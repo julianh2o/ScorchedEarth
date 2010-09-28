@@ -5,7 +5,6 @@ public class ChatServer {
 	}
 	
 	public void receivedChatMessage(Connection source, ChatMessage message) {
-		Log.p.out("GOT A CHAT MESSAGE IN THE message server");
 		if (message instanceof ChatCommand) {
 			String response = "";
 			response += "Connected Users:";
@@ -14,8 +13,8 @@ public class ChatServer {
 			}
 			source.nh.send(new ChatMessage("Server",response));
 		} else {
-			Log.p.out(message.toString());
-			server.broadcastObject(new ChatMessage(source.getName(),message.text));
+			Log.p.out("Chatserver got message: "+message.toString());
+			server.broadcastObject(message);
 		}
 	}
 }

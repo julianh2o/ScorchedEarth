@@ -2,10 +2,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
+import java.util.LinkedList;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Server implements Runnable {
-	Vector<Connection> connections;
+	ReadWriteLock connectionsLock;
+	LinkedList<Connection> connections;
 	NetworkHandler ni;
 	ServerSocket server;
 	Thread t;
@@ -17,11 +20,12 @@ public class Server implements Runnable {
 	}
 	
 	public Server(int port) {
+		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
 		Log.setPrimary(Log.SERVER);
 		Log.p.out("Server Starting");
 		server = NetworkHandler.getServerSocket(port);
-		connections = new Vector<Connection>();
+		connections = new LinkedList<Connection>();
 		if (server == null) {
 			Log.p.out("Error Connecting Socket");
 			System.exit(-1);
@@ -40,14 +44,32 @@ public class Server implements Runnable {
 				Log.p.out("Accepted Connection");
 				NetworkHandler nh = new NetworkHandler(s);
 				Connection conn = new Connection(this,nh);
-				connections.add(conn);
+				addConnection(conn);
 			} catch (IOException e) {
 				Log.p.error("Failed to accept connection",e);
 			}
 		}
 	}
+	
+	public void addConnection(Connection conn) {
+		connectionsLock.writeLock().lock();
+		try {
+			connections.add(conn);
+		} finally {
+			connectionsLock.writeLock().unlock();
+		}
+	}
+	
+	public void removeConnection(Connection conn) {
+		connectionsLock.writeLock().lock();
+		try {
+			connections.remove(conn);
+		} finally {
+			connectionsLock.writeLock().unlock();
+		}
+	}
 
-	public Vector<Connection> getConnections() {
+	public LinkedList<Connection> getConnections() {
 		return connections;
 	}
 

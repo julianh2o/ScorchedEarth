@@ -50,7 +50,7 @@ public class Client implements NetworkEventListener, Runnable {
 		Object o = e.object;
 		if (o instanceof ChatMessage) {
 			ChatMessage message = (ChatMessage)o;
-			Log.p.out(message.toString());
+			Log.p.out("Got Message: " + message.toString());
 		}
 	}
 }

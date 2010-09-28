@@ -26,9 +26,9 @@ public class NetworkHandler implements Runnable {
 	Thread t;
 	volatile boolean halt;
 	
-	public NetworkHandler(Socket s) {
+	public NetworkHandler(Socket socket) {
 		listeners = new Vector<NetworkEventListener>();
-		socket = s;
+		this.socket = socket;
 		try {
 			out = socket.getOutputStream();
 			oos = new ObjectOutputStream(out);
