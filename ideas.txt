@@ -1,0 +1,11 @@
+Tanks:
+Can build bases, collect resources, armament etc
+Resonably complex build/craft system
+
+When logged in, other tanks emit periodic blips that show up on your map (every 5-20 seconds) so that exact position is not known.
+
+When logged out, each player's "base" is protected by defensive towers that they can build. These towers protect for a certain number of days based on quality. A cheap version might protect your base for a few hours of being logged out, where a more expensive one might even protect for weeks. While the base is protected, blocks under its protection can not be destroyed by enemies.
+
+When the base protection wears out, the base will still be "protected" by anonymity as there is no player present to give away its location. However, if an enemy tank finds it, it will be open to attack.
+
+While in protected mode, the base's defenses are offline. When the defensive matrix wears out or the player logs in, the defenses come online again and attacking tanks will still need to fight their way through them.
