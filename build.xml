@@ -5,7 +5,7 @@
     <property name="jar.dir" value="."/>
 
     <property name="lib.dir" value="lib" />
-	<property name="native.dir" value="${lib.dir}/native" />
+	<property name="native.dir" value="${lib.dir}/native/macosx" />
 
     <property name="main-class" value="FullScreenWindowedTest"/>
 
