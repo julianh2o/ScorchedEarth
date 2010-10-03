@@ -1,0 +1,9 @@
+ScorchedEarth ReadMe
+
+ant compile - compile all java classes
+ant server - start the server
+ant run - run the client
+ant os - display your operating system
+ant - build and run client
+
+
