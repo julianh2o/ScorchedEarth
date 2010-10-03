@@ -11,9 +11,8 @@ public class Window {
 	boolean fullscreen;
 	
 	public Window() {
-		fullscreen = true;
-		fullscreen();
 		
+		windowed();
 		try {
 		Display.create();
 		glInit();
@@ -29,7 +28,7 @@ public class Window {
 	public void doRender(Screen screen) {
 		if (Display.isVisible()) {
 			processKeyboard();
-			screen.render();
+			screen.render(this);
 		}
 		Display.update();
 	}

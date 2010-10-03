@@ -19,19 +19,27 @@ public class Client implements NetworkEventListener, Runnable {
 		Socket s = NetworkHandler.getClientSocket(host,port);
 		nh = new NetworkHandler(s);
 		nh.addNetworkEventListener(this);
-//		t = new Thread(this);
+		
 		Log.p.out("Starting client thread");
 		run();
-//		t.start();
 	}
 
 	public void run() {
 		Window window = new Window();
 		GameScreen screen = new GameScreen();
-		
+
+		TickTimer tick = new TickTimer();
 		while(!window.shouldExit()) {
-			screen.update(10);
+			long delta = tick.tick();
+			
+			screen.update(delta);
 			window.doRender(screen);
+			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				
+			}
 		}
 		window.cleanup();
 		nh.close();
