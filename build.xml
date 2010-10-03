@@ -5,8 +5,8 @@
     <property name="jar.dir" value="."/>
 
     <property name="lib.dir" value="lib" />
-	<property name="native.dir" value="${lib.dir}/native/linux" />
-
+	<property name="native.dir" value="${lib.dir}/native/${os.name}" />
+	
     <property name="client-class" value="Client"/>
     <property name="server-class" value="Server"/>
 
@@ -49,6 +49,10 @@
 				<path location="${classes.dir}" />
 			</classpath>
 		</java>
+	</target>
+	
+	<target name="os">
+		<echo message="${os.name}" />
 	</target>
 
     <target name="clean-build" depends="clean,jar"/>
