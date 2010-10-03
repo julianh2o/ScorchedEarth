@@ -1,6 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Client implements NetworkEventListener, Runnable {
@@ -28,22 +25,30 @@ public class Client implements NetworkEventListener, Runnable {
 	}
 
 	public void run() {
-		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-		String line;
-		try {
-			while((line = stdin.readLine()) != null) {
-				ChatMessage message = null;
-				if (line.startsWith("/")) {
-					Log.p.out("Sending chat Command");
-					message = new ChatCommand(line);
-				} else {
-					message = new ChatMessage(line);
-				}
-				nh.send(message);
-			}
-		} catch (IOException e) {
-			Log.p.error("Error reading from user",e);
+		Window window = new Window();
+		
+		while(!window.shouldExit()) {
+			window.update();
 		}
+		window.cleanup();
+
+		
+//		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+//		String line;
+//		try {
+//			while((line = stdin.readLine()) != null) {
+//				ChatMessage message = null;
+//				if (line.startsWith("/")) {
+//					Log.p.out("Sending chat Command");
+//					message = new ChatCommand(line);
+//				} else {
+//					message = new ChatMessage(line);
+//				}
+//				nh.send(message);
+//			}
+//		} catch (IOException e) {
+//			Log.p.error("Error reading from user",e);
+//		}
 	}
 
 	public void networkEventReceived(NetworkEvent e) {

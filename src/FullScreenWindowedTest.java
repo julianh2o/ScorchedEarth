@@ -115,7 +115,7 @@ public class FullScreenWindowedTest {
 				}
 				// don't waste cpu time, sleep more
 				try {
-					Thread.sleep(10);
+					Thread.sleep(100);
 				} catch (InterruptedException inte) {
 				}
 			}
