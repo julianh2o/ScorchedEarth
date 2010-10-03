@@ -83,7 +83,9 @@ public class NetworkHandler implements Runnable {
 		while(!halt) {
 			Object o = null;
 			try {
-				o = ois.readObject();
+				if (ois.available() > 0) {
+					o = ois.readObject();
+				}
 			} catch (ClassNotFoundException e) {
 				Log.p.error("Class not found",e);
 			} catch (EOFException e) {
@@ -93,12 +95,12 @@ public class NetworkHandler implements Runnable {
 				Log.p.error("Could not read from stream",e);
 			}
 			if (o == null) {
-				break;
+				continue;
 			}
 			broadcastEvent(new NetworkEvent(o));
 
 			try {
-				Thread.sleep(5);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

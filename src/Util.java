@@ -22,4 +22,8 @@ public class Util {
 		Calendar c = Calendar.getInstance();
 		return c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)+":"+c.get(Calendar.SECOND)+"."+c.get(Calendar.MILLISECOND);
 	}
+
+	public static double timeScale(double x, long ms) {
+		return x*(ms/1000.0);
+	}
 }

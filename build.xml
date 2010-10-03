@@ -7,7 +7,8 @@
     <property name="lib.dir" value="lib" />
 	<property name="native.dir" value="${lib.dir}/native/linux" />
 
-    <property name="main-class" value="Client"/>
+    <property name="client-class" value="Client"/>
+    <property name="server-class" value="Server"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -27,13 +28,13 @@
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
+                <attribute name="Main-Class" value="${client-class}"/>
             </manifest>
         </jar>
     </target>
 
     <target name="run" depends="compile">
-		<java classname="${main-class}" fork="true">
+		<java classname="${client-class}" fork="true">
 			<sysproperty key="java.library.path" path="${native.dir}"/>
             <classpath>
                 <path refid="classpath"/>
@@ -41,6 +42,14 @@
             </classpath>
 		</java>
     </target>
+	
+	<target name="server" depends="compile">
+		<java classname="${server-class}" fork="true">
+			<classpath>
+				<path location="${classes.dir}" />
+			</classpath>
+		</java>
+	</target>
 
     <target name="clean-build" depends="clean,jar"/>
     <target name="main" depends="clean,run"/>

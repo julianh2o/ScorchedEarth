@@ -26,33 +26,12 @@ public class Window {
 		return Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || Display.isCloseRequested();
 	}
 	
-	public void update() {
+	public void doRender(Screen screen) {
 		if (Display.isVisible()) {
 			processKeyboard();
-			
-			render();
+			screen.render();
 		}
 		Display.update();
-	}
-	
-	private void render() {
-		glClear(GL_COLOR_BUFFER_BIT);
-		
-		glPushMatrix();
-		{
-			glTranslatef(10,10, 0);
-			glRotatef(20, 0.0f, 0.0f, 1.0f);
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glBegin(GL_QUADS);
-			{
-				glVertex2i(-50, -50);
-				glVertex2i(50, -50);
-				glVertex2i(50, 50);
-				glVertex2i(-50, 50);
-			}
-			glEnd();
-		}
-		glPopMatrix();
 	}
 	
 	public void fullscreen() {
