@@ -17,9 +17,13 @@ public class Client implements NetworkEventListener, Runnable {
 	public Client(String host, int port) {
 		Log.setPrimary(Log.CLIENT);
 		Socket s = NetworkHandler.getClientSocket(host,port);
-		nh = new NetworkHandler(s);
-		nh.addNetworkEventListener(this);
-		
+		if (s != null) {
+			nh = new NetworkHandler(s);
+			nh.addNetworkEventListener(this);
+		} else {
+			nh = null;
+		}
+			
 		Log.p.out("Starting client thread");
 		run();
 	}
@@ -42,7 +46,7 @@ public class Client implements NetworkEventListener, Runnable {
 			}
 		}
 		window.cleanup();
-		nh.close();
+		if (nh != null) nh.close();
 		
 		Log.p.out("Exiting cleanly");
 		System.exit(0);
