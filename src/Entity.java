@@ -1,17 +1,20 @@
 public class Entity {
 	Vector2D position;
 	Vector2D velocity;
+	double angle;
+	
 	Model model;
 	
 	public Entity() {
-		position = new Vector2D();
-		velocity = new Vector2D(1.0,1.0);
+		position = new Vector2D(100,100);
+		velocity = new Vector2D(0,0);
+		angle = 0;
 		model = new Model();
 	}
 	
 	void render(Window w) {
 		if (model != null) {
-			model.renderAt(w,getX(),getY());
+			model.renderAt(w,getX(),getY(),angle);
 		}
 	}
 	
@@ -49,6 +52,14 @@ public class Entity {
 
 	public void setVelocity(Vector2D velocity) {
 		this.velocity = velocity;
+	}
+	
+	public double getAngle() {
+		return angle;
+	}
+
+	public void setAngle(double angle) {
+		this.angle = angle;
 	}
 
 	public Model getModel() {

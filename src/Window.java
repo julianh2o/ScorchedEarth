@@ -61,24 +61,10 @@ public class Window {
 				fullscreen();
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
-		}
-		
 		while ( Mouse.next() );
 	}
 	
 	private void glInit() {
-		glEnable(GL_TEXTURE_2D);
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();

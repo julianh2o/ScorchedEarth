@@ -12,6 +12,11 @@ public class Vector2D {
 		this.y = y;
 	}
 	
+	public Vector2D(double angle) {
+		this.x = Math.cos(angle);
+		this.y = Math.sin(angle);
+	}
+	
 	public double getMagnitude() {
 		return getLength();
 	}

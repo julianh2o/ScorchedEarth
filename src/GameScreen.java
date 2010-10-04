@@ -7,10 +7,21 @@ public class GameScreen implements Screen {
 	public static final int FRAME_STEP = 10;
 	
 	List<Entity> entities;
+	List<Tank> tanks;
+	List<Controller> controllers;
 	
 	public GameScreen() {
 		entities = new LinkedList<Entity>();
-		entities.add(new Entity());
+		tanks = new LinkedList<Tank>();
+		controllers = new LinkedList<Controller>();
+		
+		
+		Tank tank = new Tank();
+		tanks.add(tank);
+		entities.add(tank);
+		
+		TankController tc = new TankController(tank);
+		controllers.add(tc);
 	}
 
 	public void enter() {
@@ -22,9 +33,17 @@ public class GameScreen implements Screen {
 		while (left > 0) {
 			long render = Math.min(left,FRAME_STEP);
 			left -= render;
-			for (Entity entity : entities) {
-				entity.update(render);
-			}
+			smallUpdate(render);
+		}
+	}
+	
+	public void smallUpdate(long ms) {
+		for (Entity entity : entities) {
+			entity.update(ms);
+		}
+		
+		for (Controller controller : controllers) {
+			controller.update(ms);
 		}
 	}
 
