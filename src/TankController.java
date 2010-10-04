@@ -15,14 +15,14 @@ public class TankController implements Controller {
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			tank.rotateLeft(1);
+			tank.rotateLeft(.03);
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			tank.rotateRight(1);
+			tank.rotateRight(.03);
 		}
 	}
 	

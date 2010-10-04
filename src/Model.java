@@ -34,15 +34,23 @@ public class Model {
 		
 			
 			glTranslated(x, y, 0);
-			glRotatef((float)angle, 0, 0, 1);
+			
+			Vector2D heading = new Vector2D(angle);
+			glBegin(GL_LINES);
+			{
+				glVertex2i(0,0);
+				glVertex2d(50*heading.getX(),50*heading.getY());
+			}
+			glEnd();
+			
+			glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
 			
 			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnd();
 			glBegin(GL_TRIANGLES);
 			{
-				glVertex2i(-10,0);
-				glVertex2i(10,0);
-				glVertex2i(0,50);
+				glVertex2i(0,-10);
+				glVertex2i(0,10);
+				glVertex2i(50,0);
 			}
 			glEnd();
 			
@@ -57,6 +65,8 @@ public class Model {
 		
 		halfWidth += 3;
 		halfHeight += 3;
+		
+		glRotatef(90, 0, 0, 1);
 		glBegin(GL_QUADS);
 		{
 			glTexCoord2f(0.0f, 0.0f);
