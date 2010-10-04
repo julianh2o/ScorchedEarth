@@ -78,6 +78,8 @@ public class Window {
 	}
 	
 	private void glInit() {
+		glEnable(GL_TEXTURE_2D);
+		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());

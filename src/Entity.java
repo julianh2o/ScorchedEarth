@@ -5,7 +5,7 @@ public class Entity {
 	
 	public Entity() {
 		position = new Vector2D();
-		velocity = new Vector2D();
+		velocity = new Vector2D(1.0,1.0);
 		model = new Model();
 	}
 	
@@ -16,7 +16,7 @@ public class Entity {
 	}
 	
 	void update(long ms) {
-		
+		position.add(velocity);
 	}
 	
 	public double getX() {

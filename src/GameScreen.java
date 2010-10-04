@@ -8,19 +8,9 @@ public class GameScreen implements Screen {
 	
 	List<Entity> entities;
 	
-	double x;
-	double y;
-	double xv;
-	double yv;
-	
 	public GameScreen() {
 		entities = new LinkedList<Entity>();
 		entities.add(new Entity());
-		this.x = 100;
-		this.y = 100;
-		
-		this.xv = 50;
-		this.yv = 50;
 	}
 
 	public void enter() {
@@ -36,9 +26,6 @@ public class GameScreen implements Screen {
 				entity.update(render);
 			}
 		}
-		
-		x += Util.timeScale(xv,ms);
-		y += Util.timeScale(yv,ms);
 	}
 
 	public void render(Window w) {
@@ -47,22 +34,6 @@ public class GameScreen implements Screen {
 		for (Entity entity : entities) {
 			entity.render(w);
 		}
-		
-		glPushMatrix();
-		{
-			glTranslated(x, y, 0);
-//			glRotatef(angle, 0.0f, 0.0f, 1.0f);
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glBegin(GL_QUADS);
-			{
-				glVertex2i(-50, -50);
-				glVertex2i(50, -50);
-				glVertex2i(50, 50);
-				glVertex2i(-50, 50);
-			}
-			glEnd();
-		}
-		glPopMatrix();
 	}
 
 	public void leave() {

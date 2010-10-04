@@ -1,10 +1,48 @@
 public class Vector2D {
-	double x;
-	double y;
+	protected double x;
+	protected double y;
 	
 	public Vector2D() {
 		this.x = 0;
 		this.y = 0;
+	}
+	
+	public Vector2D(double x, double y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public double getMagnitude() {
+		return getLength();
+	}
+
+	public Vector2D getUnitVector() {
+		double mag = getMagnitude();
+		return new Vector2D(x/mag, y/mag);
+	}
+
+	public double getAngle() {
+		return Math.atan2(x,y);
+	}
+
+	public double angleTo(Vector2D v) {
+		return Math.abs(getAngle() - v.getAngle());
+	}
+
+	public double dot(Vector2D v) {
+		return getMagnitude() * v.getMagnitude() * Math.cos(angleTo(v));
+	}
+
+	public Vector2D addVector(Vector2D v) {
+		return new Vector2D(x + v.x, y + v.y);
+	}
+
+	public Vector2D rotate(double angle) {
+		return new Vector2D(x * Math.cos(angle) + y * Math.sin(angle), y * Math.cos(angle) - x * Math.sin(angle));
+	}
+
+	public Vector2D scale(double s) {
+		return new Vector2D(x*s, y*s);
 	}
 	
 	public double getLength() {
@@ -25,5 +63,10 @@ public class Vector2D {
 	
 	public void setY(double y) {
 		this.y = y;
+	}
+
+	public void add(Vector2D v) {
+		this.x += v.x;
+		this.y += v.y;
 	}
 }
