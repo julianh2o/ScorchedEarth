@@ -4,9 +4,16 @@ public class Tank extends Entity {
 	}
 
 	void update(long ms) {
-		position.add(velocity);
+		position = position.add(velocity);
 
-		velocity = velocity.scale(.99);
+		double friction = .006;
+		if (velocity.getMagnitude() < friction) {
+			velocity = new Vector2D(0,0);
+		} else {
+			Vector2D drag = velocity.getUnitVector();
+			drag = drag.scale(-friction);
+			velocity = velocity.add(drag);
+		}
 	}
 	
 	public void rotateLeft(double amount) {

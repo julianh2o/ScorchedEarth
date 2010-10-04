@@ -38,7 +38,7 @@ public class Vector2D {
 		return getMagnitude() * v.getMagnitude() * Math.cos(angleTo(v));
 	}
 
-	public Vector2D addVector(Vector2D v) {
+	public Vector2D add(Vector2D v) {
 		return new Vector2D(x + v.x, y + v.y);
 	}
 
@@ -68,10 +68,5 @@ public class Vector2D {
 	
 	public void setY(double y) {
 		this.y = y;
-	}
-
-	public void add(Vector2D v) {
-		this.x += v.x;
-		this.y += v.y;
 	}
 }

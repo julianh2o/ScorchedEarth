@@ -19,7 +19,7 @@ public class Entity {
 	}
 	
 	void update(long ms) {
-		position.add(velocity);
+		position = position.add(velocity);
 	}
 	
 	public double getX() {

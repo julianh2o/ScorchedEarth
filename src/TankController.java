@@ -10,7 +10,8 @@ public class TankController implements Controller {
 	public void update(long ms) {
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 			Vector2D dvel = new Vector2D(tank.getAngle());
-			tank.getVelocity().add(Util.timeScale(dvel, ms));
+			dvel = dvel.scale(3);
+			tank.setVelocity(tank.getVelocity().add(Util.timeScale(dvel, ms)));
 			
 		}
 		
