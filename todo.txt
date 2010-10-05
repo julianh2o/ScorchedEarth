@@ -1,1 +1,3 @@
+Organize classes into packages
+
 Friction should depend on underlying ground type, also friction should take into consideration the direction your tank is pointing.
