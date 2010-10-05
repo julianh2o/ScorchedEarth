@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
@@ -68,7 +67,7 @@ public class NetworkHandler implements Runnable {
 	// All network activity is sent through serializable objects
 	// The behavior of the client/server monitoring this network handler should
 	// check the type/nature of the object and distribute it accordingly
-	public void send(Serializable s) {
+	public void send(NetworkObject s) {
 		try {
 			oos.writeObject(s);
 		} catch (IOException e) {
@@ -83,7 +82,6 @@ public class NetworkHandler implements Runnable {
 		while(!halt) {
 			Object o = null;
 			try {
-				Log.p.out("Reading object!");
 				o = ois.readObject();
 			} catch (ClassNotFoundException e) {
 				Log.p.error("Class not found",e);
@@ -126,10 +124,12 @@ public class NetworkHandler implements Runnable {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public Socket getSocket() {
+		return socket;
+	}
 
 	// Listener methods
-	
 	// Adds a network listener to be called whenever an object is received over the network
 	public void addNetworkEventListener(NetworkEventListener l) {
 		listeners.add(l);

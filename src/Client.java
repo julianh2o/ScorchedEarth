@@ -94,6 +94,13 @@ public class Client implements NetworkEventListener, Runnable {
 			Log.p.out("Got Message: " + message.toString());
 		} else if (o instanceof World) {
 			world = (World)o;
+		} else if (o instanceof Tank) {
+			Log.p.out("GOT TANK OBJECT");
+			Tank in = (Tank)o;
+			Log.p.out(""+in.getPosition().toString());
+//			Tank t = world.tanks.get(0);
+//			t.setPosition(in.getPosition());
+//			t.setVelocity(in.getVelocity());
 		}
 	}
 }

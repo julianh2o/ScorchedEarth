@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
@@ -112,9 +111,9 @@ public class Server implements Runnable {
 		return connections;
 	}
 
-	public void broadcastObject(Serializable o) {
+	public void broadcastObject(NetworkObject o) {
 		for (Connection conn : connections) {
-			conn.nh.send(o);
+			conn.getNetworkHandler().send(o);
 		}
 	}
 

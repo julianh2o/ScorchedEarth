@@ -58,6 +58,10 @@ public class Vector2D implements Serializable {
 		return Math.sqrt(x*x + y*y);
 	}
 	
+//	public String toString() {
+//		return "<"+getX()+", "+getY()+">";
+//	}
+	
 	public double getX() {
 		return x;
 	}

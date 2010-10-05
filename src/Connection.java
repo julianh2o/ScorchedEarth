@@ -4,11 +4,14 @@ import org.lwjgl.input.Keyboard;
 // means of sending objects to each client as well as tightly bound userdata.
 
 public class Connection implements Runnable, NetworkEventListener {
-	Server server;
-	NetworkHandler nh;
-	Thread t;
-	Tank tank;
-	KeyboardHandler kb;
+	private static final long NETWORK_INTERVAL = 500;
+	
+	private Server server;
+	private NetworkHandler nh;
+	private Thread t;
+	private Tank tank;
+	private KeyboardHandler kb;
+	private long lastNetworkUpdate;
 	
 	public Connection(Server server, NetworkHandler nh) {
 		kb = new KeyboardHandler();
@@ -34,18 +37,33 @@ public class Connection implements Runnable, NetworkEventListener {
 	}
 	
 	public void update(long ms) {
-		if (kb.getLastEvent(Keyboard.KEY_W).isDown()) {
+		if (kb.isDown(Keyboard.KEY_W)) {
 			Vector2D dvel = new Vector2D(tank.getAngle());
 			dvel = dvel.scale(3);
 			tank.setVelocity(tank.getVelocity().add(Util.timeScale(dvel, ms)));
 		}
 		
-		if (kb.getLastEvent(Keyboard.KEY_A).isDown()) {
+		if (kb.isDown(Keyboard.KEY_A)) {
 			tank.rotateLeft(.03);
 		}
-		if (kb.getLastEvent(Keyboard.KEY_D).isDown()) {
+		if (kb.isDown(Keyboard.KEY_D)) {
 			tank.rotateRight(.03);
 		}
+		
+//		Log.p.out("tank mag: "+tank.getVelocity().getMagnitude());
+		Log.p.out("tank pos: "+tank.getPosition().toString());
+		tank.update(ms);
+		
+		lastNetworkUpdate += ms;
+		if (lastNetworkUpdate > NETWORK_INTERVAL) {
+			networkUpdate();
+			lastNetworkUpdate = 0;
+		}
+	}
+	
+	public void networkUpdate() {
+		if (nh == null) return;
+		nh.send(tank);
 	}
 
 	// This method is the entry point for all communication sent by the client
@@ -63,5 +81,21 @@ public class Connection implements Runnable, NetworkEventListener {
 
 	public String getName() {
 		return nh.socket.getInetAddress().toString();
+	}
+
+	public Server getServer() {
+		return server;
+	}
+
+	public Tank getTank() {
+		return tank;
+	}
+
+	public KeyboardHandler getKb() {
+		return kb;
+	}
+
+	public NetworkHandler getNetworkHandler() {
+		return nh;
 	}
 }

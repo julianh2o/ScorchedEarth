@@ -9,9 +9,9 @@ public class ChatServer {
 			String response = "";
 			response += "Connected Users:";
 			for (Connection ch : server.getConnections()) {
-				response += "IP: "+ch.nh.socket.getInetAddress().toString();
+				response += "IP: "+ch.getNetworkHandler().getSocket().getInetAddress().toString();
 			}
-			source.nh.send(new ChatMessage("Server",response));
+			source.getNetworkHandler().send(new ChatMessage("Server",response));
 		} else {
 			Log.p.out("Chatserver got message: "+message.toString());
 			server.broadcastObject(message);

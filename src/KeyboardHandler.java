@@ -35,6 +35,12 @@ public class KeyboardHandler {
 		return keyStates.get(new Integer(key));
 	}
 	
+	public boolean isDown(int key) {
+		KeyEvent e = getLastEvent(key);
+		if (e == null) return false;
+		return e.isDown();
+	}
+	
 	public void addKeyListener(KeyListener k) {
 		listeners.add(k);
 	}
