@@ -3,24 +3,23 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GameScreen implements Screen {
-	public static final int FRAME_STEP = 10;
+public class GameScreen implements Screen, KeyListener {
+	private static final int NETWORK_INTERVAL = 100;
 	
-	List<Entity> entities;
-	List<Tank> tanks;
+	NetworkHandler nh;
+	World world;
+	
 	List<Controller> controllers;
+
+	private long lastNetworkUpdate;
 	
-	public GameScreen() {
-		entities = new LinkedList<Entity>();
-		tanks = new LinkedList<Tank>();
+	public GameScreen(World world, NetworkHandler nh) {
+		this.nh = nh;
+		this.world = world;
+		
 		controllers = new LinkedList<Controller>();
 		
-		
-		Tank tank = new Tank();
-		tanks.add(tank);
-		entities.add(tank);
-		
-		TankController tc = new TankController(tank);
+		TankController tc = new TankController(nh);
 		controllers.add(tc);
 	}
 
@@ -29,33 +28,42 @@ public class GameScreen implements Screen {
 	}
 
 	public void update(long ms) {
-		long left = ms;
-		while (left > 0) {
-			long render = Math.min(left,FRAME_STEP);
-			left -= render;
-			smallUpdate(render);
+		for (Controller controller : controllers) {
+			controller.update(ms);
+		}
+		
+		lastNetworkUpdate += ms;
+		if (lastNetworkUpdate > NETWORK_INTERVAL) {
+			networkUpdate();
+			lastNetworkUpdate = 0;
 		}
 	}
 	
-	public void smallUpdate(long ms) {
-		for (Entity entity : entities) {
-			entity.update(ms);
-		}
-		
-		for (Controller controller : controllers) {
-			controller.update(ms);
+	public void networkUpdate() {
+		if (nh == null) return;
+		for (Entity entity : world.getEntities()) {
+			if (entity.isDirty()) {
+				Log.p.out("Sending stuff");
+				nh.send(entity);
+				entity.setDirty(false);
+			}
 		}
 	}
 
 	public void render(Window w) {
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-		for (Entity entity : entities) {
-			entity.render(w);
-		}
+		world.render(w);
 	}
 
 	public void leave() {
 		
+	}
+
+	public void keyPressed(KeyEvent e) {
+		nh.send(e);
+	}
+
+	public void keyReleased(KeyEvent e) {
+		nh.send(e);
 	}
 }

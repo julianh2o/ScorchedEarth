@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -9,16 +12,23 @@ import static org.lwjgl.util.glu.GLU.*;
 public class Window {
 	private DisplayMode	mode;
 	boolean fullscreen;
+	List<Model> models;
 	
 	public Window() {
-		
 		windowed();
 		try {
-		Display.create();
-		glInit();
+			Display.create();
+			glInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		models = new ArrayList<Model>();
+		models.add(new Model());
+	}
+	
+	public void addKeyListener(KeyListener k) {
+		//Display.getParent().addKeyListener(k);
 	}
 	
 	public boolean shouldExit() {
@@ -91,5 +101,9 @@ public class Window {
 	
 	public void cleanup() {
 		Display.destroy();
+	}
+	
+	public Model getModel(int id) {
+		return models.get(id);
 	}
 }

@@ -1,5 +1,8 @@
-public class Tank extends Entity {
-	
+import java.io.Serializable;
+
+public class Tank extends Entity implements Serializable {
+	private static final long serialVersionUID = 4043804903222636075L;
+
 	public Tank() {
 	}
 
@@ -17,10 +20,10 @@ public class Tank extends Entity {
 	}
 	
 	public void rotateLeft(double amount) {
-		angle += amount;
+		setAngle(getAngle()+amount);
 	}
 	
 	public void rotateRight(double amount) {
-		angle -= amount;
+		setAngle(getAngle()-amount);
 	}
 }

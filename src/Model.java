@@ -17,8 +17,6 @@ public class Model {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream("resources/tank.png"));
 			halfWidth = texture.getTextureWidth()/2;
 			halfHeight = texture.getTextureHeight()/2;
-			Log.p.out("halfWidth: "+halfWidth);
-			Log.p.out("halfHeight: "+halfHeight);
 		} catch (FileNotFoundException e) {
 			Log.p.out("File Not Found when loading texture");
 			e.printStackTrace();

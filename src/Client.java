@@ -3,6 +3,7 @@ import java.net.Socket;
 public class Client implements NetworkEventListener, Runnable {
 	NetworkHandler nh;
 	Thread t;
+	World world;
 
 	public static void main(String[] args) {
 		String host = "localhost";
@@ -15,6 +16,8 @@ public class Client implements NetworkEventListener, Runnable {
 	}
 
 	public Client(String host, int port) {
+		world = null;
+		
 		Log.setPrimary(Log.CLIENT);
 		Socket s = NetworkHandler.getClientSocket(host,port);
 		if (s != null) {
@@ -29,8 +32,20 @@ public class Client implements NetworkEventListener, Runnable {
 	}
 
 	public void run() {
+		Log.p.out("Waiting for world...");
+		while(world == null) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				Log.p.error("Interrupted sleep",e);
+			}
+		}
+		
 		Window window = new Window();
-		GameScreen screen = new GameScreen();
+		GameScreen screen = new GameScreen(world,nh);
+		
+		KeyboardHandler kb = new KeyboardHandler();
+		kb.addKeyListener(screen);
 
 		TickTimer tick = new TickTimer();
 		while(!window.shouldExit()) {
@@ -38,6 +53,8 @@ public class Client implements NetworkEventListener, Runnable {
 			
 			screen.update(delta);
 			window.doRender(screen);
+			
+			kb.handle();
 			
 			try {
 				Thread.sleep(10);
@@ -75,6 +92,8 @@ public class Client implements NetworkEventListener, Runnable {
 		if (o instanceof ChatMessage) {
 			ChatMessage message = (ChatMessage)o;
 			Log.p.out("Got Message: " + message.toString());
+		} else if (o instanceof World) {
+			world = (World)o;
 		}
 	}
 }

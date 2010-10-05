@@ -1,20 +1,25 @@
-public class Entity {
+import java.io.Serializable;
+
+public class Entity extends NetworkObject implements Serializable {
+	private static final long serialVersionUID = -6741321824807407435L;
+	
 	Vector2D position;
 	Vector2D velocity;
 	double angle;
 	
-	Model model;
+	private transient boolean dirty;
+	int model;
 	
 	public Entity() {
 		position = new Vector2D(100,100);
 		velocity = new Vector2D(0,0);
 		angle = 0;
-		model = new Model();
 	}
 	
 	void render(Window w) {
-		if (model != null) {
-			model.renderAt(w,getX(),getY(),angle);
+		Model modelObject = w.getModel(model);
+		if (modelObject != null) {
+			modelObject.renderAt(w,getX(),getY(),angle);
 		}
 	}
 	
@@ -22,12 +27,15 @@ public class Entity {
 		position = position.add(velocity);
 	}
 	
+	// Getters and Setters
+	
 	public double getX() {
 		return position.getX();
 	}
 	
 	public void setX(double x) {
 		position.setX(x);
+		setDirty(true);
 	}
 	
 	public double getY() {
@@ -36,6 +44,7 @@ public class Entity {
 	
 	public void setY(double y) {
 		position.setY(y);
+		setDirty(true);
 	}
 
 	public Vector2D getPosition() {
@@ -44,6 +53,7 @@ public class Entity {
 
 	public void setPosition(Vector2D position) {
 		this.position = position;
+		setDirty(true);
 	}
 
 	public Vector2D getVelocity() {
@@ -52,6 +62,7 @@ public class Entity {
 
 	public void setVelocity(Vector2D velocity) {
 		this.velocity = velocity;
+		setDirty(true);
 	}
 	
 	public double getAngle() {
@@ -60,13 +71,23 @@ public class Entity {
 
 	public void setAngle(double angle) {
 		this.angle = angle;
+		setDirty(true);
 	}
 
-	public Model getModel() {
+	public int getModel() {
 		return model;
 	}
 
-	public void setModel(Model model) {
+	public void setModel(int model) {
 		this.model = model;
+		setDirty(true);
+	}
+
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
+	}
+
+	public boolean isDirty() {
+		return dirty;
 	}
 }

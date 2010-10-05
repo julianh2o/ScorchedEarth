@@ -83,15 +83,15 @@ public class NetworkHandler implements Runnable {
 		while(!halt) {
 			Object o = null;
 			try {
-				if (ois.available() > 0) {
-					o = ois.readObject();
-				}
+				Log.p.out("Reading object!");
+				o = ois.readObject();
 			} catch (ClassNotFoundException e) {
 				Log.p.error("Class not found",e);
 			} catch (EOFException e) {
 				Log.p.out("Connection closed by peer");
 				break;
 			} catch (IOException e) {
+				if (halt == true) continue;
 				Log.p.error("Could not read from stream",e);
 			}
 			if (o == null) {
@@ -107,7 +107,7 @@ public class NetworkHandler implements Runnable {
 		}
 
 		try {
-			socket.close();
+			if (!socket.isClosed()) socket.close();
 		} catch (IOException e) {
 			System.out.println("Could not close connection");
 		}
@@ -116,9 +116,13 @@ public class NetworkHandler implements Runnable {
 	public void close() {
 		halt = true;
 		try {
+			socket.close();
 			t.join();
 		} catch (InterruptedException e) {
 			System.out.println("thread join interrupted!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Error closing socket");
 			e.printStackTrace();
 		}
 	}
