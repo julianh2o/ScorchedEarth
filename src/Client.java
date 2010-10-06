@@ -1,17 +1,27 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.Socket;
+import java.util.Properties;
 
 public class Client implements NetworkEventListener, Runnable {
 	NetworkHandler nh;
 	Thread t;
 	World world;
 
-	public static void main(String[] args) {
-		String host = "localhost";
-		if (args.length > 0) {
-			host = args[0];
-		} else {
-			System.out.println("No hostname given, assuming localhost");
+	public static void main(String[] args) throws IOException {
+		Properties p = new Properties();
+		File props = new File("host.properties");
+			
+		try {
+			p.load(new FileInputStream(props));
+		} catch (IOException e) {
+			p.setProperty("host", "localhost");
+			p.store(new FileOutputStream(props),null);
 		}
+		String host = p.getProperty("host");
+		
 		new Client(host,7331);
 	}
 
