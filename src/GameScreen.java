@@ -4,15 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameScreen implements Screen, KeyListener {
-	private static final int NETWORK_INTERVAL = 100;
-	
 	NetworkHandler nh;
 	World world;
 	
 	List<Controller> controllers;
 
-	private long lastNetworkUpdate;
-	
 	public GameScreen(World world, NetworkHandler nh) {
 		this.nh = nh;
 		this.world = world;
@@ -28,28 +24,13 @@ public class GameScreen implements Screen, KeyListener {
 	}
 
 	public void update(long ms) {
+		world.update(ms);
+		
 		for (Controller controller : controllers) {
 			controller.update(ms);
 		}
-		
-		lastNetworkUpdate += ms;
-		if (lastNetworkUpdate > NETWORK_INTERVAL) {
-			networkUpdate();
-			lastNetworkUpdate = 0;
-		}
 	}
 	
-	public void networkUpdate() {
-		if (nh == null) return;
-		for (Entity entity : world.getEntities()) {
-			if (entity.isDirty()) {
-				Log.p.out("Sending stuff");
-				nh.send(entity);
-				entity.setDirty(false);
-			}
-		}
-	}
-
 	public void render(Window w) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		world.render(w);

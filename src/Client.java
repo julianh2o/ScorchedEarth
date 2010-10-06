@@ -67,24 +67,6 @@ public class Client implements NetworkEventListener, Runnable {
 		
 		Log.p.out("Exiting cleanly");
 		System.exit(0);
-
-		
-//		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-//		String line;
-//		try {
-//			while((line = stdin.readLine()) != null) {
-//				ChatMessage message = null;
-//				if (line.startsWith("/")) {
-//					Log.p.out("Sending chat Command");
-//					message = new ChatCommand(line);
-//				} else {
-//					message = new ChatMessage(line);
-//				}
-//				nh.send(message);
-//			}
-//		} catch (IOException e) {
-//			Log.p.error("Error reading from user",e);
-//		}
 	}
 
 	public void networkEventReceived(NetworkEvent e) {
@@ -94,13 +76,9 @@ public class Client implements NetworkEventListener, Runnable {
 			Log.p.out("Got Message: " + message.toString());
 		} else if (o instanceof World) {
 			world = (World)o;
-		} else if (o instanceof Tank) {
-			Log.p.out("GOT TANK OBJECT");
-			Tank in = (Tank)o;
-			Log.p.out(""+in.getPosition().toString());
-//			Tank t = world.tanks.get(0);
-//			t.setPosition(in.getPosition());
-//			t.setVelocity(in.getVelocity());
+		} else if (o instanceof EntityUpdate) {
+			EntityUpdate update = (EntityUpdate)o;
+			update.update(world.getEntities());
 		}
 	}
 }

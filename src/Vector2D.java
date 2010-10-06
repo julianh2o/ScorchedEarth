@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class Vector2D implements Serializable {
+public class Vector2D extends NetworkObject implements Serializable {
 	private static final long serialVersionUID = -2786458774826777729L;
 	
 	protected double x;
@@ -58,9 +58,9 @@ public class Vector2D implements Serializable {
 		return Math.sqrt(x*x + y*y);
 	}
 	
-//	public String toString() {
-//		return "<"+getX()+", "+getY()+">";
-//	}
+	public String toString() {
+		return "<"+getX()+", "+getY()+">";
+	}
 	
 	public double getX() {
 		return x;

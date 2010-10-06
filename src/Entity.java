@@ -1,30 +1,42 @@
 import java.io.Serializable;
 
-public class Entity extends NetworkObject implements Serializable {
-	private static final long serialVersionUID = -6741321824807407435L;
+public class Entity implements Serializable {
+	private static final long serialVersionUID = 5297550353991097958L;
 	
 	Vector2D position;
 	Vector2D velocity;
 	double angle;
+	int id;
 	
 	private transient boolean dirty;
 	int model;
 	
 	public Entity() {
+		position = new Vector2D(0,0);
+		velocity = new Vector2D(0,0);
+		angle = 0;
+	}
+	
+	public Entity(int id) {
+		this.id = id;
 		position = new Vector2D(100,100);
 		velocity = new Vector2D(0,0);
 		angle = 0;
 	}
 	
-	void render(Window w) {
+	public void render(Window w) {
 		Model modelObject = w.getModel(model);
 		if (modelObject != null) {
 			modelObject.renderAt(w,getX(),getY(),angle);
 		}
 	}
 	
-	void update(long ms) {
+	public void update(long ms) {
 		position = position.add(velocity);
+	}
+	
+	public String toString() {
+		return "Pos"+getPosition()+" vel"+getVelocity()+"  ("+getAngle()+")";
 	}
 	
 	// Getters and Setters
@@ -89,5 +101,13 @@ public class Entity extends NetworkObject implements Serializable {
 
 	public boolean isDirty() {
 		return dirty;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

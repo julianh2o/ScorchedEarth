@@ -50,8 +50,6 @@ public class Connection implements Runnable, NetworkEventListener {
 			tank.rotateRight(.03);
 		}
 		
-//		Log.p.out("tank mag: "+tank.getVelocity().getMagnitude());
-		Log.p.out("tank pos: "+tank.getPosition().toString());
 		tank.update(ms);
 		
 		lastNetworkUpdate += ms;
@@ -63,7 +61,8 @@ public class Connection implements Runnable, NetworkEventListener {
 	
 	public void networkUpdate() {
 		if (nh == null) return;
-		nh.send(tank);
+		EntityUpdate update = new EntityUpdate(tank);
+		nh.send(update);
 	}
 
 	// This method is the entry point for all communication sent by the client
@@ -73,10 +72,15 @@ public class Connection implements Runnable, NetworkEventListener {
 		if (o instanceof ChatMessage) {
 			server.getChatServer().receivedChatMessage(this,(ChatMessage)o);
 		} else if (o instanceof KeyEvent) {
+			Log.p.out("got key event");
 			kb.update((KeyEvent)o);
 		} else {
 			Log.p.out("Unknown Object Received: "+o);
 		}
+	}
+	
+	public boolean isClosed() {
+		return nh.getSocket().isClosed();
 	}
 
 	public String getName() {

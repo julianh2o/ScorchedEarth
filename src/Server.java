@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -47,25 +48,29 @@ public class Server implements Runnable {
 		private ServerSocket server;
 		private Server parent;
 		private Thread t;
+		private boolean halt;
 
 		public SocketAcceptor(ServerSocket server, Server parent) {
 			this.server = server;
 			this.parent = parent;
+			halt = false;
 			
 			t = new Thread(this);
 			t.start();
 		}
 		
 		public void run() {
-			Socket s;
-			try {
-				s = server.accept();
-				Log.p.out("Accepted Connection");
-				NetworkHandler nh = new NetworkHandler(s);
-				Connection conn = new Connection(parent,nh);
-				parent.addConnection(conn);
-			} catch (IOException e) {
-				Log.p.error("Failed to accept connection",e);
+			while(!halt) {
+				Socket s;
+				try {
+					s = server.accept();
+					Log.p.out("Accepted Connection");
+					NetworkHandler nh = new NetworkHandler(s);
+					Connection conn = new Connection(parent,nh);
+					parent.addConnection(conn);
+				} catch (IOException e) {
+					Log.p.error("Failed to accept connection",e);
+				}
 			}
 		}
 	}
@@ -76,13 +81,22 @@ public class Server implements Runnable {
 			long delta = timer.tick();
 			
 			connectionsLock.readLock().lock();
-			for (Connection conn : connections) {
+			Iterator<Connection> it = connections.iterator();
+			while(it.hasNext()) {
+				Connection conn = it.next();
+				if (conn.isClosed()) {
+					it.remove();
+					Log.p.out("Removed connection");
+					Log.p.out("Remaining Connections: "+connections.size());
+					continue;
+				}
+				
 				conn.update(delta);
 			}
 			connectionsLock.readLock().unlock();
 			
 			try {
-				Thread.sleep(50);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				Log.p.out("Thread sleep interrupted");
 			}

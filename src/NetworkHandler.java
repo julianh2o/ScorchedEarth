@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Vector;
 
 // This network handler is designed to handle both the client and server sockets
@@ -40,7 +41,7 @@ public class NetworkHandler implements Runnable {
 		t.start();
 	}
 	
-	// this method is used to enerate a server socket, this socket starts a server on the specified port
+	// this method is used to instantiate a server socket, this socket starts a server on the specified port
 	// Once this socket is created, call accept() to start generating normal socket objects
 	// These sockets should then be fed into the constructor of this class (NetworkHandler)
 	public static ServerSocket getServerSocket(int port) {
@@ -69,6 +70,7 @@ public class NetworkHandler implements Runnable {
 	// check the type/nature of the object and distribute it accordingly
 	public void send(NetworkObject s) {
 		try {
+			oos.reset();
 			oos.writeObject(s);
 		} catch (IOException e) {
 			Log.p.error("Error sending object",e);
@@ -87,6 +89,9 @@ public class NetworkHandler implements Runnable {
 				Log.p.error("Class not found",e);
 			} catch (EOFException e) {
 				Log.p.out("Connection closed by peer");
+				break;
+			} catch (SocketException e) {
+				Log.p.out("Connection reset");
 				break;
 			} catch (IOException e) {
 				if (halt == true) continue;
@@ -109,6 +114,7 @@ public class NetworkHandler implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Could not close connection");
 		}
+		Log.p.out("Returning from run");
 	}
 	
 	public void close() {

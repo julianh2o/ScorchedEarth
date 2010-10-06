@@ -2,13 +2,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class World extends NetworkObject {
-	private static final int FRAME_STEP = 10;
 	private static final long serialVersionUID = 3294614897289442040L;
+	
+	private static final int FRAME_STEP = 10;
+	public int nextId;
 	
 	List<Entity> entities;
 	List<Tank> tanks;
 	
 	public World() {
+		nextId = 0;
 		entities = new LinkedList<Entity>();
 		tanks = new LinkedList<Tank>();
 	}
@@ -36,10 +39,14 @@ public class World extends NetworkObject {
 	}
 	
 	public Tank addTank() {
-		Tank tank = new Tank();
+		Tank tank = new Tank(newId());
 		tanks.add(tank);
 		entities.add(tank);
 		return tank;
+	}
+	
+	public int newId() {
+		return nextId++;
 	}
 
 	public List<Entity> getEntities() {
