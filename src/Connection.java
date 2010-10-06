@@ -4,14 +4,11 @@ import org.lwjgl.input.Keyboard;
 // means of sending objects to each client as well as tightly bound userdata.
 
 public class Connection implements Runnable, NetworkEventListener {
-	private static final long NETWORK_INTERVAL = 500;
-	
 	private Server server;
 	private NetworkHandler nh;
 	private Thread t;
 	private Tank tank;
 	private KeyboardHandler kb;
-	private long lastNetworkUpdate;
 	
 	public Connection(Server server, NetworkHandler nh) {
 		kb = new KeyboardHandler();
@@ -21,6 +18,7 @@ public class Connection implements Runnable, NetworkEventListener {
 		nh.addNetworkEventListener(this);
 		Log.p.out("Sending world..");
 		tank = server.getWorld().addTank();
+		server.broadcastObject(new WorldUpdate(WorldUpdate.Type.NEW_TANK,tank));
 		nh.send(server.getWorld());
 
 		t = new Thread(this);
@@ -51,18 +49,6 @@ public class Connection implements Runnable, NetworkEventListener {
 		}
 		
 		tank.update(ms);
-		
-		lastNetworkUpdate += ms;
-		if (lastNetworkUpdate > NETWORK_INTERVAL) {
-			networkUpdate();
-			lastNetworkUpdate = 0;
-		}
-	}
-	
-	public void networkUpdate() {
-		if (nh == null) return;
-		EntityUpdate update = new EntityUpdate(tank);
-		nh.send(update);
 	}
 
 	// This method is the entry point for all communication sent by the client

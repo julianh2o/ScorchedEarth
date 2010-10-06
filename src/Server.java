@@ -7,6 +7,9 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Server implements Runnable {
+	private static final long NETWORK_INTERVAL = 100;
+	private long lastNetworkUpdate;
+	
 	ReadWriteLock connectionsLock;
 	LinkedList<Connection> connections;
 	NetworkHandler ni;
@@ -95,11 +98,25 @@ public class Server implements Runnable {
 			}
 			connectionsLock.readLock().unlock();
 			
+			lastNetworkUpdate += delta;
+			if (lastNetworkUpdate > NETWORK_INTERVAL) {
+				networkUpdate();
+				lastNetworkUpdate = 0;
+			}
+	
+			
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				Log.p.out("Thread sleep interrupted");
 			}
+		}
+	}
+	
+	public void networkUpdate() {
+		for (Entity entity : world.getEntities()) {
+			EntityUpdate update = new EntityUpdate(entity);
+			broadcastObject(update);
 		}
 	}
 	

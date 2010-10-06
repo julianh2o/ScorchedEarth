@@ -79,6 +79,9 @@ public class Client implements NetworkEventListener, Runnable {
 		} else if (o instanceof EntityUpdate) {
 			EntityUpdate update = (EntityUpdate)o;
 			update.update(world.getEntities());
+		} else if (o instanceof WorldUpdate) {
+			WorldUpdate update = (WorldUpdate)o;
+			update.update(world);
 		}
 	}
 }

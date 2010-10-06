@@ -45,6 +45,11 @@ public class World extends NetworkObject {
 		return tank;
 	}
 	
+	public void addTank(Tank tank) {
+		tanks.add(tank);
+		entities.add(tank);
+	}
+	
 	public int newId() {
 		return nextId++;
 	}
