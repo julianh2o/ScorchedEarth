@@ -7,8 +7,8 @@
     <property name="lib.dir" value="lib" />
 	<property name="native.dir" value="${lib.dir}/native/${os.name}" />
 	
-    <property name="client-class" value="Client"/>
-    <property name="server-class" value="Server"/>
+    <property name="client-class" value="client.Client"/>
+    <property name="server-class" value="server.Server"/>
 
     <path id="classpath">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
