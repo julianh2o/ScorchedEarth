@@ -2,40 +2,42 @@ package client;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import common.key.KeyEvent;
 import common.key.KeyListener;
+import common.key.KeyboardHandler;
 import common.network.NetworkHandler;
+import common.util.Log;
+import common.world.Tank;
 import common.world.World;
 
 public class GameScreen implements Screen, KeyListener {
-	NetworkHandler nh;
-	World world;
+	private NetworkHandler nh;
+	private World world;
 	
-	List<Controller> controllers;
-
-	public GameScreen(World world, NetworkHandler nh) {
+	private TankController tc;
+	private KeyboardHandler kb;
+	
+	public GameScreen(World world, NetworkHandler nh, KeyboardHandler kb) {
 		this.nh = nh;
 		this.world = world;
+		this.kb = kb;
 		
-		controllers = new LinkedList<Controller>();
-		
-		TankController tc = new TankController(nh);
-		controllers.add(tc);
+		kb.addKeyListener(this);
 	}
 
 	public void enter() {
-		
+		//TODO request world
+	}
+	
+	public void controlTank(int id) {
+		Tank t = (Tank)world.findEntity(id);
+		this.tc = new TankController(t,kb);
+		Log.p.out("Controlling tank: "+id);
 	}
 
 	public void update(long ms) {
+		if (tc != null) tc.update(ms);
 		world.update(ms);
-		
-		for (Controller controller : controllers) {
-			controller.update(ms);
-		}
 	}
 	
 	public void render(Window w) {
@@ -44,7 +46,7 @@ public class GameScreen implements Screen, KeyListener {
 	}
 
 	public void leave() {
-		
+		//TODO send leave message
 	}
 
 	public void keyPressed(KeyEvent e) {

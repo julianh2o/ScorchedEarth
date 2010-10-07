@@ -9,19 +9,23 @@ import java.util.Properties;
 
 import common.key.KeyboardHandler;
 import common.network.ChatMessage;
+import common.network.ClientMessage;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
+import common.world.ClientUpdate;
 import common.world.EntityUpdate;
 import common.world.World;
 import common.world.WorldUpdate;
 
 public class Client implements NetworkEventListener, Runnable {
-	NetworkHandler nh;
-	Thread t;
-	World world;
+	private NetworkHandler nh;
+	private World world;
+	private Window window;
+	private KeyboardHandler kb;
+	private Screen screen;
 
 	public static void main(String[] args) throws IOException {
 		Properties p = new Properties();
@@ -64,11 +68,11 @@ public class Client implements NetworkEventListener, Runnable {
 			}
 		}
 		
-		Window window = new Window();
-		GameScreen screen = new GameScreen(world,nh);
+		window = new Window();
+		kb = new KeyboardHandler();
+		screen = new GameScreen(world,nh,kb);
 		
-		KeyboardHandler kb = new KeyboardHandler();
-		kb.addKeyListener(screen);
+		nh.send(new ClientMessage(ClientMessage.Type.CLIENT_READY));
 
 		TickTimer tick = new TickTimer();
 		while(!window.shouldExit()) {
@@ -105,6 +109,29 @@ public class Client implements NetworkEventListener, Runnable {
 		} else if (o instanceof WorldUpdate) {
 			WorldUpdate update = (WorldUpdate)o;
 			update.update(world);
+		} else if (o instanceof ClientUpdate) {
+			ClientUpdate update = (ClientUpdate)o;
+			update.update(this);
 		}
+	}
+
+	public NetworkHandler getNetworkHandler() {
+		return nh;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public Window getWindow() {
+		return window;
+	}
+
+	public KeyboardHandler getKeyboardHandler() {
+		return kb;
+	}
+
+	public Screen getScreen() {
+		return screen;
 	}
 }

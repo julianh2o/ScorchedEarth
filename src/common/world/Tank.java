@@ -33,4 +33,18 @@ public class Tank extends Entity implements Serializable {
 	public void rotateRight(double amount) {
 		setAngle(getAngle()-amount);
 	}
+	
+	public void forward(long ms) {
+		Vector2D dvel = new Vector2D(getAngle());
+		dvel = dvel.scale(3);
+		velocity = velocity.add(Util.timeScale(dvel,ms));
+	}
+	
+	public void turnLeft(long ms) {
+		rotateLeft(Util.timeScale(3, ms));
+	}
+	
+	public void turnRight(long ms) {
+		rotateRight(Util.timeScale(3, ms));
+	}
 }

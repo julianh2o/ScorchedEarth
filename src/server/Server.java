@@ -91,29 +91,17 @@ public class Server implements Runnable {
 	public void run() {
 		TickTimer timer = new TickTimer();
 		while(true) {
-			long delta = timer.tick();
+			long ms = timer.tick();
 			
-			connectionsLock.readLock().lock();
-			Iterator<Connection> it = connections.iterator();
-			while(it.hasNext()) {
-				Connection conn = it.next();
-				if (conn.isClosed()) {
-					it.remove();
-					Log.p.out("Removed connection");
-					Log.p.out("Remaining Connections: "+connections.size());
-					continue;
-				}
-				
-				conn.update(delta);
-			}
-			connectionsLock.readLock().unlock();
+			world.update(ms);
 			
-			lastNetworkUpdate += delta;
+			updateConnections(ms);
+			
+			lastNetworkUpdate += ms;
 			if (lastNetworkUpdate > NETWORK_INTERVAL) {
 				networkUpdate();
 				lastNetworkUpdate = 0;
 			}
-	
 			
 			try {
 				Thread.sleep(10);
@@ -121,6 +109,23 @@ public class Server implements Runnable {
 				Log.p.out("Thread sleep interrupted");
 			}
 		}
+	}
+	
+	private void updateConnections(long ms) {
+		connectionsLock.readLock().lock();
+		Iterator<Connection> it = connections.iterator();
+		while(it.hasNext()) {
+			Connection conn = it.next();
+			if (conn.isClosed()) {
+				it.remove();
+				Log.p.out("Removed connection");
+				Log.p.out("Remaining Connections: "+connections.size());
+				continue;
+			}
+			
+			conn.update(ms);
+		}
+		connectionsLock.readLock().unlock();
 	}
 	
 	public void networkUpdate() {

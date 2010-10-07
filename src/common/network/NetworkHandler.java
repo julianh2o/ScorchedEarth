@@ -118,7 +118,6 @@ public class NetworkHandler implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Could not close connection");
 		}
-		Log.p.out("Returning from run");
 	}
 	
 	public void close() {

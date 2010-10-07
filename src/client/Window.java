@@ -9,8 +9,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
-import common.key.KeyListener;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
@@ -30,10 +28,6 @@ public class Window {
 		
 		models = new ArrayList<Model>();
 		models.add(new Model());
-	}
-	
-	public void addKeyListener(KeyListener k) {
-		//Display.getParent().addKeyListener(k);
 	}
 	
 	public boolean shouldExit() {

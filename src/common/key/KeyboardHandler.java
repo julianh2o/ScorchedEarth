@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Vector;
 import org.lwjgl.input.Keyboard;
 
-import common.util.Log;
-
 public class KeyboardHandler {
 	private Vector<KeyListener> listeners;
 	private HashMap<Integer,KeyEvent> keyStates;
@@ -20,7 +18,6 @@ public class KeyboardHandler {
 		while (Keyboard.next()) { 
 			int key = Keyboard.getEventKey();
 			boolean down = Keyboard.getEventKeyState();
-			Log.p.out("got char: "+key+" ("+new Boolean(down).toString()+")");
 			KeyEvent e = new KeyEvent(key,down);
 			update(e);
 			if (down) {

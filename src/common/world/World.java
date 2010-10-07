@@ -67,4 +67,13 @@ public class World extends NetworkObject {
 	public List<Tank> getTanks() {
 		return tanks;
 	}
+
+	public Entity findEntity(int id) {
+		for (Entity e : entities) {
+			if (e.getId() == id) {
+				return e;
+			}
+		}
+		return null;
+	}
 }
