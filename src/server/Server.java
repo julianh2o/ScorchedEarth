@@ -17,7 +17,7 @@ import common.world.EntityUpdate;
 import common.world.World;
 
 public class Server implements Runnable {
-	private static final long NETWORK_INTERVAL = 100;
+	private static final long NETWORK_INTERVAL = 50;
 	private long lastNetworkUpdate;
 	
 	ReadWriteLock connectionsLock;
@@ -117,6 +117,7 @@ public class Server implements Runnable {
 		while(it.hasNext()) {
 			Connection conn = it.next();
 			if (conn.isClosed()) {
+				conn.finish();
 				it.remove();
 				Log.p.out("Removed connection");
 				Log.p.out("Remaining Connections: "+connections.size());

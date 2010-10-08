@@ -1,5 +1,6 @@
 package common.world;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,5 +76,14 @@ public class World extends NetworkObject {
 			}
 		}
 		return null;
+	}
+
+	public void removeEntity(int id) {
+		Iterator<Entity> it = entities.iterator();
+		while (it.hasNext()) {
+			if (it.next().getId() == id) {
+				it.remove();
+			}
+		}
 	}
 }

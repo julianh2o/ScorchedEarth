@@ -34,9 +34,8 @@ public class Model {
 	public void renderAt(Window w, double x, double y, double angle) {
 		glPushMatrix();
 		{
-		
-			
 			glTranslated(x, y, 0);
+			glScaled(.5, .5, .5);
 			
 			Vector2D heading = new Vector2D(angle);
 			glBegin(GL_LINES);

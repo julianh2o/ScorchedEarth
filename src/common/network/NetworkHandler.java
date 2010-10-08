@@ -76,6 +76,12 @@ public class NetworkHandler implements Runnable {
 		try {
 			oos.reset();
 			oos.writeObject(s);
+		} catch (SocketException e) {
+			if (socket.isClosed()) {
+				halt = true;
+				return;
+			}
+			Log.p.error("Socket Exception", e);
 		} catch (IOException e) {
 			Log.p.error("Error sending object",e);
 		}
@@ -123,7 +129,7 @@ public class NetworkHandler implements Runnable {
 	public void close() {
 		halt = true;
 		try {
-			socket.close();
+			if (!socket.isClosed()) socket.close();
 			t.join();
 		} catch (InterruptedException e) {
 			System.out.println("thread join interrupted!");

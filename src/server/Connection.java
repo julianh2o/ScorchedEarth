@@ -81,6 +81,10 @@ public class Connection implements Runnable, NetworkEventListener {
 		}
 	}
 	
+	public void finish() {
+		server.getWorld().removeEntity(tank.getId());
+	}
+	
 	public boolean isClosed() {
 		return nh.getSocket().isClosed();
 	}
