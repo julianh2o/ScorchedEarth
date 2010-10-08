@@ -15,9 +15,6 @@ public class Entity implements Serializable {
 	double angle;
 	int id;
 	
-	private transient boolean dirty;
-	int model;
-	
 	public Entity() {
 		position = new Vector2D(0,0);
 		velocity = new Vector2D(0,0);
@@ -32,7 +29,7 @@ public class Entity implements Serializable {
 	}
 	
 	public void render(Window w) {
-		Model modelObject = w.getModel(model);
+		Model modelObject = w.getModel(getModel());
 		if (modelObject != null) {
 			modelObject.renderAt(w,getX(),getY(),angle);
 		}
@@ -54,7 +51,6 @@ public class Entity implements Serializable {
 	
 	public void setX(double x) {
 		position.setX(x);
-		setDirty(true);
 	}
 	
 	public double getY() {
@@ -63,7 +59,6 @@ public class Entity implements Serializable {
 	
 	public void setY(double y) {
 		position.setY(y);
-		setDirty(true);
 	}
 
 	public Vector2D getPosition() {
@@ -72,7 +67,6 @@ public class Entity implements Serializable {
 
 	public void setPosition(Vector2D position) {
 		this.position = position;
-		setDirty(true);
 	}
 
 	public Vector2D getVelocity() {
@@ -81,7 +75,6 @@ public class Entity implements Serializable {
 
 	public void setVelocity(Vector2D velocity) {
 		this.velocity = velocity;
-		setDirty(true);
 	}
 	
 	public double getAngle() {
@@ -90,24 +83,10 @@ public class Entity implements Serializable {
 
 	public void setAngle(double angle) {
 		this.angle = angle;
-		setDirty(true);
 	}
 
 	public int getModel() {
-		return model;
-	}
-
-	public void setModel(int model) {
-		this.model = model;
-		setDirty(true);
-	}
-
-	public void setDirty(boolean dirty) {
-		this.dirty = dirty;
-	}
-
-	public boolean isDirty() {
-		return dirty;
+		return 0;
 	}
 
 	public int getId() {

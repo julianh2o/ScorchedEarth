@@ -70,4 +70,8 @@ public class Tank extends Entity implements Serializable {
 	public double getTankFriction() {
 		return 1.0;
 	}
+	
+	public int getModel() {
+		return 0;
+	}
 }

@@ -16,8 +16,12 @@ public class World extends NetworkObject {
 	
 	List<Entity> entities;
 	List<Tank> tanks;
+	List<Chunk> chunks;
 	
 	public World() {
+		chunks = new LinkedList<Chunk>();
+		chunks.add(new Chunk(100,100));
+		
 		nextId = 0;
 		entities = new LinkedList<Entity>();
 		tanks = new LinkedList<Tank>();
@@ -40,6 +44,10 @@ public class World extends NetworkObject {
 	}
 	
 	public void render(Window w) {
+		for (Chunk chunk : chunks) {
+			chunk.render(w);
+		}
+		
 		for (Entity entity : entities) {
 			entity.render(w);
 		}
