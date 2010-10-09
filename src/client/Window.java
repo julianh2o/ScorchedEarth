@@ -29,6 +29,7 @@ public class Window {
 		models = new ArrayList<Model>();
 		models.add(new Model("resources/tank.png"));
 		models.add(new Model("resources/grass.png"));
+		models.add(new Model("resources/dirt.png"));
 	}
 	
 	public boolean shouldExit() {

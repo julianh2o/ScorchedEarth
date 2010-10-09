@@ -22,6 +22,8 @@ public class Tile implements Serializable {
 		switch(type) {
 			case GRASS:
 				return 1;
+			case DIRT:
+				return 2;
 		}
 		return 0;
 	}

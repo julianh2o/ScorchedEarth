@@ -25,7 +25,7 @@ public class Chunk extends NetworkObject implements Serializable {
 		
 		for (int i=0; i<CHUNK_SIZE; i++) {
 			for (int j=0; j<CHUNK_SIZE; j++) {
-				int rand = (int)(Math.random()*1);
+				int rand = (int)(Math.random()*2);
 				tiles[i][j] = new Tile(Tile.types[rand]);
 			}
 		}

@@ -10,7 +10,6 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import common.util.Log;
-import common.util.Vector2D;
 
 public class Model {
 	Texture texture;
@@ -45,7 +44,7 @@ public class Model {
 //			}
 //			glEnd();
 //			
-			glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
+			glRotatef((float)Math.toDegrees(angle)+90, 0, 0, 1);
 //			
 //			glColor3f(1.0f, 1.0f, 1.0f);
 //			glBegin(GL_TRIANGLES);
@@ -71,8 +70,8 @@ public class Model {
 //		glRotatef(90, 0, 0, 1);
 //		glBegin(GL_QUADS);
 //		{
-//			glTexCoord2f(0.0f, 0.0f);
 //			glVertex2f(-halfWidth, -halfHeight);
+//			glTexCoord2f(0.0f, 0.0f);
 //			
 //			glTexCoord2f(1.0f, 0.0f);
 //			glVertex2f(halfWidth, -halfHeight);
