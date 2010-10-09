@@ -3,6 +3,11 @@ package client;
 import java.util.ArrayList;
 import java.util.List;
 
+//import net.phys2d.math.Vector2f;
+//import net.phys2d.raw.Body;
+//import net.phys2d.raw.World;
+//import net.phys2d.raw.shapes.Box;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -18,6 +23,11 @@ public class Window {
 	List<Model> models;
 	
 	public Window() {
+//		World w = new World(new Vector2f(0, 0), 10);
+//		Body b = new Body("foo", new Box(10, 10), 1);
+//		w.add(b);
+//		w.step();
+		
 		windowed();
 		try {
 			Display.create();
@@ -30,6 +40,8 @@ public class Window {
 		models.add(new Model("resources/tank.png"));
 		models.add(new Model("resources/grass.png"));
 		models.add(new Model("resources/dirt.png"));
+		models.add(new Model("resources/block.png"));
+		models.add(new Model("resources/pink.png"));
 	}
 	
 	public boolean shouldExit() {

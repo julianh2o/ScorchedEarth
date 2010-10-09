@@ -35,6 +35,11 @@ public class Connection implements Runnable, NetworkEventListener {
 		nh.addNetworkEventListener(this);
 		
 		tank = server.getWorld().addTank();
+		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
+			tank.setModel(4);
+		}
+		
 		server.broadcastObject(new WorldUpdate(WorldUpdate.Type.NEW_TANK,tank));
 		
 		tc = new TankController(tank,kb);

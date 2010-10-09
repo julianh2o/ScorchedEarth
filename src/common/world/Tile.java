@@ -8,7 +8,8 @@ public class Tile implements Serializable {
 	public static Type[] types = Type.values();
 	enum Type {
 		GRASS,
-		DIRT
+		DIRT,
+		BLOCK
 	}
 	
 	
@@ -24,6 +25,8 @@ public class Tile implements Serializable {
 				return 1;
 			case DIRT:
 				return 2;
+			case BLOCK:
+				return 3;
 		}
 		return 0;
 	}

@@ -30,6 +30,18 @@ public class Chunk extends NetworkObject implements Serializable {
 			}
 		}
 		
+		for (int i=0; i<20; i++) {
+			int xx = (int)(Math.random()*CHUNK_SIZE);
+			int yy = (int)(Math.random()*CHUNK_SIZE);
+			int len = (int)(Math.random()*20);
+			for (int l=0; l<len; l++) {
+				xx += (int)(Math.random()*3 - 1);
+				yy += (int)(Math.random()*3 - 1);
+				
+				if (xx < 0 || xx > CHUNK_SIZE-1 || yy < 0 || yy > CHUNK_SIZE-1) continue;
+				tiles[xx][yy] = new Tile(Tile.Type.BLOCK);
+			}
+		}
 	}
 	
 	public void render(Window w) {

@@ -31,15 +31,14 @@ public class Server implements Runnable {
 
 	public static void main(String[] args) {
 		int port = 7331;
+		Log.setPrimary(Log.SERVER);
 		new Server(port);
 	}
 	
 	public Server(int port) {
 		world = new World();
-		
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
-		Log.setPrimary(Log.SERVER);
 		Log.p.out("Server Starting");
 		server = NetworkHandler.getServerSocket(port);
 		
@@ -77,7 +76,7 @@ public class Server implements Runnable {
 				Socket s;
 				try {
 					s = server.accept();
-					Log.p.out("Accepted Connection");
+					Log.p.out("Accepted Connection: "+s.getInetAddress().getHostAddress());
 					NetworkHandler nh = new NetworkHandler(s);
 					Connection conn = new Connection(parent,nh);
 					parent.addConnection(conn);

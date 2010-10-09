@@ -8,9 +8,12 @@ import common.util.Vector2D;
 public class Tank extends Entity implements Serializable {
 	private static final long serialVersionUID = 4043804903222636075L;
 	
+	private int model;
+	
 
 	public Tank(int id) {
 		super(id);
+		setModel(0);
 	}
 
 	public void update(long ms) {
@@ -38,6 +41,12 @@ public class Tank extends Entity implements Serializable {
 	public void forward(long ms) {
 		Vector2D dvel = new Vector2D(getAngle());
 		dvel = dvel.scale(getAcceleration());
+		velocity = velocity.add(Util.timeScale(dvel,ms));
+	}
+	
+	public void backward(long ms) {
+		Vector2D dvel = new Vector2D(getAngle());
+		dvel = dvel.scale(-getAcceleration());
 		velocity = velocity.add(Util.timeScale(dvel,ms));
 	}
 	
@@ -72,6 +81,10 @@ public class Tank extends Entity implements Serializable {
 	}
 	
 	public int getModel() {
-		return 0;
+		return model;
+	}
+
+	public void setModel(int model) {
+		this.model = model;
 	}
 }

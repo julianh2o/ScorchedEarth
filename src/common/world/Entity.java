@@ -88,7 +88,7 @@ public class Entity implements Serializable {
 	public int getModel() {
 		return 0;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
