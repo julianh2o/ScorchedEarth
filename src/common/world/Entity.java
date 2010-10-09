@@ -96,4 +96,8 @@ public class Entity implements Serializable {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public void collide(long ms) {
+		position = position.add(velocity.scale(-1.2));
+	}
 }
