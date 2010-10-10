@@ -34,16 +34,16 @@ public class Connection implements Runnable, NetworkEventListener {
 		
 		nh.addNetworkEventListener(this);
 		
-		tank = server.getWorld().addTank();
-		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+		//tank = server.getWorld().addTank();
+		//if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
-			tank.setModel(4);
-		}
+			//tank.setModel(4);
+		//}
 		
-		server.broadcastObject(new WorldUpdate(WorldUpdate.Type.NEW_TANK,tank));
+		//server.broadcastObject(new WorldUpdate(WorldUpdate.Type.NEW_TANK,tank));
 		
-		tc = new TankController(tank,kb);
-		nh.send(server.getWorld());
+		//tc = new TankController(tank,kb);
+		//nh.send(server.getWorld());
 
 		t = new Thread(this);
 		t.start();
@@ -60,7 +60,7 @@ public class Connection implements Runnable, NetworkEventListener {
 	}
 	
 	public void update(long ms) {
-		tc.update(ms);
+		//tc.update();
 	}
 
 	// This method is the entry point for all communication sent by the client
@@ -81,13 +81,13 @@ public class Connection implements Runnable, NetworkEventListener {
 	public void handleClientMessage(ClientMessage message) {
 		switch(message.getType()) {
 			case CLIENT_READY:
-				nh.send(new ClientUpdate(ClientUpdate.Type.GRANT_CONTROL,tank.getId()));
+				//nh.send(new ClientUpdate(ClientUpdate.Type.GRANT_CONTROL,tank.getId()));
 				break;
 		}
 	}
 	
 	public void finish() {
-		server.getWorld().removeEntity(tank.getId());
+		//server.getWorld().removeEntity(tank.getId());
 	}
 	
 	public boolean isClosed() {

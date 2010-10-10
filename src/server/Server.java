@@ -14,7 +14,7 @@ import common.util.Log;
 import common.util.TickTimer;
 import common.world.Entity;
 import common.world.EntityUpdate;
-import common.world.World;
+import common.world.GameWorld;
 
 public class Server implements Runnable {
 	private static final long NETWORK_INTERVAL = 50;
@@ -26,7 +26,7 @@ public class Server implements Runnable {
 	ServerSocket server;
 	Thread t;
 	ChatServer chatServer;
-	World world;
+	GameWorld world;
 	SocketAcceptor acceptor;
 
 	public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class Server implements Runnable {
 	}
 	
 	public Server(int port) {
-		world = new World();
+		world = new GameWorld();
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
 		Log.p.out("Server Starting");
@@ -129,10 +129,10 @@ public class Server implements Runnable {
 	}
 	
 	public void networkUpdate() {
-		for (Entity entity : world.getEntities()) {
-			EntityUpdate update = new EntityUpdate(entity);
-			broadcastObject(update);
-		}
+//		for (Entity entity : world.getEntities()) {
+//			EntityUpdate update = new EntityUpdate(entity);
+//			broadcastObject(update);
+//		}
 	}
 	
 	public void addConnection(Connection conn) {
@@ -167,7 +167,7 @@ public class Server implements Runnable {
 		return chatServer;
 	}
 
-	public World getWorld() {
+	public GameWorld getWorld() {
 		return world;
 	}
 }

@@ -19,7 +19,7 @@ public class WorldUpdate extends NetworkObject implements Serializable {
 		this.object = object;
 	}
 	
-	public void update(World world) {
+	public void update(GameWorld world) {
 		switch(type) {
 			case NEW_TANK:
 				world.addTank((Tank)object);

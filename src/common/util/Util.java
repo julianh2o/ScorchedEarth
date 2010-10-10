@@ -29,7 +29,7 @@ public class Util {
 		return x*(ms/1000.0);
 	}
 	
-	public static Vector2D timeScale(Vector2D v, long ms) {
-		return new Vector2D(timeScale(v.getX(),ms),timeScale(v.getY(),ms));
-	}
+//	public static Vector2D timeScale(Vector2D v, long ms) {
+//		return new Vector2D(timeScale(v.getX(),ms),timeScale(v.getY(),ms));
+//	}
 }

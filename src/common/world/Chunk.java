@@ -3,7 +3,6 @@ package common.world;
 import java.io.Serializable;
 
 import common.network.NetworkObject;
-import common.util.Vector2D;
 
 import client.Window;
 
@@ -17,10 +16,11 @@ public class Chunk extends NetworkObject implements Serializable {
 	
 	Chunk north,east,south,west;
 	
-	private Vector2D position;
+	int x, y;
 	
 	public Chunk(int x, int y) {
-		position = new Vector2D(x,y);
+		this.x = x;
+		this.y = y;
 		
 		tiles = new Tile[CHUNK_SIZE][CHUNK_SIZE];
 		
@@ -102,8 +102,8 @@ public class Chunk extends NetworkObject implements Serializable {
 	}
 
 	public Tile getTileAt(double xx, double yy) {
-		int relx = (int)((xx - position.getX())/TILE_SIZE) + 1;
-		int rely = (int)((yy - position.getY())/TILE_SIZE) + 1;
+		int relx = (int)((xx - x)/TILE_SIZE) + 1;
+		int rely = (int)((yy - y)/TILE_SIZE) + 1;
 		if (!validIndex(relx,rely)) return null;
 		
 		return tiles[relx][rely];

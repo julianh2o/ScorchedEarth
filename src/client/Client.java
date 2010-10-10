@@ -17,12 +17,12 @@ import common.util.Log;
 import common.util.TickTimer;
 import common.world.ClientUpdate;
 import common.world.EntityUpdate;
-import common.world.World;
+import common.world.GameWorld;
 import common.world.WorldUpdate;
 
 public class Client implements NetworkEventListener, Runnable {
 	private NetworkHandler nh;
-	private World world;
+	private GameWorld world;
 	private Window window;
 	private KeyboardHandler kb;
 	private Screen screen;
@@ -60,6 +60,8 @@ public class Client implements NetworkEventListener, Runnable {
 
 	public void run() {
 		Log.p.out("Waiting for world...");
+		world = new GameWorld();
+		
 		while(world == null) {
 			try {
 				Thread.sleep(200);
@@ -84,7 +86,7 @@ public class Client implements NetworkEventListener, Runnable {
 			kb.handle();
 			
 			try {
-				Thread.sleep(10);
+				Thread.sleep(45);
 			} catch (InterruptedException e) {
 				
 			}
@@ -101,11 +103,11 @@ public class Client implements NetworkEventListener, Runnable {
 		if (o instanceof ChatMessage) {
 			ChatMessage message = (ChatMessage)o;
 			Log.p.out("Got Message: " + message.toString());
-		} else if (o instanceof World) {
-			world = (World)o;
+		} else if (o instanceof GameWorld) {
+			world = (GameWorld)o;
 		} else if (o instanceof EntityUpdate) {
-			EntityUpdate update = (EntityUpdate)o;
-			update.update(world.getEntities());
+			//EntityUpdate update = (EntityUpdate)o;
+			//update.update(world.getEntities());
 		} else if (o instanceof WorldUpdate) {
 			WorldUpdate update = (WorldUpdate)o;
 			update.update(world);
@@ -119,7 +121,7 @@ public class Client implements NetworkEventListener, Runnable {
 		return nh;
 	}
 
-	public World getWorld() {
+	public GameWorld getWorld() {
 		return world;
 	}
 

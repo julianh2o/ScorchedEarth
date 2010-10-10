@@ -12,6 +12,7 @@
     <property name="server-class" value="server.Server"/>
 
     <path id="classpath">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
 
@@ -25,14 +26,14 @@
 			debug="true" debuglevel="lines,vars,source"/>
     </target>
 
-    <target name="jar" depends="compile">
+	<!--<target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${client-class}"/>
             </manifest>
         </jar>
-    </target>
+	</target>-->
 
     <target name="run" depends="compile">
 		<java classname="${client-class}" fork="true">
@@ -47,6 +48,7 @@
 	<target name="server" depends="compile">
 		<java classname="${server-class}" fork="true">
 			<classpath>
+                <path refid="classpath"/>
 				<path location="${classes.dir}" />
 			</classpath>
 		</java>
@@ -56,6 +58,6 @@
 		<echo message="${os.name}" />
 	</target>
 
-    <target name="clean-build" depends="clean,jar"/>
+    <target name="clean-build" depends="clean,compile"/>
     <target name="main" depends="clean,run"/>
 </project>

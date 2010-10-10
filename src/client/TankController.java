@@ -16,19 +16,19 @@ public class TankController implements KeyListener {
 		this.kb = kb;
 	}
 	
-	public void update(long ms) {
+	public void update() {
 		if (kb.isDown(Keyboard.KEY_W)) {
-			tank.forward(ms);
+			tank.forward();
 		}
 		if (kb.isDown(Keyboard.KEY_S)) {
-			tank.backward(ms);
+			tank.backward();
 		}
 		
 		if (kb.isDown(Keyboard.KEY_A)) {
-			tank.turnLeft(ms);
+			tank.turnLeft();
 		}
 		if (kb.isDown(Keyboard.KEY_D)) {
-			tank.turnRight(ms);
+			tank.turnRight();
 		}
 	}
 	

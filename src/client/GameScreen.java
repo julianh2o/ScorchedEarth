@@ -8,16 +8,16 @@ import common.key.KeyboardHandler;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.world.Tank;
-import common.world.World;
+import common.world.GameWorld;
 
 public class GameScreen implements Screen, KeyListener {
 	private NetworkHandler nh;
-	private World world;
+	private GameWorld world;
 	
 	private TankController tc;
 	private KeyboardHandler kb;
 	
-	public GameScreen(World world, NetworkHandler nh, KeyboardHandler kb) {
+	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb) {
 		this.nh = nh;
 		this.world = world;
 		this.kb = kb;
@@ -36,7 +36,7 @@ public class GameScreen implements Screen, KeyListener {
 	}
 
 	public void update(long ms) {
-		if (tc != null) tc.update(ms);
+		if (tc != null) tc.update();
 		world.update(ms);
 	}
 	
