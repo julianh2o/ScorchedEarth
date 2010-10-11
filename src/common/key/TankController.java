@@ -1,10 +1,7 @@
-package client;
+package common.key;
 
 import org.lwjgl.input.Keyboard;
 
-import common.key.KeyEvent;
-import common.key.KeyListener;
-import common.key.KeyboardHandler;
 import common.world.Tank;
 
 public class TankController implements KeyListener {
@@ -30,6 +27,8 @@ public class TankController implements KeyListener {
 		if (kb.isDown(Keyboard.KEY_D)) {
 			tank.turnRight();
 		}
+		
+		tank.update();
 	}
 	
 	public void keyPressed(KeyEvent k) {

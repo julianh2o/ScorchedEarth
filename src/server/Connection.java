@@ -1,26 +1,26 @@
 package server;
 
-import client.TankController;
 
 import common.key.KeyEvent;
 import common.key.KeyboardHandler;
+import common.key.TankController;
 import common.network.ChatMessage;
-import common.network.ClientMessage;
+import common.network.ClientReady;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
-import common.network.NetworkObject;
 import common.util.Log;
-import common.world.ClientUpdate;
+import common.world.Chunk;
 import common.world.Tank;
-import common.world.WorldUpdate;
+import common.world.net.GrantTankControl;
+import common.world.net.NewTank;
+import common.world.net.WorldChunk;
 
 // The connection class handles a single connection to the server. This class holds the
 // means of sending objects to each client as well as tightly bound userdata.
 
-public class Connection implements Runnable, NetworkEventListener {
+public class Connection implements NetworkEventListener {
 	private Server server;
-	private Thread t;
 	private NetworkHandler nh;
 	
 	private KeyboardHandler kb;
@@ -34,60 +34,43 @@ public class Connection implements Runnable, NetworkEventListener {
 		
 		nh.addNetworkEventListener(this);
 		
-		//tank = server.getWorld().addTank();
+		tank = server.getWorld().addTank(-1);
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
 			//tank.setModel(4);
 		//}
 		
-		//server.broadcastObject(new WorldUpdate(WorldUpdate.Type.NEW_TANK,tank));
+		tc = new TankController(tank,kb);
 		
-		//tc = new TankController(tank,kb);
-		//nh.send(server.getWorld());
-
-		t = new Thread(this);
-		t.start();
-	}
-	
-	// TODO remove this if we're not using it
-	public void run() {
-		while(true) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-			}
-		}
+		//TODO save and restore a logged-out tank's position.. (implement user persistence lol)
+		Chunk c = server.getWorld().getChunk(5F, 5F);
+		nh.send(new WorldChunk(c));
 	}
 	
 	public void update(long ms) {
-		//tc.update();
+		if (tc != null) tc.update();
 	}
 
 	// This method is the entry point for all communication sent by the client
 	public void networkEventReceived(NetworkEvent e) {
-		NetworkObject o = (NetworkObject)e.object;
-		o.setSender(getName());
+		Object o = (Object)e.object;
 		if (o instanceof ChatMessage) {
 			server.getChatServer().receivedChatMessage(this,(ChatMessage)o);
 		} else if (o instanceof KeyEvent) {
 			kb.update((KeyEvent)o);
-		} else if (o instanceof ClientMessage) {
-			handleClientMessage((ClientMessage)o);
+		} else if (o instanceof ClientReady) {
+			Log.p.out("broadcasting tank");
+			NewTank nt = new NewTank(tank.getId(),tank.getModel(),false);
+			server.broadcastExcept(this,nt);
+			nt.setControl(true);
+			nh.send(nt);
 		} else {
 			Log.p.out("Unknown Object Received: "+o);
 		}
 	}
 	
-	public void handleClientMessage(ClientMessage message) {
-		switch(message.getType()) {
-			case CLIENT_READY:
-				//nh.send(new ClientUpdate(ClientUpdate.Type.GRANT_CONTROL,tank.getId()));
-				break;
-		}
-	}
-	
 	public void finish() {
-		//server.getWorld().removeEntity(tank.getId());
+		server.getWorld().removeEntity(tank.getId());
 	}
 	
 	public boolean isClosed() {

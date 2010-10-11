@@ -1,25 +1,26 @@
-package common.world;
+package common.world.net;
 
-import common.network.NetworkObject;
+import net.phys2d.raw.Body;
+import common.world.Entity;
 
-public class EntityUpdate extends NetworkObject {
+public class EntityUpdate extends Update {
 	private static final long serialVersionUID = -6281198949891263824L;
 	
 	private int id;
 	private float x,y,xvel,yvel,r,rvel;
 	
-	public EntityUpdate(Entity e) {
+	public EntityUpdate(Entity e, Body b) {
 		this.id = e.getId();
-//		this.x = e.getPosition().getX();
-//		this.y = e.getPosition().getY();
-//		this.xvel = e.getVelocity().getX();
-//		this.yvel = e.getVelocity().getY();
-//		this.r = e.getRotation();
-//		this.rvel = e.getAngularVelocity();
+		this.x = b.getPosition().getX();
+		this.y = b.getPosition().getY();
+		this.xvel = b.getVelocity().getX();
+		this.yvel = b.getVelocity().getY();
+		this.r = b.getRotation();
+		this.rvel = b.getAngularVelocity();
 	}
 	
-	public void update(Entity e) {
-		//e.move(x, y);
+	public void update(Entity e, Body b) {
+		b.setPosition(x, y);
 	}
 	
 	public int getId() {

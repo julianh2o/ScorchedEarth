@@ -23,11 +23,6 @@ public class Window {
 	List<Model> models;
 	
 	public Window() {
-//		World w = new World(new Vector2f(0, 0), 10);
-//		Body b = new Body("foo", new Box(10, 10), 1);
-//		w.add(b);
-//		w.step();
-		
 		windowed();
 		try {
 			Display.create();
@@ -37,11 +32,11 @@ public class Window {
 		}
 		
 		models = new ArrayList<Model>();
-		models.add(new Model("resources/tank.png"));
-		models.add(new Model("resources/grass.png"));
-		models.add(new Model("resources/dirt.png"));
-		models.add(new Model("resources/block.png"));
-		models.add(new Model("resources/pink.png"));
+		models.add(new Model("resources/tank.png",1F,1F));
+		models.add(new Model("resources/grass.png",1F,1F));
+		models.add(new Model("resources/dirt.png",1F,1F));
+		models.add(new Model("resources/block.png",1F,1F));
+		models.add(new Model("resources/pink.png",1F,1F));
 	}
 	
 	public boolean shouldExit() {
@@ -91,11 +86,13 @@ public class Window {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluOrtho2D(0, mode.getWidth(), 0, mode.getHeight());
+		gluOrtho2D(0, mode.getWidth()/20F, 0, mode.getHeight()/20F);
+		//gluOrtho2D(0, mode.getWidth()/10, 0, 5);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, mode.getWidth(), mode.getHeight());
+		//glViewport(0, 0, 5, 5);
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		Display.setVSyncEnabled(true);

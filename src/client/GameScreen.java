@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import common.key.KeyEvent;
 import common.key.KeyListener;
 import common.key.KeyboardHandler;
+import common.key.TankController;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.world.Tank;
@@ -30,7 +31,12 @@ public class GameScreen implements Screen, KeyListener {
 	}
 	
 	public void controlTank(int id) {
+		Log.p.out("Trying to control: "+id);
 		Tank t = (Tank)world.findEntity(id);
+		if (t == null) {
+			Log.p.out("ERORR: TANK NOT FOUND");
+			return;
+		}
 		this.tc = new TankController(t,kb);
 		Log.p.out("Controlling tank: "+id);
 	}

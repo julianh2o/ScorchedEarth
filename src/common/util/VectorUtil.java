@@ -1,13 +1,13 @@
 package common.util;
 
-import org.jbox2d.common.Vec2;
+import net.phys2d.math.Vector2f;
 
 public class VectorUtil {
 	
-	public Vec2 create(double angle) {
+	public static Vector2f create(float angle) {
 		float x = (float)Math.cos(angle);
 		float y = (float)Math.sin(angle);
-		return new Vec2(x,y);
+		return new Vector2f(x,y);
 	}
 	
 //	public float getMagnitude() {

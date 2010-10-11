@@ -1,18 +1,43 @@
 package common.world;
 
+import common.util.VectorUtil;
+
+import net.phys2d.math.Vector2f;
+import net.phys2d.raw.Body;
+
 public class Tank extends Entity {
 	private int model;
 	
-	public Tank(int id) {
-		super(id);
+	public Tank(GameWorld world, int id) {
+		super(world, id);
+		
 		setModel(0);
 	}
-
+	
+	public Body getBody() {
+		return getWorld().ebmap.get(this);
+	}
+	
+	public void update() {
+		Body b = getBody();
+		Vector2f vel = new Vector2f(b.getVelocity());
+		Vector2f lateral = VectorUtil.create((float)(b.getRotation() + Math.PI/2));
+		
+		Vector2f result = new Vector2f();
+		vel.projectOntoUnit(lateral, result);
+		
+		result = result.negate();
+		result.scale(.2F);
+		
+		b.adjustVelocity(result);
+	}
 	
 	public void accelerate(float amount) {
-		//Vector2D dvel = new Vector2D(getRotation());
-//		dvel.scale(amount);
-//		adjustVelocity(dvel);
+		Body b = getBody();
+		
+		Vector2f dvel = VectorUtil.create(b.getRotation());
+		dvel.scale(amount);
+		b.adjustVelocity(dvel);
 	}
 	
 	public void forward() {
@@ -23,8 +48,8 @@ public class Tank extends Entity {
 		accelerate(-getAcceleration());
 	}
 	
-	public void rotate(float amount) {
-//		setRotation(getRotation() + amount);
+	public void rotate(float radians) {
+		getBody().adjustRotation(radians);
 	}
 	
 	public void turnLeft() {
@@ -39,7 +64,7 @@ public class Tank extends Entity {
 	
 	public float getActualRotationSpeed() {
 //		return Math.max(getRotationSpeed()*(getVelocity().length()/getMaxSpeed()),getRotationSpeed()/2);
-		return 1F;
+		return .1F;
 	}
 	
 	public float getRotationSpeed() {
@@ -47,7 +72,7 @@ public class Tank extends Entity {
 	}
 	
 	public float getAcceleration() {
-		return 2.0F;
+		return 0.5F;
 	}
 	
 	public float getMaxSpeed() {

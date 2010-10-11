@@ -9,16 +9,18 @@ import java.util.Properties;
 
 import common.key.KeyboardHandler;
 import common.network.ChatMessage;
-import common.network.ClientMessage;
+import common.network.ClientReady;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
-import common.world.ClientUpdate;
-import common.world.EntityUpdate;
 import common.world.GameWorld;
-import common.world.WorldUpdate;
+import common.world.Tank;
+import common.world.net.EntityUpdate;
+import common.world.net.GrantTankControl;
+import common.world.net.NewTank;
+import common.world.net.WorldChunk;
 
 public class Client implements NetworkEventListener, Runnable {
 	private NetworkHandler nh;
@@ -59,8 +61,7 @@ public class Client implements NetworkEventListener, Runnable {
 	}
 
 	public void run() {
-		Log.p.out("Waiting for world...");
-		world = new GameWorld();
+		Log.p.out("Waiting for chunks...");
 		
 		while(world == null) {
 			try {
@@ -74,7 +75,7 @@ public class Client implements NetworkEventListener, Runnable {
 		kb = new KeyboardHandler();
 		screen = new GameScreen(world,nh,kb);
 		
-		nh.send(new ClientMessage(ClientMessage.Type.CLIENT_READY));
+		nh.send(new ClientReady());
 
 		TickTimer tick = new TickTimer();
 		while(!window.shouldExit()) {
@@ -86,7 +87,7 @@ public class Client implements NetworkEventListener, Runnable {
 			kb.handle();
 			
 			try {
-				Thread.sleep(45);
+				Thread.sleep(17);
 			} catch (InterruptedException e) {
 				
 			}
@@ -108,12 +109,24 @@ public class Client implements NetworkEventListener, Runnable {
 		} else if (o instanceof EntityUpdate) {
 			//EntityUpdate update = (EntityUpdate)o;
 			//update.update(world.getEntities());
-		} else if (o instanceof WorldUpdate) {
-			WorldUpdate update = (WorldUpdate)o;
-			update.update(world);
-		} else if (o instanceof ClientUpdate) {
-			ClientUpdate update = (ClientUpdate)o;
-			update.update(this);
+		} else if (o instanceof NewTank) {
+			Log.p.out("adding new tank");
+			NewTank update = (NewTank)o;
+			Tank t = world.addTank(update.getId());
+			t.setModel(update.getModel());
+			if (update.isControl()) {
+				Log.p.out("Controlling new tank");
+				((GameScreen)screen).controlTank(update.getId());
+			}
+		} else if (o instanceof GrantTankControl) {
+			GrantTankControl update = (GrantTankControl)o;
+			if (screen instanceof GameScreen) {
+				((GameScreen)screen).controlTank(update.getId());
+			}
+		} else if (o instanceof WorldChunk) {
+			WorldChunk update = (WorldChunk)o;
+			if (world == null) world = new GameWorld();
+			world.addChunk(update.getChunk());
 		}
 	}
 

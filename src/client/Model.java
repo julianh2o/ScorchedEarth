@@ -13,14 +13,14 @@ import common.util.Log;
 
 public class Model {
 	Texture texture;
-	private float halfWidth;
-	private float halfHeight;
+	private float width, height;
 	
-	public Model(String path) {
+	public Model(String path, float width, float height) {
+		this.width = width;
+		this.setHeight(height);
+		
 		try {
 			texture = TextureLoader.getTexture("PNG", new FileInputStream(path));
-			halfWidth = texture.getTextureWidth()/2;
-			halfHeight = texture.getTextureHeight()/2;
 		} catch (FileNotFoundException e) {
 			Log.p.out("File Not Found when loading texture");
 			e.printStackTrace();
@@ -34,7 +34,6 @@ public class Model {
 		glPushMatrix();
 		{
 			glTranslated(x, y, 0);
-			glScaled(.5, .5, .5);
 			
 //			Vector2D heading = new Vector2D(angle);
 //			glBegin(GL_LINES);
@@ -44,17 +43,8 @@ public class Model {
 //			}
 //			glEnd();
 //			
-			glRotatef((float)Math.toDegrees(angle)+90, 0, 0, 1);
-//			
-//			glColor3f(1.0f, 1.0f, 1.0f);
-//			glBegin(GL_TRIANGLES);
-//			{
-//				glVertex2i(0,-10);
-//				glVertex2i(0,10);
-//				glVertex2i(50,0);
-//			}
-//			glEnd();
-//			
+			glRotatef((float)Math.toDegrees(angle), 0, 0, 1);
+			
 			render(w);
 		}
 		glPopMatrix();
@@ -87,6 +77,8 @@ public class Model {
 //		halfWidth -= 3;
 //		halfHeight -= 3;
 		
+		float halfWidth = width/2;
+		float halfHeight = height/2;
 		
 		glEnable(GL_TEXTURE_2D);
 		texture.bind();
@@ -106,5 +98,13 @@ public class Model {
 		}
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+	}
+
+	public float getHeight() {
+		return height;
 	}
 }

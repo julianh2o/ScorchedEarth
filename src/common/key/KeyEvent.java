@@ -1,8 +1,8 @@
 package common.key;
 
-import common.network.NetworkObject;
+import common.world.net.Update;
 
-public class KeyEvent extends NetworkObject {
+public class KeyEvent extends Update {
 	private static final long serialVersionUID = 2013332506792378711L;
 	
 	private int key;

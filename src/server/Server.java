@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
@@ -9,12 +10,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import common.network.NetworkHandler;
-import common.network.NetworkObject;
 import common.util.Log;
 import common.util.TickTimer;
-import common.world.Entity;
-import common.world.EntityUpdate;
+import common.world.Chunk;
 import common.world.GameWorld;
+import common.world.net.NewTank;
 
 public class Server implements Runnable {
 	private static final long NETWORK_INTERVAL = 50;
@@ -37,6 +37,8 @@ public class Server implements Runnable {
 	
 	public Server(int port) {
 		world = new GameWorld();
+		world.addChunk(new Chunk(0,0));
+		
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
 		Log.p.out("Server Starting");
@@ -157,10 +159,8 @@ public class Server implements Runnable {
 		return connections;
 	}
 
-	public void broadcastObject(NetworkObject o) {
-		for (Connection conn : connections) {
-			conn.getNetworkHandler().send(o);
-		}
+	public void broadcastObject(Serializable o) {
+		broadcastExcept(null,o);
 	}
 
 	public ChatServer getChatServer() {
@@ -169,5 +169,13 @@ public class Server implements Runnable {
 
 	public GameWorld getWorld() {
 		return world;
+	}
+
+	public void broadcastExcept(Connection except, Serializable o) {
+		for (Connection conn : connections) {
+			if (conn != except) {
+				conn.getNetworkHandler().send(o);
+			}
+		}
 	}
 }

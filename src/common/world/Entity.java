@@ -4,10 +4,11 @@ import client.Model;
 import client.Window;
 
 public class Entity {
-	
+	GameWorld world;
 	int id;
 	
-	public Entity(int id) {
+	public Entity(GameWorld world, int id) {
+		this.world = world;
 		this.id = id;
 	}
 	
@@ -30,5 +31,13 @@ public class Entity {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public GameWorld getWorld() {
+		return world;
+	}
+
+	public void setWorld(GameWorld world) {
+		this.world = world;
 	}
 }

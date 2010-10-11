@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -72,7 +73,7 @@ public class NetworkHandler implements Runnable {
 	// All network activity is sent through serializable objects
 	// The behavior of the client/server monitoring this network handler should
 	// check the type/nature of the object and distribute it accordingly
-	public void send(NetworkObject s) {
+	public void send(Serializable s) {
 		try {
 			oos.reset();
 			oos.writeObject(s);
