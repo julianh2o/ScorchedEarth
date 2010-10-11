@@ -65,18 +65,19 @@ public class Renderer {
 	}
 	
 	private static void renderVector(Vector2f vector) {
-//		glPushAttrib(GL_TEXTURE_2D);
-//		glPushMatrix();
+		glPushAttrib(GL_TEXTURE_2D);
+		glPushMatrix();
 		
-//		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_2D);
+		glColor3f(1.0f, 1.0f, 1.0f);
 		
 		glBegin(GL_LINES); {
 			glVertex2f(0,0);
 			glVertex2f(vector.getX(),vector.getY());
 		} glEnd();
 		
-//		glPopMatrix();
-//		glPopAttrib();
+		glPopMatrix();
+		glPopAttrib();
 	}
 
 	public static void test() {

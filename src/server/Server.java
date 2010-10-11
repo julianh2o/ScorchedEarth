@@ -13,8 +13,9 @@ import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
 import common.world.Chunk;
+import common.world.Entity;
 import common.world.GameWorld;
-import common.world.net.NewTank;
+import common.world.net.EntityUpdate;
 
 public class Server implements Runnable {
 	private static final long NETWORK_INTERVAL = 50;
@@ -91,12 +92,18 @@ public class Server implements Runnable {
 	
 	public void run() {
 		TickTimer timer = new TickTimer();
+		
+		int TICK_TIME = (int)(1000F/60F);
+		long remain = 0;
 		while(true) {
 			long ms = timer.tick();
+			remain += ms;
 			
-			world.update(ms);
-			
-			updateConnections(ms);
+			while(remain > TICK_TIME) {
+				world.update();
+				updateConnections();
+				remain -= TICK_TIME;
+			}
 			
 			lastNetworkUpdate += ms;
 			if (lastNetworkUpdate > NETWORK_INTERVAL) {
@@ -112,7 +119,7 @@ public class Server implements Runnable {
 		}
 	}
 	
-	private void updateConnections(long ms) {
+	private void updateConnections() {
 		connectionsLock.readLock().lock();
 		Iterator<Connection> it = connections.iterator();
 		while(it.hasNext()) {
@@ -125,16 +132,16 @@ public class Server implements Runnable {
 				continue;
 			}
 			
-			conn.update(ms);
+			conn.update();
 		}
 		connectionsLock.readLock().unlock();
 	}
 	
 	public void networkUpdate() {
-//		for (Entity entity : world.getEntities()) {
-//			EntityUpdate update = new EntityUpdate(entity);
-//			broadcastObject(update);
-//		}
+		for (Entity entity : world.getEntities()) {
+			EntityUpdate update = new EntityUpdate(entity);
+			broadcastObject(update);
+		}
 	}
 	
 	public void addConnection(Connection conn) {

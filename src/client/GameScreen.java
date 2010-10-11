@@ -15,7 +15,7 @@ public class GameScreen implements Screen, KeyListener {
 	private NetworkHandler nh;
 	private GameWorld world;
 	
-	private TankController tc;
+	TankController tc;
 	private KeyboardHandler kb;
 	
 	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb) {
@@ -41,9 +41,9 @@ public class GameScreen implements Screen, KeyListener {
 		Log.p.out("Controlling tank: "+id);
 	}
 
-	public void update(long ms) {
+	public void update() {
 		if (tc != null) tc.update();
-		world.update(ms);
+		world.update();
 	}
 	
 	public void render(Window w) {

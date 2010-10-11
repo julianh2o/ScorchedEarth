@@ -1,6 +1,8 @@
 package common.world.net;
 
+import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
+import common.util.BodyUtil;
 import common.world.Entity;
 
 public class EntityUpdate extends Update {
@@ -9,7 +11,8 @@ public class EntityUpdate extends Update {
 	private int id;
 	private float x,y,xvel,yvel,r,rvel;
 	
-	public EntityUpdate(Entity e, Body b) {
+	public EntityUpdate(Entity e) {
+		Body b = e.getWorld().getBody(e);
 		this.id = e.getId();
 		this.x = b.getPosition().getX();
 		this.y = b.getPosition().getY();
@@ -19,8 +22,12 @@ public class EntityUpdate extends Update {
 		this.rvel = b.getAngularVelocity();
 	}
 	
-	public void update(Entity e, Body b) {
+	public void update(Entity e) {
+		Body b = e.getWorld().getBody(e);
 		b.setPosition(x, y);
+		BodyUtil.setVelocity(b,new Vector2f(xvel,yvel));
+		b.setRotation(r);
+		BodyUtil.setAngularVelocity(b,rvel);
 	}
 	
 	public int getId() {

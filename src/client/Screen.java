@@ -2,7 +2,7 @@ package client;
 
 public interface Screen {
 	void enter();
-	void update(long ms);
+	void update();
 	void render(Window w);
 	void leave();
 }

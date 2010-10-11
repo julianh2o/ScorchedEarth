@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Properties;
 
+import org.lwjgl.input.Keyboard;
+
+import common.key.KeyEvent;
+import common.key.KeyListener;
 import common.key.KeyboardHandler;
 import common.network.ChatMessage;
 import common.network.ClientReady;
@@ -15,6 +19,7 @@ import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
+import common.world.Entity;
 import common.world.GameWorld;
 import common.world.Tank;
 import common.world.net.EntityUpdate;
@@ -22,12 +27,13 @@ import common.world.net.GrantTankControl;
 import common.world.net.NewTank;
 import common.world.net.WorldChunk;
 
-public class Client implements NetworkEventListener, Runnable {
+public class Client implements KeyListener, NetworkEventListener, Runnable {
 	private NetworkHandler nh;
 	private GameWorld world;
 	private Window window;
 	private KeyboardHandler kb;
 	private Screen screen;
+	boolean halt;
 
 	public static void main(String[] args) throws IOException {
 		Properties p = new Properties();
@@ -62,8 +68,9 @@ public class Client implements NetworkEventListener, Runnable {
 
 	public void run() {
 		Log.p.out("Waiting for chunks...");
+		halt = false;
 		
-		while(world == null) {
+		while(world == null && !halt) {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
@@ -73,18 +80,28 @@ public class Client implements NetworkEventListener, Runnable {
 		
 		window = new Window();
 		kb = new KeyboardHandler();
+		kb.addKeyListener(this);
 		screen = new GameScreen(world,nh,kb);
 		
 		nh.send(new ClientReady());
 
 		TickTimer tick = new TickTimer();
-		while(!window.shouldExit()) {
-			long delta = tick.tick();
+		
+		int TICK_TIME = (int)(1000F/60F);
+		long remain = 0;
+		//TODO Clean this up
+		while(!(window.shouldExit() || halt || nh.getSocket().isClosed())) {
+			long ms = tick.tick();
+			remain += ms;
 			
-			screen.update(delta);
-			window.doRender(screen);
+			while(remain > TICK_TIME && !halt) {
+				screen.update();
+				window.doRender(screen);
+				remain -= TICK_TIME;
+				
+				kb.handle();
+			}
 			
-			kb.handle();
 			
 			try {
 				Thread.sleep(17);
@@ -107,8 +124,9 @@ public class Client implements NetworkEventListener, Runnable {
 		} else if (o instanceof GameWorld) {
 			world = (GameWorld)o;
 		} else if (o instanceof EntityUpdate) {
-			//EntityUpdate update = (EntityUpdate)o;
-			//update.update(world.getEntities());
+			EntityUpdate update = (EntityUpdate)o;
+			Entity entity = world.findEntity(update.getId());
+			if (entity != null) update.update(entity);
 		} else if (o instanceof NewTank) {
 			Log.p.out("adding new tank");
 			NewTank update = (NewTank)o;
@@ -148,5 +166,14 @@ public class Client implements NetworkEventListener, Runnable {
 
 	public Screen getScreen() {
 		return screen;
+	}
+
+	public void keyPressed(KeyEvent k) {
+		if (k.getKey() == Keyboard.KEY_ESCAPE) {
+			halt = true;
+		}
+	}
+
+	public void keyReleased(KeyEvent k) {
 	}
 }

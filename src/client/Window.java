@@ -40,7 +40,7 @@ public class Window {
 	}
 	
 	public boolean shouldExit() {
-		return Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || Display.isCloseRequested();
+		return Display.isCloseRequested();
 	}
 	
 	public void doRender(Screen screen) {

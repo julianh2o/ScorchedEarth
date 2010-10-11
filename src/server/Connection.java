@@ -12,7 +12,6 @@ import common.network.NetworkHandler;
 import common.util.Log;
 import common.world.Chunk;
 import common.world.Tank;
-import common.world.net.GrantTankControl;
 import common.world.net.NewTank;
 import common.world.net.WorldChunk;
 
@@ -42,12 +41,13 @@ public class Connection implements NetworkEventListener {
 		
 		tc = new TankController(tank,kb);
 		
+		
 		//TODO save and restore a logged-out tank's position.. (implement user persistence lol)
 		Chunk c = server.getWorld().getChunk(5F, 5F);
 		nh.send(new WorldChunk(c));
 	}
 	
-	public void update(long ms) {
+	public void update() {
 		if (tc != null) tc.update();
 	}
 
@@ -64,6 +64,13 @@ public class Connection implements NetworkEventListener {
 			server.broadcastExcept(this,nt);
 			nt.setControl(true);
 			nh.send(nt);
+			
+			
+			for (Connection conn : server.getConnections()) {
+				if (conn != this && conn.tank != null) {
+					nh.send(new NewTank(conn.tank.getId(),conn.tank.getModel(),false));
+				}
+			}
 		} else {
 			Log.p.out("Unknown Object Received: "+o);
 		}

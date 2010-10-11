@@ -15,7 +15,7 @@ public class Tank extends Entity {
 	}
 	
 	public Body getBody() {
-		return getWorld().ebmap.get(this);
+		return getWorld().getBody(this);
 	}
 	
 	public void update() {
@@ -63,24 +63,18 @@ public class Tank extends Entity {
 	}
 	
 	public float getActualRotationSpeed() {
-//		return Math.max(getRotationSpeed()*(getVelocity().length()/getMaxSpeed()),getRotationSpeed()/2);
-		return .1F;
+//		float vel = getBody().getVelocity().length();
+//		if (vel == 0) return getRotationSpeed()/2F;
+//		return Math.max(Math.min(getRotationSpeed()/2,getRotationSpeed() - getRotationSpeed()*(1/vel)),getRotationSpeed());
+		return getRotationSpeed();
 	}
 	
 	public float getRotationSpeed() {
-		return 2.0F;
+		return 0.1F;
 	}
 	
 	public float getAcceleration() {
 		return 0.5F;
-	}
-	
-	public float getMaxSpeed() {
-		return 1.5F;
-	}
-	
-	public float getTankFriction() {
-		return 1.0F;
 	}
 	
 	public int getModel() {

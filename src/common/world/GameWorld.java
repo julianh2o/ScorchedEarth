@@ -3,6 +3,7 @@ package common.world;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
@@ -34,6 +35,8 @@ public class GameWorld {
 		if (e instanceof Tank) {
 			body = new Body(new Box(1.0F,1.0F), 1.0F);
 			body.setRestitution(1.0F);
+			body.setDamping(.05F);
+			body.setRotDamping(.05F);
 		} else {
 			body = new Body(new Box(1.0F,1.0F), 1.0F);
 			body.setRestitution(1.0F);
@@ -48,7 +51,7 @@ public class GameWorld {
 	}
 
 	//please call me 60 times per second
-	public void update(long ms) {
+	public void update() {
 		phys.step();
 	}
 	
@@ -113,5 +116,13 @@ public class GameWorld {
 
 	public void addChunk(Chunk chunk) {
 		chunks.add(chunk);
+	}
+	
+	public Set<Entity> getEntities() {
+		return ebmap.keySet();
+	}
+	
+	public Body getBody(Entity e) {
+		return ebmap.get(e);
 	}
 }
