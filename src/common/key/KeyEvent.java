@@ -1,8 +1,11 @@
 package common.key;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import common.world.net.Update;
 
-public class KeyEvent extends Update {
+public class KeyEvent implements Update {
 	private static final long serialVersionUID = 2013332506792378711L;
 	
 	private int key;
@@ -13,6 +16,13 @@ public class KeyEvent extends Update {
 		setKey(key);
 		setDown(down);
 		setTime(System.currentTimeMillis());
+	}
+
+	@Override
+	public void write(DataOutputStream o) throws IOException {
+		o.write(key);
+		o.writeBoolean(down);
+		o.writeLong(time);
 	}
 
 	public void setKey(int key) {

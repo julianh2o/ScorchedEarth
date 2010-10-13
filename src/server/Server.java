@@ -1,7 +1,6 @@
 package server;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
@@ -16,6 +15,7 @@ import common.world.Chunk;
 import common.world.Entity;
 import common.world.GameWorld;
 import common.world.net.EntityUpdate;
+import common.world.net.Update;
 
 public class Server implements Runnable {
 	private static final long NETWORK_INTERVAL = 50;
@@ -74,6 +74,7 @@ public class Server implements Runnable {
 			t.start();
 		}
 		
+		@Override
 		public void run() {
 			while(!halt) {
 				Socket s;
@@ -90,6 +91,7 @@ public class Server implements Runnable {
 		}
 	}
 	
+	@Override
 	public void run() {
 		TickTimer timer = new TickTimer();
 		
@@ -166,7 +168,7 @@ public class Server implements Runnable {
 		return connections;
 	}
 
-	public void broadcastObject(Serializable o) {
+	public void broadcastObject(Update o) {
 		broadcastExcept(null,o);
 	}
 
@@ -178,7 +180,7 @@ public class Server implements Runnable {
 		return world;
 	}
 
-	public void broadcastExcept(Connection except, Serializable o) {
+	public void broadcastExcept(Connection except, Update o) {
 		for (Connection conn : connections) {
 			if (conn != except) {
 				conn.getNetworkHandler().send(o);

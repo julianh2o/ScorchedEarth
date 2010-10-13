@@ -1,11 +1,15 @@
 package common.world.net;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import common.util.BodyUtil;
 import common.world.Entity;
 
-public class EntityUpdate extends Update {
+public class EntityUpdate implements Update, Serializable {
 	private static final long serialVersionUID = -6281198949891263824L;
 	
 	private int id;
@@ -28,6 +32,17 @@ public class EntityUpdate extends Update {
 		BodyUtil.setVelocity(b,new Vector2f(xvel,yvel));
 		b.setRotation(r);
 		BodyUtil.setAngularVelocity(b,rvel);
+	}
+	
+	//writes the update to a stream
+	@Override
+	public void write(DataOutputStream o) throws IOException {
+		o.writeFloat(x);
+		o.writeFloat(x);
+		o.writeFloat(x);
+		o.writeFloat(x);
+		o.writeFloat(x);
+		o.writeFloat(x);
 	}
 	
 	public int getId() {

@@ -7,7 +7,7 @@ public class Chunk {
 	public static int CHUNK_SIZE = 50;
 	public static float TILE_SIZE = 1F;
 	
-	int[][] tiles;
+	short[][] tiles;
 	
 	Chunk north,east,south,west;
 	
@@ -17,11 +17,11 @@ public class Chunk {
 		this.x = x;
 		this.y = y;
 		
-		tiles = new int[CHUNK_SIZE][CHUNK_SIZE];
+		tiles = new short[CHUNK_SIZE][CHUNK_SIZE];
 		
 		for (int i=0; i<CHUNK_SIZE; i++) {
 			for (int j=0; j<CHUNK_SIZE; j++) {
-				int rand = (int)(Math.random()*2);
+				short rand = (short)(Math.random()*2);
 				tiles[i][j] = rand;
 			}
 		}
@@ -40,7 +40,7 @@ public class Chunk {
 		}
 	}
 	
-	public Chunk(float x, float y, int[][] tiles) {
+	public Chunk(float x, float y, short[][] tiles) {
 		this.tiles = tiles;
 	}
 
@@ -89,7 +89,7 @@ public class Chunk {
 		this.west = west;
 	}
 
-	public int[][] getTiles() {
+	public short[][] getTiles() {
 		return tiles;
 	}
 	
@@ -124,7 +124,7 @@ public class Chunk {
 		return CHUNK_SIZE * TILE_SIZE;
 	}
 	
-	public int[][] getChunkData() {
+	public short[][] getChunkData() {
 		return tiles;
 	}
 
