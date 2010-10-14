@@ -5,17 +5,16 @@ import static org.lwjgl.opengl.GL11.*;
 import common.key.KeyEvent;
 import common.key.KeyListener;
 import common.key.KeyboardHandler;
-import common.key.TankController;
 import common.network.NetworkHandler;
 import common.util.Log;
-import common.world.Tank;
+import common.world.Entity;
 import common.world.GameWorld;
+import common.world.behavior.ControlledTankBehavior;
 
 public class GameScreen implements Screen, KeyListener {
 	private NetworkHandler nh;
 	private GameWorld world;
 	
-	TankController tc;
 	private KeyboardHandler kb;
 	
 	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb) {
@@ -32,17 +31,16 @@ public class GameScreen implements Screen, KeyListener {
 	
 	public void controlTank(int id) {
 		Log.p.out("Trying to control: "+id);
-		Tank t = (Tank)world.findEntity(id);
-		if (t == null) {
+		Entity tank = world.findEntity(id);
+		if (tank == null) {
 			Log.p.out("ERORR: TANK NOT FOUND");
 			return;
 		}
-		this.tc = new TankController(t,kb);
+		tank.setBehavior(new ControlledTankBehavior(kb));
 		Log.p.out("Controlling tank: "+id);
 	}
 
 	public void update() {
-		if (tc != null) tc.update();
 		world.update();
 	}
 	
@@ -56,10 +54,10 @@ public class GameScreen implements Screen, KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		nh.send(e);
+		nh.send(NetworkHandler.KEY_EVENT,e.getBytes());
 	}
 
 	public void keyReleased(KeyEvent e) {
-		nh.send(e);
+		nh.send(NetworkHandler.KEY_EVENT,e.getBytes());
 	}
 }

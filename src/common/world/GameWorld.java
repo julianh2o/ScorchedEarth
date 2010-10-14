@@ -5,8 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import common.world.Entity.Type;
+
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
+import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.World;
 import net.phys2d.raw.shapes.Box;
 
@@ -29,22 +32,40 @@ public class GameWorld {
 		
 		nextId = 0;
 	}
+
+	public void generate() {
+		for (int i=0; i<20; i++) {
+			int xx = (int)(Math.random()*Chunk.CHUNK_SIZE);
+			int yy = (int)(Math.random()*Chunk.CHUNK_SIZE);
+			int len = (int)(Math.random()*20);
+			for (int l=0; l<len; l++) {
+				xx += (int)(Math.random()*3 - 1);
+				yy += (int)(Math.random()*3 - 1);
+
+				if (xx < 0 || xx > Chunk.CHUNK_SIZE-1 || yy < 0 || yy > Chunk.CHUNK_SIZE-1) continue;
+				Entity e = new Entity(this, newId(),Entity.Type.BLOCK);
+				addEntity(e,xx*Chunk.TILE_SIZE, yy*Chunk.TILE_SIZE);
+			}
+		}
+	}
 	
-	public void addEntity(Entity e) {
+	public void addEntity(Entity e, float x, float y) {
 		Body body = null;
-		if (e instanceof Tank) {
+		switch(e.getType()) {
+		case TANK:
 			body = new Body(new Box(1.0F,1.0F), 1.0F);
 			body.setRestitution(1.0F);
 			body.setDamping(.05F);
 			body.setRotDamping(.05F);
-		} else {
-			body = new Body(new Box(1.0F,1.0F), 1.0F);
+			break;
+		case BLOCK:
+			body = new StaticBody(new Box(1.0F,1.0F));
 			body.setRestitution(1.0F);
+			break;
 		}
 		
 		if (body != null) {
-		//TODO set this to something useful
-			body.setPosition(15.0F, 15.0F);
+			body.setPosition(x,y);
 			ebmap.put(e,body);
 			phys.add(body);
 		}
@@ -53,6 +74,10 @@ public class GameWorld {
 	//please call me 60 times per second
 	public void update() {
 		phys.step();
+		
+		for (Entity e : getEntities()) {
+			e.update();
+		}
 	}
 	
 	public int getTileAt(double x, double y) {
@@ -72,13 +97,6 @@ public class GameWorld {
 			Body b = ebmap.get(e);
 			Renderer.render(w,b,e);
 		}
-	}
-	
-	public Tank addTank(int id) {
-		if (id == -1) id = newId();
-		Tank tank = new Tank(this,id);
-		addEntity(tank);
-		return tank;
 	}
 	
 	public int newId() {
@@ -124,5 +142,11 @@ public class GameWorld {
 	
 	public Body getBody(Entity e) {
 		return ebmap.get(e);
+	}
+
+	public Entity newEntity(Type type,float x,float y) {
+		Entity e = new Entity(this,newId(),type);
+		addEntity(e,x,y);
+		return e;
 	}
 }

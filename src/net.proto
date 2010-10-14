@@ -1,0 +1,33 @@
+package common.network;
+
+option java_package = "common.network";
+option java_outer_classname = "NetworkProto";
+
+message NetworkEntity {
+	optional int32 id = 1;
+	optional float x = 2;
+	optional float y = 3;
+	optional float xvel = 4;
+	optional float yvel = 5;
+	optional float r = 6;
+	optional float rvel = 7;
+
+	optional int32 model = 8;
+	optional int32 type = 9;
+}
+
+message NetworkKeyEvent {
+	optional int32 key = 1;
+	optional bool down = 2;
+	optional int64 time = 3;
+}
+
+message NetworkMessage {
+	enum Type {
+		CLIENT_READY = 0;
+		GRANT_CONTROL = 1;
+	}
+	
+	optional Type type = 1;
+	optional int32 target = 2;
+}

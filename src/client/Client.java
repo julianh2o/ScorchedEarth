@@ -9,23 +9,20 @@ import java.util.Properties;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import common.key.KeyEvent;
 import common.key.KeyListener;
 import common.key.KeyboardHandler;
-import common.network.ChatMessage;
-import common.network.ClientReady;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkEntity;
+import common.network.NetworkProto.NetworkMessage;
+import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
 import common.util.TickTimer;
 import common.world.Entity;
 import common.world.GameWorld;
-import common.world.Tank;
-import common.world.net.EntityUpdate;
-import common.world.net.GrantTankControl;
-import common.world.net.NewTank;
-import common.world.net.WorldChunk;
 
 public class Client implements KeyListener, NetworkEventListener, Runnable {
 	private NetworkHandler nh;
@@ -51,7 +48,7 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 	}
 
 	public Client(String host, int port) {
-		world = null;
+		world = new GameWorld();
 		
 		Log.setPrimary(Log.CLIENT);
 		Socket s = NetworkHandler.getClientSocket(host,port);
@@ -83,7 +80,7 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		kb.addKeyListener(this);
 		screen = new GameScreen(world,nh,kb);
 		
-		nh.send(new ClientReady());
+		nh.send(NetworkHandler.MESSAGE,NetworkMessage.newBuilder().setType(Type.CLIENT_READY).build().toByteArray());
 
 		TickTimer tick = new TickTimer();
 		
@@ -117,35 +114,58 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 	}
 
 	public void networkEventReceived(NetworkEvent e) {
-		Object o = e.object;
-		if (o instanceof ChatMessage) {
-			ChatMessage message = (ChatMessage)o;
-			Log.p.out("Got Message: " + message.toString());
-		} else if (o instanceof GameWorld) {
-			world = (GameWorld)o;
-		} else if (o instanceof EntityUpdate) {
-			EntityUpdate update = (EntityUpdate)o;
-			Entity entity = world.findEntity(update.getId());
-			if (entity != null) update.update(entity);
-		} else if (o instanceof NewTank) {
-			Log.p.out("adding new tank");
-			NewTank update = (NewTank)o;
-			Tank t = world.addTank(update.getId());
-			t.setModel(update.getModel());
-			if (update.isControl()) {
-				Log.p.out("Controlling new tank");
-				((GameScreen)screen).controlTank(update.getId());
+		int type = e.getType();
+		Log.p.out("Client has event: "+type);
+		switch(type) {
+		case NetworkHandler.CHUNK:
+//			TODO, handle chunks
+			 //e.getData()
+			break;
+		case NetworkHandler.ENTITY_UPDATE:
+			NetworkEntity ne;
+			try {
+				ne = NetworkEntity.parseFrom(e.getData());
+			} catch (InvalidProtocolBufferException e1) {
+				e1.printStackTrace();
+				return;
 			}
-		} else if (o instanceof GrantTankControl) {
-			GrantTankControl update = (GrantTankControl)o;
-			if (screen instanceof GameScreen) {
-				((GameScreen)screen).controlTank(update.getId());
+			Entity entity = world.findEntity(ne.getId());
+			if (entity == null) {
+				Log.p.out("adding entity");
+				entity = world.newEntity(Entity.Type.values()[ne.getType()], 0, 0);
 			}
-		} else if (o instanceof WorldChunk) {
-			WorldChunk update = (WorldChunk)o;
-			if (world == null) world = new GameWorld();
-			world.addChunk(update.getChunk());
+			//entity.updateWith(ne);
+			break;
+		case NetworkHandler.MESSAGE:
+			handleNetworkMessage(e);
+			break;
 		}
+		
+//		} else if (o instanceof WorldChunk) {
+//			WorldChunk update = (WorldChunk)o;
+//			if (world == null) world = new GameWorld();
+//			world.addChunk(update.getChunk());
+//		}
+	}
+
+	private void handleNetworkMessage(NetworkEvent e) {
+		NetworkMessage nm = null;
+		try {
+			nm = NetworkMessage.parseFrom(e.getData());
+		} catch (InvalidProtocolBufferException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		
+		switch(nm.getType()) {
+		case GRANT_CONTROL:
+			if (screen instanceof GameScreen) {
+				((GameScreen)screen).controlTank(nm.getTarget());
+			}
+			break;
+		}
+		
+		
 	}
 
 	public NetworkHandler getNetworkHandler() {

@@ -1,18 +1,20 @@
 package server;
 
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import common.key.KeyEvent;
 import common.key.KeyboardHandler;
-import common.key.TankController;
-import common.network.ChatMessage;
-import common.network.ClientReady;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkKeyEvent;
+import common.network.NetworkProto.NetworkMessage;
+import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
 import common.world.Chunk;
-import common.world.Tank;
-import common.world.net.NewTank;
+import common.world.Entity;
+import common.world.behavior.ControlledTankBehavior;
 import common.world.net.WorldChunk;
 
 // The connection class handles a single connection to the server. This class holds the
@@ -21,10 +23,8 @@ import common.world.net.WorldChunk;
 public class Connection implements NetworkEventListener {
 	private Server server;
 	private NetworkHandler nh;
-	
 	private KeyboardHandler kb;
-	private TankController tc;
-	private Tank tank;
+	private Entity tank;
 	
 	public Connection(Server server, NetworkHandler nh) {
 		kb = new KeyboardHandler();
@@ -33,49 +33,63 @@ public class Connection implements NetworkEventListener {
 		
 		nh.addNetworkEventListener(this);
 		
-		tank = server.getWorld().addTank(-1);
+		tank = server.getWorld().newEntity(Entity.Type.TANK,0,0);
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
 			//tank.setModel(4);
 		//}
 		
-		tc = new TankController(tank,kb);
-		
-		
 		//TODO save and restore a logged-out tank's position.. (implement user persistence lol)
-		Chunk c = server.getWorld().getChunk(5F, 5F);
-		nh.send(new WorldChunk(c));
+		//Chunk c = server.getWorld().getChunk(5F, 5F);
+		//nh.send(NetworkHandler.CHUNK,new WorldChunk(c).getBytes());
 	}
 	
 	public void update() {
-		if (tc != null) tc.update();
+		
 	}
 
 	// This method is the entry point for all communication sent by the client
 	public void networkEventReceived(NetworkEvent e) {
-		Object o = (Object)e.object;
-		if (o instanceof ChatMessage) {
-			server.getChatServer().receivedChatMessage(this,(ChatMessage)o);
-		} else if (o instanceof KeyEvent) {
-			kb.update((KeyEvent)o);
-		} else if (o instanceof ClientReady) {
-			Log.p.out("broadcasting tank");
-			NewTank nt = new NewTank(tank.getId(),tank.getModel(),false);
-			server.broadcastExcept(this,nt);
-			nt.setControl(true);
-			nh.send(nt);
-			
-			
-			for (Connection conn : server.getConnections()) {
-				if (conn != this && conn.tank != null) {
-					nh.send(new NewTank(conn.tank.getId(),conn.tank.getModel(),false));
-				}
+		int type = e.getType();
+		switch (type) {
+		case NetworkHandler.KEY_EVENT:
+			NetworkKeyEvent nke;
+			try {
+				nke = NetworkKeyEvent.parseFrom(e.getData());
+			} catch (InvalidProtocolBufferException e1) {
+				e1.printStackTrace();
+				return; 
 			}
-		} else {
-			Log.p.out("Unknown Object Received: "+o);
+			kb.update(new KeyEvent(nke));
+			break;
+		case NetworkHandler.MESSAGE:
+			handleNetworkMessage(e);
+			break;
 		}
+		//server.getChatServer().receivedChatMessage(this,(ChatMessage)o);
 	}
 	
+	private void handleNetworkMessage(NetworkEvent e) {
+		NetworkMessage nm;
+		try {
+			nm = NetworkMessage.parseFrom(e.getData());
+		} catch (InvalidProtocolBufferException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		
+		switch (nm.getType()) {
+		case CLIENT_READY:
+			Log.p.out("broadcasting tank");
+			server.broadcastBytes(NetworkHandler.ENTITY_UPDATE,tank.getBytes());
+			
+			//TODO streamline this or at least put it on its own line
+			tank.setBehavior(new ControlledTankBehavior(kb));
+			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).setTarget(tank.getId()).build().toByteArray());
+			break;
+		}
+	}
+
 	public void finish() {
 		server.getWorld().removeEntity(tank.getId());
 	}
@@ -92,7 +106,7 @@ public class Connection implements NetworkEventListener {
 		return server;
 	}
 
-	public Tank getTank() {
+	public Entity getTank() {
 		return tank;
 	}
 

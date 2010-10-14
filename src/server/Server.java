@@ -14,11 +14,9 @@ import common.util.TickTimer;
 import common.world.Chunk;
 import common.world.Entity;
 import common.world.GameWorld;
-import common.world.net.EntityUpdate;
-import common.world.net.Update;
 
 public class Server implements Runnable {
-	private static final long NETWORK_INTERVAL = 50;
+	private static final long NETWORK_INTERVAL = 500;
 	private long lastNetworkUpdate;
 	
 	ReadWriteLock connectionsLock;
@@ -39,6 +37,7 @@ public class Server implements Runnable {
 	public Server(int port) {
 		world = new GameWorld();
 		world.addChunk(new Chunk(0,0));
+		//world.generate();
 		
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
@@ -140,9 +139,9 @@ public class Server implements Runnable {
 	}
 	
 	public void networkUpdate() {
+		Log.p.out("Sending entities: "+world.getEntities().size());
 		for (Entity entity : world.getEntities()) {
-			EntityUpdate update = new EntityUpdate(entity);
-			broadcastObject(update);
+			broadcastBytes(NetworkHandler.ENTITY_UPDATE,entity.getBytes());
 		}
 	}
 	
@@ -168,9 +167,6 @@ public class Server implements Runnable {
 		return connections;
 	}
 
-	public void broadcastObject(Update o) {
-		broadcastExcept(null,o);
-	}
 
 	public ChatServer getChatServer() {
 		return chatServer;
@@ -179,11 +175,15 @@ public class Server implements Runnable {
 	public GameWorld getWorld() {
 		return world;
 	}
-
-	public void broadcastExcept(Connection except, Update o) {
+	
+	public void broadcastBytes(int type, byte[] bytes) {
+		broadcastBytesExcept(null,type,bytes);
+	}
+	
+	public void broadcastBytesExcept(Connection except, int type, byte[] bytes) {
 		for (Connection conn : connections) {
 			if (conn != except) {
-				conn.getNetworkHandler().send(o);
+				conn.getNetworkHandler().send(type,bytes);
 			}
 		}
 	}

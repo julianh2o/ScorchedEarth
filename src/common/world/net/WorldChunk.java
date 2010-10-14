@@ -1,8 +1,11 @@
 package common.world.net;
 
+//TODO proto this class
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import common.util.Log;
 import common.world.Chunk;
 
 public class WorldChunk implements Update {
@@ -27,6 +30,17 @@ public class WorldChunk implements Update {
 		}
 		o.writeFloat(x);
 		o.writeFloat(y);
+	}
+	
+	public byte[] getBytes() {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			write(dos);
+		} catch (IOException e) {
+			Log.p.error("Error writing chunk to bytestring", e);
+		}
+		return baos.toByteArray();
 	}
 	
 	public Chunk getChunk() {
