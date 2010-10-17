@@ -1,6 +1,8 @@
 package server;
 
 
+import java.io.IOException;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import common.key.KeyEvent;
@@ -33,15 +35,20 @@ public class Connection implements NetworkEventListener {
 		
 		nh.addNetworkEventListener(this);
 		
-		tank = server.getWorld().newEntity(Entity.Type.TANK,0,0);
-		//if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+		tank = server.getWorld().newEntity(Entity.Type.TANK,0F,0F);
+		
+		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
-			//tank.setModel(4);
-		//}
+			tank.setModel(4);
+		}
 		
 		//TODO save and restore a logged-out tank's position.. (implement user persistence lol)
-		//Chunk c = server.getWorld().getChunk(5F, 5F);
-		//nh.send(NetworkHandler.CHUNK,new WorldChunk(c).getBytes());
+		Chunk c = server.getWorld().getChunk(5F, 5F);
+		try {
+		nh.send(NetworkHandler.CHUNK,new WorldChunk(c).getBytes());
+		} catch (IOException e) {
+			Log.p.error("Error sending chunk",e);
+		}
 	}
 	
 	public void update() {

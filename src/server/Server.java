@@ -139,7 +139,6 @@ public class Server implements Runnable {
 	}
 	
 	public void networkUpdate() {
-		Log.p.out("Sending entities: "+world.getEntities().size());
 		for (Entity entity : world.getEntities()) {
 			broadcastBytes(NetworkHandler.ENTITY_UPDATE,entity.getBytes());
 		}

@@ -16,6 +16,14 @@ message NetworkEntity {
 	optional int32 type = 9;
 }
 
+message NetworkChunk {
+	optional int32 id = 1;
+	optional float x = 2;
+	optional float y = 3;
+	
+	optional bytes data = 4;
+}
+
 message NetworkKeyEvent {
 	optional int32 key = 1;
 	optional bool down = 2;

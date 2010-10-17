@@ -16,6 +16,7 @@ import common.key.KeyboardHandler;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkChunk;
 import common.network.NetworkProto.NetworkEntity;
 import common.network.NetworkProto.NetworkMessage;
 import common.network.NetworkProto.NetworkMessage.Type;
@@ -23,6 +24,7 @@ import common.util.Log;
 import common.util.TickTimer;
 import common.world.Entity;
 import common.world.GameWorld;
+import common.world.net.WorldChunk;
 
 public class Client implements KeyListener, NetworkEventListener, Runnable {
 	private NetworkHandler nh;
@@ -118,8 +120,14 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		Log.p.out("Client has event: "+type);
 		switch(type) {
 		case NetworkHandler.CHUNK:
-//			TODO, handle chunks
-			 //e.getData()
+			Log.p.out("Hey yo, i gots a chunk");
+			try {
+				NetworkChunk nc = NetworkChunk.parseFrom(e.getData());
+				WorldChunk wc = new WorldChunk(nc);
+				//TODO finish this
+			} catch (InvalidProtocolBufferException e2) {
+				e2.printStackTrace();
+			}
 			break;
 		case NetworkHandler.ENTITY_UPDATE:
 			NetworkEntity ne;

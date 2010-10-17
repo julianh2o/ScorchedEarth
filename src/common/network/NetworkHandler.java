@@ -16,7 +16,7 @@ import java.util.Vector;
 import common.util.Log;
 
 // This network handler is designed to handle both the client and server sockets
-// Two static methods provide easy socket creation and should almost always be used
+
 // to create the sockets required by the constructor.
 public class NetworkHandler implements Runnable {
 	public static final int INVALID = -1;
@@ -98,6 +98,7 @@ public class NetworkHandler implements Runnable {
 	
 	public void send(int type, byte[] bytes) {
 		Log.p.out("Sending type: "+type);
+		Log.p.out("Sending size: "+bytes.length);
 		try {
 			dos.writeInt(type);
 			dos.writeInt(bytes.length);
@@ -126,9 +127,13 @@ public class NetworkHandler implements Runnable {
 				size = dis.readInt();
 				bytes = new byte[size];
 				
-				int read = dis.read(bytes, 0, size);
+				int bytesRead = 0;
+				while(bytesRead < size) {
+					Log.p.out("bytes read:"+bytesRead+ " of "+size);
+					bytesRead += dis.read(bytes, bytesRead, size-bytesRead);
+				}
 				
-				if (read < size) {
+				if (bytesRead < size) {
 					Log.p.out("SHORT READ");
 					continue;
 				}

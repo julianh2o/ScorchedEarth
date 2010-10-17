@@ -604,6 +604,410 @@ public final class NetworkProto {
     // @@protoc_insertion_point(class_scope:common.network.NetworkEntity)
   }
   
+  public static final class NetworkChunk extends
+      com.google.protobuf.GeneratedMessage {
+    // Use NetworkChunk.newBuilder() to construct.
+    private NetworkChunk() {
+      initFields();
+    }
+    private NetworkChunk(boolean noInit) {}
+    
+    private static final NetworkChunk defaultInstance;
+    public static NetworkChunk getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public NetworkChunk getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return common.network.NetworkProto.internal_static_common_network_NetworkChunk_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return common.network.NetworkProto.internal_static_common_network_NetworkChunk_fieldAccessorTable;
+    }
+    
+    // optional int32 id = 1;
+    public static final int ID_FIELD_NUMBER = 1;
+    private boolean hasId;
+    private int id_ = 0;
+    public boolean hasId() { return hasId; }
+    public int getId() { return id_; }
+    
+    // optional float x = 2;
+    public static final int X_FIELD_NUMBER = 2;
+    private boolean hasX;
+    private float x_ = 0F;
+    public boolean hasX() { return hasX; }
+    public float getX() { return x_; }
+    
+    // optional float y = 3;
+    public static final int Y_FIELD_NUMBER = 3;
+    private boolean hasY;
+    private float y_ = 0F;
+    public boolean hasY() { return hasY; }
+    public float getY() { return y_; }
+    
+    // optional bytes data = 4;
+    public static final int DATA_FIELD_NUMBER = 4;
+    private boolean hasData;
+    private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
+    public boolean hasData() { return hasData; }
+    public com.google.protobuf.ByteString getData() { return data_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasId()) {
+        output.writeInt32(1, getId());
+      }
+      if (hasX()) {
+        output.writeFloat(2, getX());
+      }
+      if (hasY()) {
+        output.writeFloat(3, getY());
+      }
+      if (hasData()) {
+        output.writeBytes(4, getData());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasId()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, getId());
+      }
+      if (hasX()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(2, getX());
+      }
+      if (hasY()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(3, getY());
+      }
+      if (hasData()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getData());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static common.network.NetworkProto.NetworkChunk parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkChunk parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(common.network.NetworkProto.NetworkChunk prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private common.network.NetworkProto.NetworkChunk result;
+      
+      // Construct using common.network.NetworkProto.NetworkChunk.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new common.network.NetworkProto.NetworkChunk();
+        return builder;
+      }
+      
+      protected common.network.NetworkProto.NetworkChunk internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new common.network.NetworkProto.NetworkChunk();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return common.network.NetworkProto.NetworkChunk.getDescriptor();
+      }
+      
+      public common.network.NetworkProto.NetworkChunk getDefaultInstanceForType() {
+        return common.network.NetworkProto.NetworkChunk.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public common.network.NetworkProto.NetworkChunk build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private common.network.NetworkProto.NetworkChunk buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public common.network.NetworkProto.NetworkChunk buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        common.network.NetworkProto.NetworkChunk returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof common.network.NetworkProto.NetworkChunk) {
+          return mergeFrom((common.network.NetworkProto.NetworkChunk)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(common.network.NetworkProto.NetworkChunk other) {
+        if (other == common.network.NetworkProto.NetworkChunk.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          setId(other.getId());
+        }
+        if (other.hasX()) {
+          setX(other.getX());
+        }
+        if (other.hasY()) {
+          setY(other.getY());
+        }
+        if (other.hasData()) {
+          setData(other.getData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setId(input.readInt32());
+              break;
+            }
+            case 21: {
+              setX(input.readFloat());
+              break;
+            }
+            case 29: {
+              setY(input.readFloat());
+              break;
+            }
+            case 34: {
+              setData(input.readBytes());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int32 id = 1;
+      public boolean hasId() {
+        return result.hasId();
+      }
+      public int getId() {
+        return result.getId();
+      }
+      public Builder setId(int value) {
+        result.hasId = true;
+        result.id_ = value;
+        return this;
+      }
+      public Builder clearId() {
+        result.hasId = false;
+        result.id_ = 0;
+        return this;
+      }
+      
+      // optional float x = 2;
+      public boolean hasX() {
+        return result.hasX();
+      }
+      public float getX() {
+        return result.getX();
+      }
+      public Builder setX(float value) {
+        result.hasX = true;
+        result.x_ = value;
+        return this;
+      }
+      public Builder clearX() {
+        result.hasX = false;
+        result.x_ = 0F;
+        return this;
+      }
+      
+      // optional float y = 3;
+      public boolean hasY() {
+        return result.hasY();
+      }
+      public float getY() {
+        return result.getY();
+      }
+      public Builder setY(float value) {
+        result.hasY = true;
+        result.y_ = value;
+        return this;
+      }
+      public Builder clearY() {
+        result.hasY = false;
+        result.y_ = 0F;
+        return this;
+      }
+      
+      // optional bytes data = 4;
+      public boolean hasData() {
+        return result.hasData();
+      }
+      public com.google.protobuf.ByteString getData() {
+        return result.getData();
+      }
+      public Builder setData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasData = true;
+        result.data_ = value;
+        return this;
+      }
+      public Builder clearData() {
+        result.hasData = false;
+        result.data_ = getDefaultInstance().getData();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:common.network.NetworkChunk)
+    }
+    
+    static {
+      defaultInstance = new NetworkChunk(true);
+      common.network.NetworkProto.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:common.network.NetworkChunk)
+  }
+  
   public static final class NetworkKeyEvent extends
       com.google.protobuf.GeneratedMessage {
     // Use NetworkKeyEvent.newBuilder() to construct.
@@ -1372,6 +1776,11 @@ public final class NetworkProto {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_common_network_NetworkEntity_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_common_network_NetworkChunk_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_common_network_NetworkChunk_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_common_network_NetworkKeyEvent_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -1394,12 +1803,14 @@ public final class NetworkProto {
       "ntity\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022" +
       "\014\n\004xvel\030\004 \001(\002\022\014\n\004yvel\030\005 \001(\002\022\t\n\001r\030\006 \001(\002\022\014" +
       "\n\004rvel\030\007 \001(\002\022\r\n\005model\030\010 \001(\005\022\014\n\004type\030\t \001(" +
-      "\005\":\n\017NetworkKeyEvent\022\013\n\003key\030\001 \001(\005\022\014\n\004dow" +
-      "n\030\002 \001(\010\022\014\n\004time\030\003 \001(\003\"\200\001\n\016NetworkMessage" +
-      "\0221\n\004type\030\001 \001(\0162#.common.network.NetworkM" +
-      "essage.Type\022\016\n\006target\030\002 \001(\005\"+\n\004Type\022\020\n\014C" +
-      "LIENT_READY\020\000\022\021\n\rGRANT_CONTROL\020\001B\036\n\016comm" +
-      "on.networkB\014NetworkProto"
+      "\005\">\n\014NetworkChunk\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002" +
+      "\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\":\n\017NetworkKeyE" +
+      "vent\022\013\n\003key\030\001 \001(\005\022\014\n\004down\030\002 \001(\010\022\014\n\004time\030" +
+      "\003 \001(\003\"\200\001\n\016NetworkMessage\0221\n\004type\030\001 \001(\0162#" +
+      ".common.network.NetworkMessage.Type\022\016\n\006t" +
+      "arget\030\002 \001(\005\"+\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n",
+      "\rGRANT_CONTROL\020\001B\036\n\016common.networkB\014Netw" +
+      "orkProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1414,8 +1825,16 @@ public final class NetworkProto {
               new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Model", "Type", },
               common.network.NetworkProto.NetworkEntity.class,
               common.network.NetworkProto.NetworkEntity.Builder.class);
-          internal_static_common_network_NetworkKeyEvent_descriptor =
+          internal_static_common_network_NetworkChunk_descriptor =
             getDescriptor().getMessageTypes().get(1);
+          internal_static_common_network_NetworkChunk_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_common_network_NetworkChunk_descriptor,
+              new java.lang.String[] { "Id", "X", "Y", "Data", },
+              common.network.NetworkProto.NetworkChunk.class,
+              common.network.NetworkProto.NetworkChunk.Builder.class);
+          internal_static_common_network_NetworkKeyEvent_descriptor =
+            getDescriptor().getMessageTypes().get(2);
           internal_static_common_network_NetworkKeyEvent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkKeyEvent_descriptor,
@@ -1423,7 +1842,7 @@ public final class NetworkProto {
               common.network.NetworkProto.NetworkKeyEvent.class,
               common.network.NetworkProto.NetworkKeyEvent.Builder.class);
           internal_static_common_network_NetworkMessage_descriptor =
-            getDescriptor().getMessageTypes().get(2);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_common_network_NetworkMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkMessage_descriptor,

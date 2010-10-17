@@ -7,6 +7,7 @@ public class Chunk {
 	public static int CHUNK_SIZE = 50;
 	public static float TILE_SIZE = 1F;
 	
+	int id;
 	short[][] tiles;
 	
 	Chunk north,east,south,west;
@@ -14,6 +15,7 @@ public class Chunk {
 	float x, y;
 	
 	public Chunk(float x, float y) {
+		this.id = 0;
 		this.x = x;
 		this.y = y;
 		
@@ -129,5 +131,13 @@ public class Chunk {
 
 	public void setY(float y) {
 		this.y = y;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }
