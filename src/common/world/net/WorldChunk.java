@@ -26,6 +26,16 @@ public class WorldChunk {
 	public WorldChunk(NetworkChunk nc) {
 		setX(nc.getX());
 		setY(nc.getY());
+		ByteString s = nc.getData();
+		byte[] bytes = s.toByteArray();
+
+		int size = Math.sqrt(bytes.length);
+
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				chunkData[i][j] = bytes[j+i*size];
+			}
+		}
 		
 		//TODO parse chunk data from bytes
 	}
