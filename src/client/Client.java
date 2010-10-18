@@ -141,7 +141,7 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			Entity entity = world.findEntity(ne.getId());
 			if (entity == null) {
 				Log.p.out("adding entity");
-				entity = world.newEntity(Entity.Type.values()[ne.getType()], 0, 0);
+				entity = world.newEntity(Entity.Type.values()[ne.getType()], 0, 0, ne.getId());
 			}
 			//entity.updateWith(ne);
 			break;
