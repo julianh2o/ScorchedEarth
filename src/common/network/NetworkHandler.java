@@ -132,6 +132,7 @@ public class NetworkHandler implements Runnable {
 					Log.p.out("bytes read:"+bytesRead+ " of "+size);
 					bytesRead += dis.read(bytes, bytesRead, size-bytesRead);
 				}
+				Log.p.out("Bytes Read: "+bytesRead);
 				
 				if (bytesRead < size) {
 					Log.p.out("SHORT READ");

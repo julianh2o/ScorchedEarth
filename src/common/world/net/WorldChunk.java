@@ -1,20 +1,15 @@
 package common.world.net;
 
 //TODO proto this class
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.google.protobuf.ByteString;
-
 import common.network.NetworkProto.NetworkChunk;
 import common.world.Chunk;
 
 public class WorldChunk {
 	int id;
-	short[][] chunkData;
+	byte[] chunkData;
 	float x, y;
 	
 	public WorldChunk(Chunk c) {
@@ -28,38 +23,17 @@ public class WorldChunk {
 	public WorldChunk(NetworkChunk nc) throws IOException {
 		setX(nc.getX());
 		setY(nc.getY());
-		ByteString s = nc.getData();
-		byte[] bytes = s.toByteArray();
-		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-		DataInputStream in = new DataInputStream(bais);
-
-		int size = (int)Math.sqrt(bytes.length);
-		chunkData = new short[size][size];
 		
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				chunkData[i][j] = in.readShort();
-			}
-		}
+		ByteString s = nc.getData();
+		chunkData = s.toByteArray();
 	}
 
-	public byte[] getChunkDataBytes() throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		DataOutputStream o = new DataOutputStream(baos);
-		for (int i = 0; i < chunkData.length; i++) {
-			for (int j = 0; j < chunkData[i].length; j++) {
-				o.writeShort(chunkData[i][j]);
-			}
-		}
-		return baos.toByteArray();
-	}
-	
 	public byte[] getBytes() throws IOException {
 		return NetworkChunk.newBuilder()
 		.setId(id)
 		.setX(getX())
 		.setY(getY())
-		.setData(ByteString.copyFrom(getChunkDataBytes())).build().toByteArray();
+		.setData(ByteString.copyFrom(chunkData)).build().toByteArray();
 	}
 	
 	public Chunk getChunk() {
@@ -67,11 +41,11 @@ public class WorldChunk {
 		return c;
 	}
 
-	public short[][] getChunkData() {
+	public byte[] getChunkData() {
 		return chunkData;
 	}
 
-	public void setChunkData(short[][] chunkData) {
+	public void setChunkData(byte[] chunkData) {
 		this.chunkData = chunkData;
 	}
 	
