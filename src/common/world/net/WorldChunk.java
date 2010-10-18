@@ -1,7 +1,9 @@
 package common.world.net;
 
 //TODO proto this class
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -23,21 +25,22 @@ public class WorldChunk {
 		this.y = c.getY();
 	}
 	
-	public WorldChunk(NetworkChunk nc) {
+	public WorldChunk(NetworkChunk nc) throws IOException {
 		setX(nc.getX());
 		setY(nc.getY());
 		ByteString s = nc.getData();
 		byte[] bytes = s.toByteArray();
+		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		DataInputStream in = new DataInputStream(bais);
 
-		int size = Math.sqrt(bytes.length);
-
+		int size = (int)Math.sqrt(bytes.length);
+		chunkData = new short[size][size];
+		
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				chunkData[i][j] = bytes[j+i*size];
+				chunkData[i][j] = in.readShort();
 			}
 		}
-		
-		//TODO parse chunk data from bytes
 	}
 
 	public byte[] getChunkDataBytes() throws IOException {

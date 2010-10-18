@@ -2,9 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/lwjgl-2.5"/>
 	<classpathentry exported="true" kind="lib" path="lib/slick-util.jar" sourcepath="/home/julian/javalib/slick"/>
-	<classpathentry kind="lib" path="lib/phys2d.jar" sourcepath="/home/julian/javalib/phys2d-source"/>
-	<classpathentry kind="lib" path="lib/protobuf-java-2.3.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/phys2d.jar" sourcepath="/home/julian/javalib/phys2d-source"/>
+	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

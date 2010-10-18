@@ -1,8 +1,6 @@
 package server;
 
-import common.network.ChatCommand;
 import common.network.ChatMessage;
-import common.util.Log;
 
 public class ChatServer {
 	Server server;

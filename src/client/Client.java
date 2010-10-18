@@ -124,8 +124,9 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			try {
 				NetworkChunk nc = NetworkChunk.parseFrom(e.getData());
 				WorldChunk wc = new WorldChunk(nc);
-				//TODO finish this
-			} catch (InvalidProtocolBufferException e2) {
+				world.addChunk(wc.getChunk());
+			} catch (Exception e2) {
+				//IO or protobuf
 				e2.printStackTrace();
 			}
 			break;
