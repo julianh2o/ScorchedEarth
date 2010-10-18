@@ -51,6 +51,7 @@ public class Entity {
 		if (behavior != null) behavior.update();
 	}
 	
+	@Deprecated
 	public void render(Window w) {
 		Model modelObject = w.getModel(getModel());
 		if (modelObject != null) {
@@ -65,7 +66,7 @@ public class Entity {
 		.setX(getX())
 		.setY(getY())
 		.setXvel(getXVel())
-		.setY(getYVel())
+		.setYvel(getYVel())
 		.setR(getRotation())
 		.setRvel(getAngularVelocity()).build().toByteArray();
 	}
@@ -97,7 +98,7 @@ public class Entity {
 	}
 	
 	public float getY() {
-		return getBody().getPosition().getX();
+		return getBody().getPosition().getY();
 	}
 	
 	public float getXVel() {

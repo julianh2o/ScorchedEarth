@@ -144,19 +144,16 @@ public class GameWorld {
 		return ebmap.get(e);
 	}
 
-	public Entity newEntity(Type type, float x, float y, int id)
-	{
-		int eid;
-		
-		if(id>0)
-			eid = id;
-		else
-			eid = newId();
+	public Entity newEntity(Type type, float x, float y, int id) {
+		if (id == -1) {
+			id = newId();
+		}
 			
-		Entity e = new Entity(this,eid,type);
+		Entity e = new Entity(this,id,type);
 		addEntity(e,x,y);
 		return e;
 	}
+		
 	public Entity newEntity(Type type,float x,float y) {
 		return newEntity(type,x,y,-1);
 	}

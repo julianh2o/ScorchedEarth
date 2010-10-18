@@ -35,7 +35,7 @@ public class Connection implements NetworkEventListener {
 		
 		nh.addNetworkEventListener(this);
 		
-		tank = server.getWorld().newEntity(Entity.Type.TANK,0F,0F);
+		tank = server.getWorld().newEntity(Entity.Type.TANK,5F,5F);
 		
 		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
@@ -45,7 +45,7 @@ public class Connection implements NetworkEventListener {
 		//TODO save and restore a logged-out tank's position.. (implement user persistence lol)
 		Chunk c = server.getWorld().getChunk(5F, 5F);
 		try {
-		nh.send(NetworkHandler.CHUNK,new WorldChunk(c).getBytes());
+			nh.send(NetworkHandler.CHUNK,new WorldChunk(c).getBytes());
 		} catch (IOException e) {
 			Log.p.error("Error sending chunk",e);
 		}
@@ -53,6 +53,14 @@ public class Connection implements NetworkEventListener {
 	
 	public void update() {
 		
+	}
+	
+	public void networkUpdate() {
+		for (Entity e : server.getWorld().getEntities()) {
+			if (e.getId() != tank.getId()) {
+				nh.send(NetworkHandler.ENTITY_UPDATE, e.getBytes());
+			}
+		}
 	}
 
 	// This method is the entry point for all communication sent by the client
@@ -124,4 +132,5 @@ public class Connection implements NetworkEventListener {
 	public NetworkHandler getNetworkHandler() {
 		return nh;
 	}
+
 }

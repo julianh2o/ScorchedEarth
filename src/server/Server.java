@@ -12,7 +12,6 @@ import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
 import common.world.Chunk;
-import common.world.Entity;
 import common.world.GameWorld;
 
 public class Server implements Runnable {
@@ -139,8 +138,8 @@ public class Server implements Runnable {
 	}
 	
 	public void networkUpdate() {
-		for (Entity entity : world.getEntities()) {
-			broadcastBytes(NetworkHandler.ENTITY_UPDATE,entity.getBytes());
+		for (Connection conn : connections) {
+			conn.networkUpdate();
 		}
 	}
 	

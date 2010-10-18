@@ -120,7 +120,6 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		Log.p.out("Client has event: "+type);
 		switch(type) {
 		case NetworkHandler.CHUNK:
-			Log.p.out("Hey yo, i gots a chunk");
 			try {
 				NetworkChunk nc = NetworkChunk.parseFrom(e.getData());
 				WorldChunk wc = new WorldChunk(nc);
@@ -141,9 +140,9 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			Entity entity = world.findEntity(ne.getId());
 			if (entity == null) {
 				Log.p.out("adding entity");
-				entity = world.newEntity(Entity.Type.values()[ne.getType()], 0, 0, ne.getId());
+				entity = world.newEntity(Entity.Type.values()[ne.getType()], ne.getX(), ne.getY(), ne.getId());
 			}
-			//entity.updateWith(ne);
+			entity.updateWith(ne);
 			break;
 		case NetworkHandler.MESSAGE:
 			handleNetworkMessage(e);
