@@ -21,7 +21,12 @@ public class Log {
 	}
 
 	public void out(String s) {
-		write(Util.stamp()+" "+s);
+		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+		StackTraceElement caller = trace[2];
+		String source = caller.getClassName();
+		int line = caller.getLineNumber();
+		
+		write(Util.stamp()+" : "+source+":"+line+" : "+s);
 	}
 
 	public void error(String s, Exception e) {

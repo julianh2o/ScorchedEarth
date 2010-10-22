@@ -2,8 +2,6 @@ package common.world;
 
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
-import client.Model;
-import client.Window;
 
 import common.network.NetworkProto.NetworkEntity;
 import common.util.BodyUtil;
@@ -22,10 +20,13 @@ public class Entity {
 	private Type type;
 	private int model;
 	
+	private boolean dirty;
+	
 	public Entity(GameWorld world, int id, Type type) {
 		this.world = world;
 		this.id = id;
 		this.type = type;
+		this.dirty = true;
 		configureType();
 	}
 	
@@ -33,8 +34,10 @@ public class Entity {
 		switch (type) {
 		case TANK:
 			setBehavior(new TankBehavior());
+			model = 0;
 			break;
 		case BLOCK:
+			model = 3;
 			break;
 		}
 	}
@@ -45,23 +48,17 @@ public class Entity {
 		this.type = type;
 		this.model = model;
 		this.behavior = behavior;
+		this.dirty = true;
 	}
 	
 	public void update() {
 		if (behavior != null) behavior.update();
 	}
 	
-	@Deprecated
-	public void render(Window w) {
-		Model modelObject = w.getModel(getModel());
-		if (modelObject != null) {
-			//modelObject.renderAt(w,getPosition().getX(),getPosition().getY(),getRotation());
-		}
-	}
-	
 	public byte[] getBytes() {
 		return NetworkEntity.newBuilder()
 		.setId(id)
+		.setType(getType().ordinal())
 		.setModel(model)
 		.setX(getX())
 		.setY(getY())
@@ -143,10 +140,21 @@ public class Entity {
 	}
 
 	public void updateWith(NetworkEntity ne) {
+		this.type = Type.values()[ne.getType()];
+		this.model = ne.getModel();
+		
         Body b = getBody(); 
         b.setPosition(ne.getX(), ne.getY()); 
         BodyUtil.setVelocity(b,new Vector2f(ne.getXvel(),ne.getYvel())); 
         b.setRotation(ne.getR()); 
         BodyUtil.setAngularVelocity(b,ne.getRvel()); 
+	}
+
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
+	}
+
+	public boolean isDirty() {
+		return dirty;
 	}
 }

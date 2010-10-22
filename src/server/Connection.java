@@ -10,6 +10,7 @@ import common.key.KeyboardHandler;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkEntity;
 import common.network.NetworkProto.NetworkKeyEvent;
 import common.network.NetworkProto.NetworkMessage;
 import common.network.NetworkProto.NetworkMessage.Type;
@@ -28,7 +29,11 @@ public class Connection implements NetworkEventListener {
 	private KeyboardHandler kb;
 	private Entity tank;
 	
+	private boolean initilized;
+	
 	public Connection(Server server, NetworkHandler nh) {
+		initilized = false;
+		
 		kb = new KeyboardHandler();
 		this.server = server;
 		this.nh = nh;
@@ -37,8 +42,9 @@ public class Connection implements NetworkEventListener {
 		
 		tank = server.getWorld().newEntity(Entity.Type.TANK,5F,5F);
 		
-		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
-		//if (nh.getSocket().getInetAddress().getHostAddress().equals("127.0.0.1")) {
+//		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+		if (nh.getSocket().getInetAddress().getHostAddress().equals("67.161.1.188")) {
+			Log.p.out("Pink Ranger!");
 			tank.setModel(4);
 		}
 		
@@ -57,31 +63,41 @@ public class Connection implements NetworkEventListener {
 	
 	public void networkUpdate() {
 		for (Entity e : server.getWorld().getEntities()) {
-			if (e.getId() != tank.getId()) {
-				nh.send(NetworkHandler.ENTITY_UPDATE, e.getBytes());
-			}
+			if (!initilized || e.isDirty()) {
+					nh.send(NetworkHandler.ENTITY_UPDATE, e.getBytes());
+				}
 		}
 	}
 
 	// This method is the entry point for all communication sent by the client
-	public void networkEventReceived(NetworkEvent e) {
+	public void networkEventReceived(NetworkEvent event) {
+		try {
+			handleNetworkEvent(event);
+		} catch (Exception e) {
+			Log.p.error("Error handling network event",e);
+			return; 
+		}
+	}
+	
+	//TODO change the exception on this
+	public void handleNetworkEvent(NetworkEvent e) throws Exception {
 		int type = e.getType();
 		switch (type) {
 		case NetworkHandler.KEY_EVENT:
 			NetworkKeyEvent nke;
-			try {
-				nke = NetworkKeyEvent.parseFrom(e.getData());
-			} catch (InvalidProtocolBufferException e1) {
-				e1.printStackTrace();
-				return; 
-			}
+			nke = NetworkKeyEvent.parseFrom(e.getData());
 			kb.update(new KeyEvent(nke));
 			break;
 		case NetworkHandler.MESSAGE:
 			handleNetworkMessage(e);
 			break;
+		case NetworkHandler.ENTITY_UPDATE:
+			NetworkEntity ne = NetworkEntity.parseFrom(e.getData());
+			if (tank.getId() == ne.getId()) {
+				tank.updateWith(ne);
+			}
+			break;
 		}
-		//server.getChatServer().receivedChatMessage(this,(ChatMessage)o);
 	}
 	
 	private void handleNetworkMessage(NetworkEvent e) {

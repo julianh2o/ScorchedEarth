@@ -15,6 +15,8 @@ public class GameScreen implements Screen, KeyListener {
 	private NetworkHandler nh;
 	private GameWorld world;
 	
+	private Entity tank;
+	
 	private KeyboardHandler kb;
 	
 	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb) {
@@ -36,6 +38,7 @@ public class GameScreen implements Screen, KeyListener {
 			Log.p.out("ERORR: TANK NOT FOUND");
 			return;
 		}
+		this.setTank(tank);
 		tank.setBehavior(new ControlledTankBehavior(kb));
 		Log.p.out("Controlling tank: "+id);
 	}
@@ -59,5 +62,13 @@ public class GameScreen implements Screen, KeyListener {
 
 	public void keyReleased(KeyEvent e) {
 		nh.send(NetworkHandler.KEY_EVENT,e.getBytes());
+	}
+
+	public void setTank(Entity tank) {
+		this.tank = tank;
+	}
+
+	public Entity getTank() {
+		return tank;
 	}
 }

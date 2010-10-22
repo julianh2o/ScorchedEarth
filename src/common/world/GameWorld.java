@@ -34,10 +34,10 @@ public class GameWorld {
 	}
 
 	public void generate() {
-		for (int i=0; i<20; i++) {
+		for (int i=0; i<10; i++) {
 			int xx = (int)(Math.random()*Chunk.CHUNK_SIZE);
 			int yy = (int)(Math.random()*Chunk.CHUNK_SIZE);
-			int len = (int)(Math.random()*20);
+			int len = (int)(Math.random()*10);
 			for (int l=0; l<len; l++) {
 				xx += (int)(Math.random()*3 - 1);
 				yy += (int)(Math.random()*3 - 1);
@@ -59,8 +59,9 @@ public class GameWorld {
 			body.setRotDamping(.05F);
 			break;
 		case BLOCK:
-			body = new StaticBody(new Box(1.0F,1.0F));
-			body.setRestitution(1.0F);
+			body = new StaticBody(new Box(1F,1F));
+			body.setRestitution(0.0F);
+			body.setRotatable(false);
 			break;
 		}
 		

@@ -27,12 +27,16 @@ import common.world.GameWorld;
 import common.world.net.WorldChunk;
 
 public class Client implements KeyListener, NetworkEventListener, Runnable {
+	private static final long NETWORK_INTERVAL = 50;
+	
 	private NetworkHandler nh;
 	private GameWorld world;
 	private Window window;
 	private KeyboardHandler kb;
-	private Screen screen;
+	private GameScreen screen;
 	boolean halt;
+	
+	private long lastNetworkUpdate;
 
 	public static void main(String[] args) throws IOException {
 		Properties p = new Properties();
@@ -98,6 +102,12 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 				window.doRender(screen);
 				remain -= TICK_TIME;
 				
+				lastNetworkUpdate += ms;
+				if (lastNetworkUpdate > NETWORK_INTERVAL) {
+					networkUpdate();
+					lastNetworkUpdate = 0;
+				}
+				
 				kb.handle();
 			}
 			
@@ -115,9 +125,12 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		System.exit(0);
 	}
 
+	private void networkUpdate() {
+		if (screen.getTank() != null) nh.send(NetworkHandler.ENTITY_UPDATE, screen.getTank().getBytes());
+	}
+
 	public void networkEventReceived(NetworkEvent e) {
 		int type = e.getType();
-		Log.p.out("Client has event: "+type);
 		switch(type) {
 		case NetworkHandler.CHUNK:
 			try {
@@ -139,7 +152,6 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			}
 			Entity entity = world.findEntity(ne.getId());
 			if (entity == null) {
-				Log.p.out("adding entity");
 				entity = world.newEntity(Entity.Type.values()[ne.getType()], ne.getX(), ne.getY(), ne.getId());
 			}
 			entity.updateWith(ne);
@@ -148,12 +160,6 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			handleNetworkMessage(e);
 			break;
 		}
-		
-//		} else if (o instanceof WorldChunk) {
-//			WorldChunk update = (WorldChunk)o;
-//			if (world == null) world = new GameWorld();
-//			world.addChunk(update.getChunk());
-//		}
 	}
 
 	private void handleNetworkMessage(NetworkEvent e) {

@@ -97,8 +97,6 @@ public class NetworkHandler implements Runnable {
 //	}
 	
 	public void send(int type, byte[] bytes) {
-		Log.p.out("Sending type: "+type);
-		Log.p.out("Sending size: "+bytes.length);
 		try {
 			dos.writeInt(type);
 			dos.writeInt(bytes.length);
@@ -129,10 +127,8 @@ public class NetworkHandler implements Runnable {
 				
 				int bytesRead = 0;
 				while(bytesRead < size) {
-					Log.p.out("bytes read:"+bytesRead+ " of "+size);
 					bytesRead += dis.read(bytes, bytesRead, size-bytesRead);
 				}
-				Log.p.out("Bytes Read: "+bytesRead);
 				
 				if (bytesRead < size) {
 					Log.p.out("SHORT READ");
@@ -149,7 +145,6 @@ public class NetworkHandler implements Runnable {
 				Log.p.error("Could not read from stream",e);
 			}
 			if (type == INVALID) continue;
-			Log.p.out("Read Packet: "+type);
 			
 			broadcastEvent(new NetworkEvent(type,bytes));
 		}

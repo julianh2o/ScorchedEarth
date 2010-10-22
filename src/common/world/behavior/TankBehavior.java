@@ -21,6 +21,10 @@ public class TankBehavior extends Behavior {
 		result.scale(.2F);
 
 		b.adjustVelocity(result);
+		
+		if (vel.length() > 0) {
+			entity.setDirty(true);
+		}
 	}
 
 	public void accelerate(float amount) {

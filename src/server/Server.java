@@ -12,10 +12,11 @@ import common.network.NetworkHandler;
 import common.util.Log;
 import common.util.TickTimer;
 import common.world.Chunk;
+import common.world.Entity;
 import common.world.GameWorld;
 
 public class Server implements Runnable {
-	private static final long NETWORK_INTERVAL = 500;
+	private static final long NETWORK_INTERVAL = 50;
 	private long lastNetworkUpdate;
 	
 	ReadWriteLock connectionsLock;
@@ -36,7 +37,7 @@ public class Server implements Runnable {
 	public Server(int port) {
 		world = new GameWorld();
 		world.addChunk(new Chunk(0,0));
-		//world.generate();
+		world.generate();
 		
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
@@ -140,6 +141,10 @@ public class Server implements Runnable {
 	public void networkUpdate() {
 		for (Connection conn : connections) {
 			conn.networkUpdate();
+		}
+		
+		for (Entity e : world.getEntities()) {
+			e.setDirty(false);
 		}
 	}
 	
