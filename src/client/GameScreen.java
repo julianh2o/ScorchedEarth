@@ -2,9 +2,10 @@ package client;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import common.key.KeyEvent;
-import common.key.KeyListener;
-import common.key.KeyboardHandler;
+import common.input.KeyEvent;
+import common.input.KeyListener;
+import common.input.KeyboardHandler;
+import common.input.MouseHandler;
 import common.network.NetworkHandler;
 import common.util.Log;
 import common.world.Entity;
@@ -18,11 +19,13 @@ public class GameScreen implements Screen, KeyListener {
 	private Entity tank;
 	
 	private KeyboardHandler kb;
+	private MouseHandler mh;
 	
-	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb) {
+	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb, MouseHandler mh) {
 		this.nh = nh;
 		this.world = world;
 		this.kb = kb;
+		this.mh = mh;
 		
 		kb.addKeyListener(this);
 	}
@@ -39,7 +42,7 @@ public class GameScreen implements Screen, KeyListener {
 			return;
 		}
 		this.setTank(tank);
-		tank.setBehavior(new ControlledTankBehavior(kb));
+		tank.setBehavior(new ControlledTankBehavior(kb,mh));
 		Log.p.out("Controlling tank: "+id);
 	}
 

@@ -55,7 +55,7 @@ public class Chunk {
 	
 	public void renderTile(Window w, int x, int y) {
 		Model m = w.getModel(Tile.getModel(tiles[getIndex(x,y)]));
-		m.renderAt(w, x*TILE_SIZE, y*TILE_SIZE, 0);
+		m.renderAt(w, x*TILE_SIZE, y*TILE_SIZE, 0,0);
 	}
 
 	public Chunk getNorth() {

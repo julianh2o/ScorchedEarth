@@ -1,4 +1,4 @@
-package common.key;
+package common.input;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

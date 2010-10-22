@@ -1,7 +1,8 @@
-package common.key;
+package common.input;
 
 import java.util.HashMap;
 import java.util.Vector;
+
 import org.lwjgl.input.Keyboard;
 
 public class KeyboardHandler {
@@ -26,6 +27,7 @@ public class KeyboardHandler {
 				broadcastReleasedEvent(e);
 			}
 		}
+		
 	}
 	
 	public void update(KeyEvent e) {

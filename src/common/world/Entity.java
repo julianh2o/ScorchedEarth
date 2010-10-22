@@ -20,12 +20,15 @@ public class Entity {
 	private Type type;
 	private int model;
 	
+	private float aim;
+	
 	private boolean dirty;
 	
 	public Entity(GameWorld world, int id, Type type) {
 		this.world = world;
 		this.id = id;
 		this.type = type;
+		this.aim = 0;
 		this.dirty = true;
 		configureType();
 	}
@@ -156,5 +159,13 @@ public class Entity {
 
 	public boolean isDirty() {
 		return dirty;
+	}
+
+	public void setAim(float aim) {
+		this.aim = aim;
+	}
+
+	public float getAim() {
+		return aim;
 	}
 }

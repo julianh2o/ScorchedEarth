@@ -1,13 +1,11 @@
 package common.util;
 
-import net.phys2d.math.Vector2f;
-
 public class VectorUtil {
 	
-	public static Vector2f create(float angle) {
+	public static net.phys2d.math.Vector2f create(float angle) {
 		float x = (float)Math.cos(angle);
 		float y = (float)Math.sin(angle);
-		return new Vector2f(x,y);
+		return new net.phys2d.math.Vector2f(x,y);
 	}
 	
 //	public float getMagnitude() {
@@ -19,9 +17,9 @@ public class VectorUtil {
 //		return new Vector2D(x/mag, y/mag);
 //	}
 //
-//	public double getAngle() {
-//		return Math.atan2(x,y);
-//	}
+	public static float getAngle(org.lwjgl.util.vector.Vector2f v) {
+		return (float)(Math.atan2(v.x,-v.y) - Math.PI/2);
+	}
 //
 //	public double angleTo(Vector2D v) {
 //		return Math.abs(getAngle() - v.getAngle());

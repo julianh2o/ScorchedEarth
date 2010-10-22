@@ -1,4 +1,4 @@
-package common.key;
+package common.input;
 
 public interface KeyListener {
 	public void keyPressed(KeyEvent k);

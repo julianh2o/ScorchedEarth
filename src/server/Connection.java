@@ -5,8 +5,8 @@ import java.io.IOException;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import common.key.KeyEvent;
-import common.key.KeyboardHandler;
+import common.input.KeyEvent;
+import common.input.KeyboardHandler;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
@@ -42,8 +42,8 @@ public class Connection implements NetworkEventListener {
 		
 		tank = server.getWorld().newEntity(Entity.Type.TANK,5F,5F);
 		
-//		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
-		if (nh.getSocket().getInetAddress().getHostAddress().equals("67.161.1.188")) {
+		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+//		if (nh.getSocket().getInetAddress().getHostAddress().equals("67.161.1.188")) {
 			Log.p.out("Pink Ranger!");
 			tank.setModel(4);
 		}
@@ -115,7 +115,7 @@ public class Connection implements NetworkEventListener {
 			server.broadcastBytes(NetworkHandler.ENTITY_UPDATE,tank.getBytes());
 			
 			//TODO streamline this or at least put it on its own line
-			tank.setBehavior(new ControlledTankBehavior(kb));
+			tank.setBehavior(new ControlledTankBehavior(kb,null));
 			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).setTarget(tank.getId()).build().toByteArray());
 			break;
 		}

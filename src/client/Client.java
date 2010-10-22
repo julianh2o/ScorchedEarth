@@ -7,12 +7,18 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Properties;
 
+import net.phys2d.math.Vector2f;
+
 import org.lwjgl.input.Keyboard;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import common.key.KeyEvent;
-import common.key.KeyListener;
-import common.key.KeyboardHandler;
+
+import common.input.KeyEvent;
+import common.input.KeyListener;
+import common.input.KeyboardHandler;
+import common.input.MouseEvent;
+import common.input.MouseHandler;
+import common.input.MouseListener;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
@@ -22,17 +28,19 @@ import common.network.NetworkProto.NetworkMessage;
 import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
 import common.util.TickTimer;
+import common.util.VectorUtil;
 import common.world.Entity;
 import common.world.GameWorld;
 import common.world.net.WorldChunk;
 
-public class Client implements KeyListener, NetworkEventListener, Runnable {
+public class Client implements MouseListener, KeyListener, NetworkEventListener, Runnable {
 	private static final long NETWORK_INTERVAL = 50;
 	
 	private NetworkHandler nh;
 	private GameWorld world;
 	private Window window;
 	private KeyboardHandler kb;
+	private MouseHandler mh;
 	private GameScreen screen;
 	boolean halt;
 	
@@ -50,13 +58,13 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		}
 		String host = p.getProperty("host");
 		
+		Log.setPrimary(Log.CLIENT);
 		new Client(host,7331);
 	}
 
 	public Client(String host, int port) {
 		world = new GameWorld();
 		
-		Log.setPrimary(Log.CLIENT);
 		Socket s = NetworkHandler.getClientSocket(host,port);
 		if (s != null) {
 			nh = new NetworkHandler(s);
@@ -82,9 +90,14 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 		}
 		
 		window = new Window();
+		Log.p.out(window.getView().toString());
+		
 		kb = new KeyboardHandler();
+		mh = new MouseHandler(window.getView());
 		kb.addKeyListener(this);
-		screen = new GameScreen(world,nh,kb);
+		mh.addMouseListener(this);
+		
+		screen = new GameScreen(world,nh,kb,mh);
 		
 		nh.send(NetworkHandler.MESSAGE,NetworkMessage.newBuilder().setType(Type.CLIENT_READY).build().toByteArray());
 
@@ -109,6 +122,7 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 				}
 				
 				kb.handle();
+				mh.handle();
 			}
 			
 			
@@ -178,8 +192,6 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 			}
 			break;
 		}
-		
-		
 	}
 
 	public NetworkHandler getNetworkHandler() {
@@ -209,5 +221,26 @@ public class Client implements KeyListener, NetworkEventListener, Runnable {
 	}
 
 	public void keyReleased(KeyEvent k) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+//		Log.p.out("x:"+e.x);
+//		Log.p.out("y:"+e.y);
+//		Log.p.out("w"+e.wheel);
+//		Log.p.out("b:"+e.button);
+//		Log.p.out("state:"+(e.state?"true":"false"));
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseWheel(MouseEvent e) {
 	}
 }

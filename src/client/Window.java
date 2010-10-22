@@ -1,21 +1,19 @@
 package client;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.util.glu.GLU.gluOrtho2D;
+
 import java.util.ArrayList;
 import java.util.List;
 
-//import net.phys2d.math.Vector2f;
-//import net.phys2d.raw.Body;
-//import net.phys2d.raw.World;
-//import net.phys2d.raw.shapes.Box;
-
 import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.util.glu.GLU.*;
 
 public class Window {
 	private DisplayMode	mode;
@@ -32,11 +30,11 @@ public class Window {
 		}
 		
 		models = new ArrayList<Model>();
-		models.add(new Model("resources/tank.png",1F,1F));
+		models.add(new Model("resources/tank.png","resources/barrel.png",1F,1F));
 		models.add(new Model("resources/grass.png",1F,1F));
 		models.add(new Model("resources/dirt.png",1F,1F));
 		models.add(new Model("resources/block.png",1F,1F));
-		models.add(new Model("resources/pink.png",1F,1F));
+		models.add(new Model("resources/pink.png","resources/barrel.png",1F,1F));
 	}
 	
 	public boolean shouldExit() {
@@ -45,7 +43,6 @@ public class Window {
 	
 	public void doRender(Screen screen) {
 		if (Display.isVisible()) {
-			processKeyboard();
 			screen.render(this);
 		}
 		Display.update();
@@ -71,28 +68,14 @@ public class Window {
 		}
 	}
 	
-	private void processKeyboard() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_M)) {
-			if (fullscreen) 
-				windowed();
-			else
-				fullscreen();
-		}
-		
-		while ( Mouse.next() );
-	}
-	
 	private void glInit() {
-		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		gluOrtho2D(0, mode.getWidth()/20F, 0, mode.getHeight()/20F);
-		//gluOrtho2D(0, mode.getWidth()/10, 0, 5);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glViewport(0, 0, mode.getWidth(), mode.getHeight());
-		//glViewport(0, 0, 5, 5);
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		Display.setVSyncEnabled(true);
@@ -115,5 +98,9 @@ public class Window {
 	
 	public Model getModel(int id) {
 		return models.get(id);
+	}
+
+	public View getView() {
+		return new View(0,0,mode.getWidth()/20F,mode.getHeight()/20F,mode.getWidth(),mode.getHeight());
 	}
 }
