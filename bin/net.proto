@@ -14,6 +14,8 @@ message NetworkEntity {
 
 	optional int32 model = 8;
 	optional int32 type = 9;
+	
+	optional float aim = 10;
 }
 
 message NetworkChunk {

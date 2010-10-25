@@ -7,12 +7,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Properties;
 
-import net.phys2d.math.Vector2f;
-
 import org.lwjgl.input.Keyboard;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-
 import common.input.KeyEvent;
 import common.input.KeyListener;
 import common.input.KeyboardHandler;
@@ -28,7 +25,6 @@ import common.network.NetworkProto.NetworkMessage;
 import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
 import common.util.TickTimer;
-import common.util.VectorUtil;
 import common.world.Entity;
 import common.world.GameWorld;
 import common.world.net.WorldChunk;
@@ -165,6 +161,7 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 				return;
 			}
 			Entity entity = world.findEntity(ne.getId());
+			//Log.p.out("got entity update:"+ne.getId());
 			if (entity == null) {
 				entity = world.newEntity(Entity.Type.values()[ne.getType()], ne.getX(), ne.getY(), ne.getId());
 			}
@@ -187,9 +184,7 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 		
 		switch(nm.getType()) {
 		case GRANT_CONTROL:
-			if (screen instanceof GameScreen) {
 				((GameScreen)screen).controlTank(nm.getTarget());
-			}
 			break;
 		}
 	}

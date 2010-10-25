@@ -64,8 +64,10 @@ public class Connection implements NetworkEventListener {
 	public void networkUpdate() {
 		for (Entity e : server.getWorld().getEntities()) {
 			if (!initilized || e.isDirty()) {
+				if (e != tank) {
 					nh.send(NetworkHandler.ENTITY_UPDATE, e.getBytes());
 				}
+			}
 		}
 	}
 

@@ -98,6 +98,13 @@ public final class NetworkProto {
     public boolean hasType() { return hasType; }
     public int getType() { return type_; }
     
+    // optional float aim = 10;
+    public static final int AIM_FIELD_NUMBER = 10;
+    private boolean hasAim;
+    private float aim_ = 0F;
+    public boolean hasAim() { return hasAim; }
+    public float getAim() { return aim_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -133,6 +140,9 @@ public final class NetworkProto {
       }
       if (hasType()) {
         output.writeInt32(9, getType());
+      }
+      if (hasAim()) {
+        output.writeFloat(10, getAim());
       }
       getUnknownFields().writeTo(output);
     }
@@ -178,6 +188,10 @@ public final class NetworkProto {
       if (hasType()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(9, getType());
+      }
+      if (hasAim()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(10, getAim());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -364,6 +378,9 @@ public final class NetworkProto {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasAim()) {
+          setAim(other.getAim());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -423,6 +440,10 @@ public final class NetworkProto {
             }
             case 72: {
               setType(input.readInt32());
+              break;
+            }
+            case 85: {
+              setAim(input.readFloat());
               break;
             }
           }
@@ -589,6 +610,24 @@ public final class NetworkProto {
       public Builder clearType() {
         result.hasType = false;
         result.type_ = 0;
+        return this;
+      }
+      
+      // optional float aim = 10;
+      public boolean hasAim() {
+        return result.hasAim();
+      }
+      public float getAim() {
+        return result.getAim();
+      }
+      public Builder setAim(float value) {
+        result.hasAim = true;
+        result.aim_ = value;
+        return this;
+      }
+      public Builder clearAim() {
+        result.hasAim = false;
+        result.aim_ = 0F;
         return this;
       }
       
@@ -1799,18 +1838,18 @@ public final class NetworkProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tnet.proto\022\016common.network\"\203\001\n\rNetworkE" +
+      "\n\tnet.proto\022\016common.network\"\220\001\n\rNetworkE" +
       "ntity\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022" +
       "\014\n\004xvel\030\004 \001(\002\022\014\n\004yvel\030\005 \001(\002\022\t\n\001r\030\006 \001(\002\022\014" +
       "\n\004rvel\030\007 \001(\002\022\r\n\005model\030\010 \001(\005\022\014\n\004type\030\t \001(" +
-      "\005\">\n\014NetworkChunk\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002" +
-      "\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\":\n\017NetworkKeyE" +
-      "vent\022\013\n\003key\030\001 \001(\005\022\014\n\004down\030\002 \001(\010\022\014\n\004time\030" +
-      "\003 \001(\003\"\200\001\n\016NetworkMessage\0221\n\004type\030\001 \001(\0162#" +
-      ".common.network.NetworkMessage.Type\022\016\n\006t" +
-      "arget\030\002 \001(\005\"+\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n",
-      "\rGRANT_CONTROL\020\001B\036\n\016common.networkB\014Netw" +
-      "orkProto"
+      "\005\022\013\n\003aim\030\n \001(\002\">\n\014NetworkChunk\022\n\n\002id\030\001 \001" +
+      "(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\":" +
+      "\n\017NetworkKeyEvent\022\013\n\003key\030\001 \001(\005\022\014\n\004down\030\002" +
+      " \001(\010\022\014\n\004time\030\003 \001(\003\"\200\001\n\016NetworkMessage\0221\n" +
+      "\004type\030\001 \001(\0162#.common.network.NetworkMess" +
+      "age.Type\022\016\n\006target\030\002 \001(\005\"+\n\004Type\022\020\n\014CLIE",
+      "NT_READY\020\000\022\021\n\rGRANT_CONTROL\020\001B\036\n\016common." +
+      "networkB\014NetworkProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1822,7 +1861,7 @@ public final class NetworkProto {
           internal_static_common_network_NetworkEntity_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkEntity_descriptor,
-              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Model", "Type", },
+              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Model", "Type", "Aim", },
               common.network.NetworkProto.NetworkEntity.class,
               common.network.NetworkProto.NetworkEntity.Builder.class);
           internal_static_common_network_NetworkChunk_descriptor =

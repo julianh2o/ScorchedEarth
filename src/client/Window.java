@@ -30,7 +30,7 @@ public class Window {
 		}
 		
 		models = new ArrayList<Model>();
-		models.add(new Model("resources/tank.png","resources/barrel.png",1F,1F));
+		models.add(new Model("resources/tank2.png","resources/barrel.png",1F,1F));
 		models.add(new Model("resources/grass.png",1F,1F));
 		models.add(new Model("resources/dirt.png",1F,1F));
 		models.add(new Model("resources/block.png",1F,1F));
@@ -71,7 +71,7 @@ public class Window {
 	private void glInit() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluOrtho2D(0, mode.getWidth()/20F, 0, mode.getHeight()/20F);
+		gluOrtho2D(0, mode.getWidth()/30F, 0, mode.getHeight()/30F);
 		
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();

@@ -63,6 +63,7 @@ public class Entity {
 		.setId(id)
 		.setType(getType().ordinal())
 		.setModel(model)
+		.setAim(aim)
 		.setX(getX())
 		.setY(getY())
 		.setXvel(getXVel())
