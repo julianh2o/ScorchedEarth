@@ -101,6 +101,6 @@ public class Window {
 	}
 
 	public View getView() {
-		return new View(0,0,mode.getWidth()/20F,mode.getHeight()/20F,mode.getWidth(),mode.getHeight());
+		return new View(0,0,mode.getWidth()/30F,mode.getHeight()/30F,mode.getWidth(),mode.getHeight());
 	}
 }
