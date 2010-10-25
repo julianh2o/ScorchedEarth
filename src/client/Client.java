@@ -49,7 +49,7 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 		try {
 			p.load(new FileInputStream(props));
 		} catch (IOException e) {
-			p.setProperty("host", "localhost");
+			p.setProperty("host", "titancolony.net");
 			p.store(new FileOutputStream(props),null);
 		}
 		String host = p.getProperty("host");
