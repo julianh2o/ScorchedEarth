@@ -1,12 +1,7 @@
 package client;
 
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.util.glu.GLU.gluOrtho2D;
+import static org.lwjgl.opengl.GL11.*;
+//import static org.lwjgl.util.glu.GLU.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +11,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 public class Window {
-	private DisplayMode	mode;
+	DisplayMode	mode;
 	boolean fullscreen;
 	List<Model> models;
 	
@@ -69,13 +64,6 @@ public class Window {
 	}
 	
 	private void glInit() {
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluOrtho2D(0, mode.getWidth()/30F, 0, mode.getHeight()/30F);
-		
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glViewport(0, 0, mode.getWidth(), mode.getHeight());
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		Display.setVSyncEnabled(true);
@@ -98,9 +86,5 @@ public class Window {
 	
 	public Model getModel(int id) {
 		return models.get(id);
-	}
-
-	public View getView() {
-		return new View(0,0,mode.getWidth()/30F,mode.getHeight()/30F,mode.getWidth(),mode.getHeight());
 	}
 }

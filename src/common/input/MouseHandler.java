@@ -5,15 +5,11 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import client.View;
-
 public class MouseHandler {
-	View view;
 	MouseEvent lastEvent;
 	List<MouseListener> listeners;
 	
-	public MouseHandler(View view) {
-		this.view = view;
+	public MouseHandler() {
 		listeners = new LinkedList<MouseListener>();
 	}
 
@@ -53,12 +49,12 @@ public class MouseHandler {
 	
 	public float getX() {
 		if (lastEvent == null) return -1;
-		return view.x + view.width*(lastEvent.x/view.windowWidth);
+		return lastEvent.x;
 	}
 	
 	public float getY() {
 		if (lastEvent == null) return -1;
-		return view.y + view.height*(lastEvent.y/view.windowHeight);
+		return lastEvent.y;
 	}
 	
 	public void addMouseListener(MouseListener m) {

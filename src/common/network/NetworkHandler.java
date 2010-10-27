@@ -102,11 +102,8 @@ public class NetworkHandler implements Runnable {
 			dos.writeInt(bytes.length);
 			dos.write(bytes);
 		} catch (SocketException e) {
-			if (socket.isClosed()) {
-				halt = true;
-				return;
-			}
-			Log.p.error("Socket Exception", e);
+			halt = true;
+			return;
 		} catch (IOException e) {
 			Log.p.error("Error sending object",e);
 		}

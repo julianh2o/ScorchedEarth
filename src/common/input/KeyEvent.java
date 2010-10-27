@@ -1,14 +1,6 @@
 package common.input;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import common.network.NetworkProto.NetworkKeyEvent;
-import common.world.net.Update;
-
-public class KeyEvent implements Update {
-	private static final long serialVersionUID = 2013332506792378711L;
-	
+public class KeyEvent {
 	private int key;
 	private boolean down;
 	private long time;
@@ -17,26 +9,6 @@ public class KeyEvent implements Update {
 		setKey(key);
 		setDown(down);
 		setTime(System.currentTimeMillis());
-	}
-
-	public KeyEvent(NetworkKeyEvent nke) {
-		setKey(nke.getKey());
-		setDown(nke.getDown());
-		setTime(nke.getTime());
-	}
-
-	@Override
-	public void write(DataOutputStream o) throws IOException {
-		o.write(key);
-		o.writeBoolean(down);
-		o.writeLong(time);
-	}
-	
-	public byte[] getBytes() {
-		return NetworkKeyEvent.newBuilder()
-		.setKey(key)
-		.setDown(down)
-		.setTime(time).build().toByteArray();
 	}
 
 	public void setKey(int key) {

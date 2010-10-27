@@ -3,41 +3,37 @@ package common.world.behavior;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
-import common.input.KeyboardHandler;
-import common.input.MouseHandler;
-import common.util.Log;
+import client.GameScreen;
+
 import common.util.VectorUtil;
+
 public class ControlledTankBehavior extends TankBehavior {
-	KeyboardHandler kb;
-	MouseHandler mh;
+	GameScreen screen;
 	
-	public ControlledTankBehavior(KeyboardHandler kb, MouseHandler mh) {
-		this.kb = kb;
-		this.mh = mh;
+	public ControlledTankBehavior(GameScreen screen) {
+		this.screen = screen;
 	}
 
 	@Override
 	public void update() {
-		if (kb.isDown(Keyboard.KEY_W)) {
+		if (screen.kb().isDown(Keyboard.KEY_W)) {
 			forward();
 		}
-		if (kb.isDown(Keyboard.KEY_S)) {
+		if (screen.kb().isDown(Keyboard.KEY_S)) {
 			backward();
 		}
 		
-		if (kb.isDown(Keyboard.KEY_A)) {
+		if (screen.kb().isDown(Keyboard.KEY_A)) {
 			turnLeft();
 		}
-		if (kb.isDown(Keyboard.KEY_D)) {
+		if (screen.kb().isDown(Keyboard.KEY_D)) {
 			turnRight();
 		}
 		
 		
-		if (mh != null) {
-			Vector2f aim = new Vector2f(mh.getX(),mh.getY());
-//			Log.p.out("MH: "+aim.toString());
+		if (screen.mh() != null) {
+			Vector2f aim = new Vector2f(screen.mh().getX(),screen.mh().getY());
 			aim = aim.translate(-entity.getX(), -entity.getY());
-//			Log.p.out("AIM: "+aim.toString());
 			entity.setAim(VectorUtil.getAngle(aim));
 		}
 		

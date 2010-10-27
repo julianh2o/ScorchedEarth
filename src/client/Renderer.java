@@ -1,8 +1,5 @@
 package client;
 
-import common.input.MouseHandler;
-import common.util.Log;
-import common.util.VectorUtil;
 import common.world.Entity;
 
 import net.phys2d.math.Vector2f;
@@ -71,7 +68,7 @@ public class Renderer {
 		glEnd();
 	}
 	
-	private static void renderVector(Vector2f vector) {
+	public static void renderVector(Vector2f vector) {
 		glPushAttrib(GL_TEXTURE_2D);
 		glPushMatrix();
 		
