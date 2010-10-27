@@ -146,6 +146,7 @@ public class Entity {
 	public void updateWith(NetworkEntity ne) {
 		this.type = Type.values()[ne.getType()];
 		this.model = ne.getModel();
+		this.aim = ne.getAim();
 		
         Body b = getBody(); 
         b.setPosition(ne.getX(), ne.getY()); 
