@@ -34,7 +34,7 @@ public class GameWorld {
 	}
 
 	public void generate() {
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<30; i++) {
 			int xx = (int)(Math.random()*Chunk.CHUNK_SIZE);
 			int yy = (int)(Math.random()*Chunk.CHUNK_SIZE);
 			int len = (int)(Math.random()*10);

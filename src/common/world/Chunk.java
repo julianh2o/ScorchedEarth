@@ -22,8 +22,8 @@ public class Chunk {
 		tiles = new byte[getChunkLength()];
 		
 		for (int i=0; i<getChunkLength(); i++) {
-				byte rand = (byte)(Math.random()*2);
-				tiles[i] = rand;
+			byte rand = (byte)(Math.random()*2);
+			tiles[i] = rand;
 		}
 	}
 	
