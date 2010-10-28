@@ -122,7 +122,7 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 		
 		switch(nm.getType()) {
 		case GRANT_CONTROL:
-				controlTank(nm.getTarget());
+				controlTank(nm.getData(0).getInt());
 			break;
 		}
 	}

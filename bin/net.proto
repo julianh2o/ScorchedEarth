@@ -29,9 +29,15 @@ message NetworkChunk {
 message NetworkMessage {
 	enum Type {
 		CLIENT_READY = 0;
-		GRANT_CONTROL = 1;
+		REQUEST_CHUNK = 1;
+		GRANT_CONTROL = 2;
+		REMOVE_ENTITY = 3;
 	}
 	
 	optional Type type = 1;
-	optional int32 target = 2;
+	repeated NetworkMessageData data = 2;
+}
+
+message NetworkMessageData {
+	optional int32 int = 1;
 }

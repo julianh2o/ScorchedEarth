@@ -1077,7 +1077,9 @@ public final class NetworkProto {
     public enum Type
         implements com.google.protobuf.ProtocolMessageEnum {
       CLIENT_READY(0, 0),
-      GRANT_CONTROL(1, 1),
+      REQUEST_CHUNK(1, 1),
+      GRANT_CONTROL(2, 2),
+      REMOVE_ENTITY(3, 3),
       ;
       
       
@@ -1086,7 +1088,9 @@ public final class NetworkProto {
       public static Type valueOf(int value) {
         switch (value) {
           case 0: return CLIENT_READY;
-          case 1: return GRANT_CONTROL;
+          case 1: return REQUEST_CHUNK;
+          case 2: return GRANT_CONTROL;
+          case 3: return REMOVE_ENTITY;
           default: return null;
         }
       }
@@ -1117,7 +1121,7 @@ public final class NetworkProto {
       }
       
       private static final Type[] VALUES = {
-        CLIENT_READY, GRANT_CONTROL, 
+        CLIENT_READY, REQUEST_CHUNK, GRANT_CONTROL, REMOVE_ENTITY, 
       };
       public static Type valueOf(
           com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
@@ -1148,12 +1152,17 @@ public final class NetworkProto {
     public boolean hasType() { return hasType; }
     public common.network.NetworkProto.NetworkMessage.Type getType() { return type_; }
     
-    // optional int32 target = 2;
-    public static final int TARGET_FIELD_NUMBER = 2;
-    private boolean hasTarget;
-    private int target_ = 0;
-    public boolean hasTarget() { return hasTarget; }
-    public int getTarget() { return target_; }
+    // repeated .common.network.NetworkMessageData data = 2;
+    public static final int DATA_FIELD_NUMBER = 2;
+    private java.util.List<common.network.NetworkProto.NetworkMessageData> data_ =
+      java.util.Collections.emptyList();
+    public java.util.List<common.network.NetworkProto.NetworkMessageData> getDataList() {
+      return data_;
+    }
+    public int getDataCount() { return data_.size(); }
+    public common.network.NetworkProto.NetworkMessageData getData(int index) {
+      return data_.get(index);
+    }
     
     private void initFields() {
       type_ = common.network.NetworkProto.NetworkMessage.Type.CLIENT_READY;
@@ -1168,8 +1177,8 @@ public final class NetworkProto {
       if (hasType()) {
         output.writeEnum(1, getType().getNumber());
       }
-      if (hasTarget()) {
-        output.writeInt32(2, getTarget());
+      for (common.network.NetworkProto.NetworkMessageData element : getDataList()) {
+        output.writeMessage(2, element);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1184,9 +1193,9 @@ public final class NetworkProto {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, getType().getNumber());
       }
-      if (hasTarget()) {
+      for (common.network.NetworkProto.NetworkMessageData element : getDataList()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, getTarget());
+          .computeMessageSize(2, element);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1330,6 +1339,10 @@ public final class NetworkProto {
           throw new IllegalStateException(
             "build() has already been called on this Builder.");
         }
+        if (result.data_ != java.util.Collections.EMPTY_LIST) {
+          result.data_ =
+            java.util.Collections.unmodifiableList(result.data_);
+        }
         common.network.NetworkProto.NetworkMessage returnMe = result;
         result = null;
         return returnMe;
@@ -1349,8 +1362,11 @@ public final class NetworkProto {
         if (other.hasType()) {
           setType(other.getType());
         }
-        if (other.hasTarget()) {
-          setTarget(other.getTarget());
+        if (!other.data_.isEmpty()) {
+          if (result.data_.isEmpty()) {
+            result.data_ = new java.util.ArrayList<common.network.NetworkProto.NetworkMessageData>();
+          }
+          result.data_.addAll(other.data_);
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1387,8 +1403,10 @@ public final class NetworkProto {
               }
               break;
             }
-            case 16: {
-              setTarget(input.readInt32());
+            case 18: {
+              common.network.NetworkProto.NetworkMessageData.Builder subBuilder = common.network.NetworkProto.NetworkMessageData.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addData(subBuilder.buildPartial());
               break;
             }
           }
@@ -1417,21 +1435,54 @@ public final class NetworkProto {
         return this;
       }
       
-      // optional int32 target = 2;
-      public boolean hasTarget() {
-        return result.hasTarget();
+      // repeated .common.network.NetworkMessageData data = 2;
+      public java.util.List<common.network.NetworkProto.NetworkMessageData> getDataList() {
+        return java.util.Collections.unmodifiableList(result.data_);
       }
-      public int getTarget() {
-        return result.getTarget();
+      public int getDataCount() {
+        return result.getDataCount();
       }
-      public Builder setTarget(int value) {
-        result.hasTarget = true;
-        result.target_ = value;
+      public common.network.NetworkProto.NetworkMessageData getData(int index) {
+        return result.getData(index);
+      }
+      public Builder setData(int index, common.network.NetworkProto.NetworkMessageData value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        result.data_.set(index, value);
         return this;
       }
-      public Builder clearTarget() {
-        result.hasTarget = false;
-        result.target_ = 0;
+      public Builder setData(int index, common.network.NetworkProto.NetworkMessageData.Builder builderForValue) {
+        result.data_.set(index, builderForValue.build());
+        return this;
+      }
+      public Builder addData(common.network.NetworkProto.NetworkMessageData value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        if (result.data_.isEmpty()) {
+          result.data_ = new java.util.ArrayList<common.network.NetworkProto.NetworkMessageData>();
+        }
+        result.data_.add(value);
+        return this;
+      }
+      public Builder addData(common.network.NetworkProto.NetworkMessageData.Builder builderForValue) {
+        if (result.data_.isEmpty()) {
+          result.data_ = new java.util.ArrayList<common.network.NetworkProto.NetworkMessageData>();
+        }
+        result.data_.add(builderForValue.build());
+        return this;
+      }
+      public Builder addAllData(
+          java.lang.Iterable<? extends common.network.NetworkProto.NetworkMessageData> values) {
+        if (result.data_.isEmpty()) {
+          result.data_ = new java.util.ArrayList<common.network.NetworkProto.NetworkMessageData>();
+        }
+        super.addAll(values, result.data_);
+        return this;
+      }
+      public Builder clearData() {
+        result.data_ = java.util.Collections.emptyList();
         return this;
       }
       
@@ -1445,6 +1496,290 @@ public final class NetworkProto {
     }
     
     // @@protoc_insertion_point(class_scope:common.network.NetworkMessage)
+  }
+  
+  public static final class NetworkMessageData extends
+      com.google.protobuf.GeneratedMessage {
+    // Use NetworkMessageData.newBuilder() to construct.
+    private NetworkMessageData() {
+      initFields();
+    }
+    private NetworkMessageData(boolean noInit) {}
+    
+    private static final NetworkMessageData defaultInstance;
+    public static NetworkMessageData getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public NetworkMessageData getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return common.network.NetworkProto.internal_static_common_network_NetworkMessageData_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return common.network.NetworkProto.internal_static_common_network_NetworkMessageData_fieldAccessorTable;
+    }
+    
+    // optional int32 int = 1;
+    public static final int INT_FIELD_NUMBER = 1;
+    private boolean hasInt;
+    private int int_ = 0;
+    public boolean hasInt() { return hasInt; }
+    public int getInt() { return int_; }
+    
+    private void initFields() {
+    }
+    public final boolean isInitialized() {
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (hasInt()) {
+        output.writeInt32(1, getInt());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (hasInt()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, getInt());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static common.network.NetworkProto.NetworkMessageData parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(common.network.NetworkProto.NetworkMessageData prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private common.network.NetworkProto.NetworkMessageData result;
+      
+      // Construct using common.network.NetworkProto.NetworkMessageData.newBuilder()
+      private Builder() {}
+      
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new common.network.NetworkProto.NetworkMessageData();
+        return builder;
+      }
+      
+      protected common.network.NetworkProto.NetworkMessageData internalGetResult() {
+        return result;
+      }
+      
+      public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
+        result = new common.network.NetworkProto.NetworkMessageData();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(result);
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return common.network.NetworkProto.NetworkMessageData.getDescriptor();
+      }
+      
+      public common.network.NetworkProto.NetworkMessageData getDefaultInstanceForType() {
+        return common.network.NetworkProto.NetworkMessageData.getDefaultInstance();
+      }
+      
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
+      public common.network.NetworkProto.NetworkMessageData build() {
+        if (result != null && !isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return buildPartial();
+      }
+      
+      private common.network.NetworkProto.NetworkMessageData buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        if (!isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return buildPartial();
+      }
+      
+      public common.network.NetworkProto.NetworkMessageData buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");
+        }
+        common.network.NetworkProto.NetworkMessageData returnMe = result;
+        result = null;
+        return returnMe;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof common.network.NetworkProto.NetworkMessageData) {
+          return mergeFrom((common.network.NetworkProto.NetworkMessageData)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(common.network.NetworkProto.NetworkMessageData other) {
+        if (other == common.network.NetworkProto.NetworkMessageData.getDefaultInstance()) return this;
+        if (other.hasInt()) {
+          setInt(other.getInt());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              setInt(input.readInt32());
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // optional int32 int = 1;
+      public boolean hasInt() {
+        return result.hasInt();
+      }
+      public int getInt() {
+        return result.getInt();
+      }
+      public Builder setInt(int value) {
+        result.hasInt = true;
+        result.int_ = value;
+        return this;
+      }
+      public Builder clearInt() {
+        result.hasInt = false;
+        result.int_ = 0;
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:common.network.NetworkMessageData)
+    }
+    
+    static {
+      defaultInstance = new NetworkMessageData(true);
+      common.network.NetworkProto.internalForceInit();
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:common.network.NetworkMessageData)
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
@@ -1462,6 +1797,11 @@ public final class NetworkProto {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_common_network_NetworkMessage_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_common_network_NetworkMessageData_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_common_network_NetworkMessageData_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1476,12 +1816,14 @@ public final class NetworkProto {
       "\014\n\004xvel\030\004 \001(\002\022\014\n\004yvel\030\005 \001(\002\022\t\n\001r\030\006 \001(\002\022\014" +
       "\n\004rvel\030\007 \001(\002\022\r\n\005model\030\010 \001(\005\022\014\n\004type\030\t \001(" +
       "\005\022\013\n\003aim\030\n \001(\002\">\n\014NetworkChunk\022\n\n\002id\030\001 \001" +
-      "(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\"\200" +
+      "(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\"\310" +
       "\001\n\016NetworkMessage\0221\n\004type\030\001 \001(\0162#.common" +
-      ".network.NetworkMessage.Type\022\016\n\006target\030\002" +
-      " \001(\005\"+\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n\rGRANT_" +
-      "CONTROL\020\001B\036\n\016common.networkB\014NetworkProt",
-      "o"
+      ".network.NetworkMessage.Type\0220\n\004data\030\002 \003" +
+      "(\0132\".common.network.NetworkMessageData\"Q" +
+      "\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n\rREQUEST_CHUN",
+      "K\020\001\022\021\n\rGRANT_CONTROL\020\002\022\021\n\rREMOVE_ENTITY\020" +
+      "\003\"!\n\022NetworkMessageData\022\013\n\003int\030\001 \001(\005B\036\n\016" +
+      "common.networkB\014NetworkProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1509,9 +1851,17 @@ public final class NetworkProto {
           internal_static_common_network_NetworkMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkMessage_descriptor,
-              new java.lang.String[] { "Type", "Target", },
+              new java.lang.String[] { "Type", "Data", },
               common.network.NetworkProto.NetworkMessage.class,
               common.network.NetworkProto.NetworkMessage.Builder.class);
+          internal_static_common_network_NetworkMessageData_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_common_network_NetworkMessageData_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_common_network_NetworkMessageData_descriptor,
+              new java.lang.String[] { "Int", },
+              common.network.NetworkProto.NetworkMessageData.class,
+              common.network.NetworkProto.NetworkMessageData.Builder.class);
           return null;
         }
       };

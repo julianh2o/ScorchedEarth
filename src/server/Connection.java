@@ -9,6 +9,7 @@ import common.network.NetworkEventListener;
 import common.network.NetworkHandler;
 import common.network.NetworkProto.NetworkEntity;
 import common.network.NetworkProto.NetworkMessage;
+import common.network.NetworkProto.NetworkMessageData;
 import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
 import common.world.Chunk;
@@ -113,7 +114,7 @@ public class Connection implements NetworkEventListener {
 			} catch (IOException e1) {
 				Log.p.error("Error sending chunk",e1);
 			}
-			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).setTarget(tank.getId()).build().toByteArray());
+			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).addData(NetworkMessageData.newBuilder().setInt(tank.getId()).build()).build().toByteArray());
 			break;
 		}
 	}
