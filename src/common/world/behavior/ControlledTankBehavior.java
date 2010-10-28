@@ -32,7 +32,7 @@ public class ControlledTankBehavior extends TankBehavior {
 		
 		
 		if (screen.mh() != null) {
-			Vector2f aim = new Vector2f(screen.mh().getX(),screen.mh().getY());
+			Vector2f aim = new Vector2f(screen.getMouseX(),screen.getMouseY());
 			aim = aim.translate(-entity.getX(), -entity.getY());
 			entity.setAim(VectorUtil.getAngle(aim));
 		}

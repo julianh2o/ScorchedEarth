@@ -47,12 +47,12 @@ public class MouseHandler {
 		return lastEvent;
 	}
 	
-	public float getX() {
+	public int getX() {
 		if (lastEvent == null) return -1;
 		return lastEvent.x;
 	}
 	
-	public float getY() {
+	public int getY() {
 		if (lastEvent == null) return -1;
 		return lastEvent.y;
 	}

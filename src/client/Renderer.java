@@ -1,8 +1,9 @@
 package client;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import common.world.Entity;
 
-import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.shapes.Box;
 import net.phys2d.raw.shapes.Shape;
@@ -82,6 +83,13 @@ public class Renderer {
 		
 		glPopMatrix();
 		glPopAttrib();
+	}
+	
+	public static void renderLine(float x, float y, float xx, float yy) {
+		glPushMatrix(); {
+			glTranslatef(x, y, 0);
+			renderVector(new Vector2f(xx-x,yy-y));
+		} glPopMatrix();
 	}
 }
 

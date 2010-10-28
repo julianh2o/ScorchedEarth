@@ -3,6 +3,8 @@ package client;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import common.input.KeyEvent;
@@ -130,10 +132,16 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 	}
 	
 	public void render(Window w) {
-		handleCamera(w);
-		
 		glClear(GL_COLOR_BUFFER_BIT);
+		
+		handleCamera(w);
 		world.render(w);
+		
+//		float x = view.screenXtoGame(mh.getX());
+//		float y = view.screenYtoGame(mh.getY());
+//		Renderer.renderLine(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+//		Renderer.renderLine(view.getRight(),view.getTop(),view.getLeft(),view.getBottom());
+//		Renderer.renderVector(new Vector2f(x,y));
 	}
 	
 	public void handleCamera(Window w) {
@@ -203,5 +211,13 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 		} else {
 			view.zoom *= 1.2;
 		}
+	}
+
+	public float getMouseX() {
+		return view.screenXtoGame(mh.getX());
+	}
+	
+	public float getMouseY() {
+		return view.screenYtoGame(mh.getY());
 	}
 }

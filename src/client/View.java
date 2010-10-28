@@ -1,7 +1,7 @@
 package client;
 
 public class View {
-	public final float PIXEL_RATIO = 40;
+	public final float PIXEL_RATIO = 20;
 	
 	public float x;
 	public float y;
@@ -25,20 +25,28 @@ public class View {
 		this.y = y;
 	}
 	
+	public float getHalfwidth() {
+		return windowWidth/2;
+	}
+	
+	public float getHalfheight() {
+		return windowHeight/2;
+	}
+	
 	public float getLeft() {
-		return x - windowWidth/getPixelsPerUnit();
+		return x - getHalfwidth()/getPixelsPerUnit();
 	}
 	
 	public float getRight() {
-		return x + windowWidth/getPixelsPerUnit();
+		return x + getHalfwidth()/getPixelsPerUnit();
 	}
 	
 	public float getTop() {
-		return y + windowHeight/getPixelsPerUnit();
+		return y + getHalfheight()/getPixelsPerUnit();
 	}
 	
 	public float getBottom() {
-		return y - windowHeight/getPixelsPerUnit();
+		return y - getHalfheight()/getPixelsPerUnit();
 	}
 	
 	public float getPixelsPerUnit() {
@@ -46,11 +54,11 @@ public class View {
 	}
 	
 	public float screenXtoGame(int screenx) {
-		return getLeft() + screenx * getPixelsPerUnit();
+		return getLeft() + screenx / getPixelsPerUnit();
 	}
 	
-	public float screenYtoGame(int screenx) {
-		return getLeft() + screenx * getPixelsPerUnit();
+	public float screenYtoGame(int screeny) {
+		return getBottom() + screeny / getPixelsPerUnit();
 	}
 	
 	public boolean canSee(float x, float y) {
