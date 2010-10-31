@@ -1,6 +1,5 @@
 Names:
-Cryoterra Cryoterranium
-
+Titan Colony
 
 Tanks:
 Can build bases, collect resources, armament etc
