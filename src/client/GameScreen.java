@@ -3,7 +3,10 @@ package client;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
-import org.lwjgl.util.vector.Vector2f;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -35,7 +38,12 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 	private KeyboardHandler kb;
 	private MouseHandler mh;
 	
+	ReadWriteLock eventQueueLock;
+	Queue<NetworkEvent> unhandledEvents;
 	public GameScreen(GameWorld world, NetworkHandler nh, KeyboardHandler kb, MouseHandler mh, View view) {
+		eventQueueLock = new ReentrantReadWriteLock();
+		unhandledEvents = new LinkedList<NetworkEvent>();
+		
 		this.nh = nh;
 		this.view = view;
 		
@@ -74,11 +82,34 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 			view.centerOn(tank.getX(), tank.getY());
 		}
 		
+		handleAllEvents();
+		
 		if (world == null) return;
 		world.update();
 	}
 	
 	public void networkEventReceived(NetworkEvent e) {
+		eventQueueLock.writeLock().lock();
+		unhandledEvents.offer(e);
+		eventQueueLock.writeLock().unlock();
+	}
+	
+	public void handleAllEvents() {
+		NetworkEvent event;
+		eventQueueLock.writeLock().lock();
+		while(true) {
+			if (unhandledEvents.isEmpty()) {
+				eventQueueLock.writeLock().unlock();
+				return;
+			}
+			
+			event = unhandledEvents.poll();
+			
+			handleNetworkEvent(event);
+		}
+	}
+	
+	public void handleNetworkEvent(NetworkEvent e) {
 		int type = e.getType();
 		switch(type) {
 		case NetworkHandler.CHUNK:

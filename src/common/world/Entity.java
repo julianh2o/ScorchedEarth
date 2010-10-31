@@ -11,7 +11,8 @@ import common.world.behavior.TankBehavior;
 public class Entity {
 	public enum Type {
 		TANK,
-		BLOCK
+		BLOCK,
+		PROJECTILE
 	}
 	
 	private GameWorld world;
@@ -24,8 +25,7 @@ public class Entity {
 	
 	private boolean dirty;
 	
-	public Entity(GameWorld world, int id, Type type) {
-		this.world = world;
+	public Entity(int id, Type type) {
 		this.id = id;
 		this.type = type;
 		this.aim = 0;
@@ -42,11 +42,13 @@ public class Entity {
 		case BLOCK:
 			model = 3;
 			break;
+		case PROJECTILE:
+			model = 5;
+			break;
 		}
 	}
 
-	public Entity(GameWorld world, int id, Type type, int model, Behavior behavior) {
-		this.world = world;
+	public Entity(int id, Type type, int model, Behavior behavior) {
 		this.id = id;
 		this.type = type;
 		this.model = model;

@@ -1,20 +1,19 @@
 package common.world;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import common.world.Entity.Type;
 
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.World;
 import net.phys2d.raw.shapes.Box;
-
 import client.Renderer;
 import client.Window;
+
+import common.world.Entity.Type;
 
 public class GameWorld {
 	public int nextId;
@@ -22,10 +21,10 @@ public class GameWorld {
 	List<Chunk> chunks;
 	
 	World phys;
-	HashMap<Entity,Body> ebmap;
+	Hashtable<Entity,Body> ebmap;
 	
 	public GameWorld() {
-		ebmap = new HashMap<Entity,Body>();
+		ebmap = new Hashtable<Entity,Body>();
 		phys = new World(new Vector2f(0F,0F),5);
 		
 		chunks = new LinkedList<Chunk>();
@@ -43,7 +42,7 @@ public class GameWorld {
 				yy += (int)(Math.random()*3 - 1);
 
 				if (xx < 0 || xx > Chunk.CHUNK_SIZE-1 || yy < 0 || yy > Chunk.CHUNK_SIZE-1) continue;
-				Entity e = new Entity(this, newId(),Entity.Type.BLOCK);
+				Entity e = new Entity(newId(),Entity.Type.BLOCK);
 				addEntity(e,xx*Chunk.TILE_SIZE, yy*Chunk.TILE_SIZE);
 			}
 		}
@@ -63,9 +62,15 @@ public class GameWorld {
 			body.setRestitution(0.0F);
 			body.setRotatable(false);
 			break;
+		case PROJECTILE:
+			body = new Body(new Box(.3F,.3F),.3F);
+			body.setRestitution(1.0F);
+			break;
 		}
 		
 		if (body != null) {
+			if (e.getId() < 0) e.setId(newId());
+			e.setWorld(this);
 			body.setPosition(x,y);
 			ebmap.put(e,body);
 			phys.add(body);
@@ -76,7 +81,8 @@ public class GameWorld {
 	public void update() {
 		phys.step();
 		
-		for (Entity e : getEntities()) {
+		Entity[] entityList = getEntities().toArray(new Entity[0]);
+		for (Entity e : entityList) {
 			e.update();
 		}
 	}
@@ -150,7 +156,7 @@ public class GameWorld {
 			id = newId();
 		}
 			
-		Entity e = new Entity(this,id,type);
+		Entity e = new Entity(id,type);
 		addEntity(e,x,y);
 		return e;
 	}

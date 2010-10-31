@@ -2,6 +2,7 @@ package client;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import common.util.Log;
 import common.world.Entity;
 
 import net.phys2d.raw.Body;

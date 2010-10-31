@@ -1,17 +1,22 @@
 package common.world.behavior;
 
+import net.phys2d.raw.Body;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
 import client.GameScreen;
 
 import common.util.VectorUtil;
+import common.world.Entity;
 
 public class ControlledTankBehavior extends TankBehavior {
 	GameScreen screen;
+	long lastShot;
 	
 	public ControlledTankBehavior(GameScreen screen) {
 		this.screen = screen;
+		lastShot = System.currentTimeMillis();
 	}
 
 	@Override
@@ -37,6 +42,26 @@ public class ControlledTankBehavior extends TankBehavior {
 			entity.setAim(VectorUtil.getAngle(aim));
 		}
 		
+		if (screen.kb().isDown(Keyboard.KEY_SPACE)) {
+			long since = (System.currentTimeMillis() - lastShot);
+			if (since > 250) {
+				fire();
+			}
+		}
+		
 		super.update();
+	}
+	
+	private void fire() {
+		lastShot = System.currentTimeMillis();
+		
+		Entity bullet = new Entity(-1,Entity.Type.PROJECTILE);
+		screen.getWorld().addEntity(bullet, entity.getX(), entity.getY());
+		Body body = bullet.getBody();
+		float mult = 5;
+		net.phys2d.math.Vector2f bulletVelocity = VectorUtil.create(entity.getAim());
+		bulletVelocity.scale(mult);
+		body.adjustVelocity(bulletVelocity);
+		body.addExcludedBody(entity.getBody());
 	}
 }

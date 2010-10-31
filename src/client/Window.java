@@ -25,11 +25,23 @@ public class Window {
 		}
 		
 		models = new ArrayList<Model>();
+		//0
 		models.add(new Model("resources/tank2.png","resources/barrel.png",1F,1F));
+		
+		//1
 		models.add(new Model("resources/grass.png",1F,1F));
+		
+		//2
 		models.add(new Model("resources/dirt.png",1F,1F));
+		
+		//3
 		models.add(new Model("resources/block.png",1F,1F));
+		
+		//4
 		models.add(new Model("resources/pink.png","resources/barrel.png",1F,1F));
+		
+		//5
+		models.add(new Model("resources/bullet.png",1F,1F));
 	}
 	
 	public boolean shouldExit() {

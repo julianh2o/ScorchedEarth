@@ -17,7 +17,7 @@ public class Model {
 	private float width, height;
 	
 	public Model(String path, float width, float height) {
-		this.width = width;
+		this.setWidth(width);
 		this.setHeight(height);
 		main = loadTexture(path);
 		aim = null;
@@ -90,6 +90,14 @@ public class Model {
 
 	public float getHeight() {
 		return height;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
 	}
 }
 
