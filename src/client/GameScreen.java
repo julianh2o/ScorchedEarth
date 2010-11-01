@@ -132,7 +132,7 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 			}
 			Entity entity = world.findEntity(ne.getId());
 			if (entity == null) {
-				entity = world.newEntity(Entity.Type.values()[ne.getType()], ne.getX(), ne.getY(), ne.getId());
+				entity = world.newEntity(ne.getType(), ne.getX(), ne.getY(), ne.getId());
 			}
 			entity.updateWith(ne);
 			break;

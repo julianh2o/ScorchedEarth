@@ -3,9 +3,6 @@ package client;
 import static org.lwjgl.opengl.GL11.*;
 //import static org.lwjgl.util.glu.GLU.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -13,7 +10,6 @@ import org.lwjgl.opengl.DisplayMode;
 public class Window {
 	DisplayMode	mode;
 	boolean fullscreen;
-	List<Model> models;
 	
 	public Window() {
 		windowed();
@@ -23,25 +19,6 @@ public class Window {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		models = new ArrayList<Model>();
-		//0
-		models.add(new Model("resources/tank2.png","resources/barrel.png",1F,1F));
-		
-		//1
-		models.add(new Model("resources/grass.png",1F,1F));
-		
-		//2
-		models.add(new Model("resources/dirt.png",1F,1F));
-		
-		//3
-		models.add(new Model("resources/block.png",1F,1F));
-		
-		//4
-		models.add(new Model("resources/pink.png","resources/barrel.png",1F,1F));
-		
-		//5
-		models.add(new Model("resources/bullet.png",1F,1F));
 	}
 	
 	public boolean shouldExit() {
@@ -94,9 +71,5 @@ public class Window {
 	
 	public void cleanup() {
 		Display.destroy();
-	}
-	
-	public Model getModel(int id) {
-		return models.get(id);
 	}
 }

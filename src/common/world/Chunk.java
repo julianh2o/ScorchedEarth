@@ -1,5 +1,7 @@
 package common.world;
 
+import common.ResourceManager;
+
 import client.Model;
 import client.Window;
 
@@ -54,7 +56,7 @@ public class Chunk {
 	}
 	
 	public void renderTile(Window w, int x, int y) {
-		Model m = w.getModel(Tile.getModel(tiles[getIndex(x,y)]));
+		Model m = ResourceManager.getInstance().getModel("dirt.model");
 		m.renderAt(w, x*TILE_SIZE, y*TILE_SIZE, 0,0);
 	}
 

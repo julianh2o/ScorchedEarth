@@ -55,10 +55,10 @@ public class ControlledTankBehavior extends TankBehavior {
 	private void fire() {
 		lastShot = System.currentTimeMillis();
 		
-		Entity bullet = new Entity(-1,Entity.Type.PROJECTILE);
+		Entity bullet = new Entity(-1,"projectile.entity");
 		screen.getWorld().addEntity(bullet, entity.getX(), entity.getY());
 		Body body = bullet.getBody();
-		float mult = 5;
+		float mult = 10;
 		net.phys2d.math.Vector2f bulletVelocity = VectorUtil.create(entity.getAim());
 		bulletVelocity.scale(mult);
 		body.adjustVelocity(bulletVelocity);

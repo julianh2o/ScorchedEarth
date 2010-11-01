@@ -51,4 +51,8 @@ public class Log {
 			e.printStackTrace();
 		}
 	}
+
+	public void error(Exception e) {
+		error("Exception: ",e);
+	}
 }

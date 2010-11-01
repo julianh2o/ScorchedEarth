@@ -1,6 +1,5 @@
 package common.world.net;
 
-//TODO proto this class
 import java.io.IOException;
 
 import com.google.protobuf.ByteString;

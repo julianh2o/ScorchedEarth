@@ -5,17 +5,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import common.world.entity.EntityType;
+
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
+import net.phys2d.raw.CollisionEvent;
+import net.phys2d.raw.CollisionListener;
 import net.phys2d.raw.StaticBody;
 import net.phys2d.raw.World;
 import net.phys2d.raw.shapes.Box;
 import client.Renderer;
 import client.Window;
 
-import common.world.Entity.Type;
-
-public class GameWorld {
+public class GameWorld implements CollisionListener {
 	public int nextId;
 	
 	List<Chunk> chunks;
@@ -26,6 +28,7 @@ public class GameWorld {
 	public GameWorld() {
 		ebmap = new Hashtable<Entity,Body>();
 		phys = new World(new Vector2f(0F,0F),5);
+		phys.addListener(this);
 		
 		chunks = new LinkedList<Chunk>();
 		
@@ -42,7 +45,7 @@ public class GameWorld {
 				yy += (int)(Math.random()*3 - 1);
 
 				if (xx < 0 || xx > Chunk.CHUNK_SIZE-1 || yy < 0 || yy > Chunk.CHUNK_SIZE-1) continue;
-				Entity e = new Entity(newId(),Entity.Type.BLOCK);
+				Entity e = new Entity(newId(),"block.entity");
 				addEntity(e,xx*Chunk.TILE_SIZE, yy*Chunk.TILE_SIZE);
 			}
 		}
@@ -50,25 +53,18 @@ public class GameWorld {
 	
 	public void addEntity(Entity e, float x, float y) {
 		Body body = null;
-		switch(e.getType()) {
-		case TANK:
-			body = new Body(new Box(1.0F,1.0F), 1.0F);
-			body.setRestitution(1.0F);
-			body.setDamping(.05F);
-			body.setRotDamping(.05F);
-			break;
-		case BLOCK:
-			body = new StaticBody(new Box(1F,1F));
-			body.setRestitution(0.0F);
-			body.setRotatable(false);
-			break;
-		case PROJECTILE:
-			body = new Body(new Box(.3F,.3F),.3F);
-			body.setRestitution(1.0F);
-			break;
-		}
+		
+		EntityType type = e.getType();
+		
+		body = new Body(new Box(type.getWidth(),type.getHeight()), type.getMass());
+		if (type.getFixed()) body = new StaticBody(new Box(type.getWidth(),type.getHeight()));
+		body.setRestitution(type.getRestitution());
+		body.setDamping(type.getDamping());
+		body.setRotDamping(type.getRotationalDamping());
+		body.setRotatable(type.getRotatable());
 		
 		if (body != null) {
+			body.setUserData(e);
 			if (e.getId() < 0) e.setId(newId());
 			e.setWorld(this);
 			body.setPosition(x,y);
@@ -85,6 +81,35 @@ public class GameWorld {
 		for (Entity e : entityList) {
 			e.update();
 		}
+	}
+	
+	@Override
+	public void collisionOccured(CollisionEvent event) {
+		Body ba = event.getBodyA();
+		Entity a = (Entity)ba.getUserData();
+		
+		Body bb = event.getBodyB();
+		Entity b = (Entity)bb.getUserData();
+		
+		//TODO FIX THIS
+		boolean projA = "projectile.entity".equals(a.getType().getPath());
+		boolean projB = "projectile.entity".equals(b.getType().getPath());
+		
+		if (projA || projB) {
+			if (projA && projB) {
+				return;
+			} else if (projA) {
+				removeEntity(a);
+			} else if (projB) {
+				removeEntity(b);
+			}
+		}
+	}
+	
+	public void removeEntity(Entity e) {
+		Body b = getBody(e);
+		phys.remove(b);
+		ebmap.remove(e);
 	}
 	
 	public int getTileAt(double x, double y) {
@@ -151,7 +176,7 @@ public class GameWorld {
 		return ebmap.get(e);
 	}
 
-	public Entity newEntity(Type type, float x, float y, int id) {
+	public Entity newEntity(String type, float x, float y, int id) {
 		if (id == -1) {
 			id = newId();
 		}
@@ -161,7 +186,7 @@ public class GameWorld {
 		return e;
 	}
 		
-	public Entity newEntity(Type type,float x,float y) {
+	public Entity newEntity(String type,float x,float y) {
 		return newEntity(type,x,y,-1);
 	}
 }

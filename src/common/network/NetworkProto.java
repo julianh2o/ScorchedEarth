@@ -84,19 +84,19 @@ public final class NetworkProto {
     public boolean hasRvel() { return hasRvel; }
     public float getRvel() { return rvel_; }
     
-    // optional int32 model = 8;
-    public static final int MODEL_FIELD_NUMBER = 8;
-    private boolean hasModel;
-    private int model_ = 0;
-    public boolean hasModel() { return hasModel; }
-    public int getModel() { return model_; }
+    // optional int32 life = 8;
+    public static final int LIFE_FIELD_NUMBER = 8;
+    private boolean hasLife;
+    private int life_ = 0;
+    public boolean hasLife() { return hasLife; }
+    public int getLife() { return life_; }
     
-    // optional int32 type = 9;
+    // optional string type = 9;
     public static final int TYPE_FIELD_NUMBER = 9;
     private boolean hasType;
-    private int type_ = 0;
+    private java.lang.String type_ = "";
     public boolean hasType() { return hasType; }
-    public int getType() { return type_; }
+    public java.lang.String getType() { return type_; }
     
     // optional float aim = 10;
     public static final int AIM_FIELD_NUMBER = 10;
@@ -135,11 +135,11 @@ public final class NetworkProto {
       if (hasRvel()) {
         output.writeFloat(7, getRvel());
       }
-      if (hasModel()) {
-        output.writeInt32(8, getModel());
+      if (hasLife()) {
+        output.writeInt32(8, getLife());
       }
       if (hasType()) {
-        output.writeInt32(9, getType());
+        output.writeString(9, getType());
       }
       if (hasAim()) {
         output.writeFloat(10, getAim());
@@ -181,13 +181,13 @@ public final class NetworkProto {
         size += com.google.protobuf.CodedOutputStream
           .computeFloatSize(7, getRvel());
       }
-      if (hasModel()) {
+      if (hasLife()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(8, getModel());
+          .computeInt32Size(8, getLife());
       }
       if (hasType()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(9, getType());
+          .computeStringSize(9, getType());
       }
       if (hasAim()) {
         size += com.google.protobuf.CodedOutputStream
@@ -372,8 +372,8 @@ public final class NetworkProto {
         if (other.hasRvel()) {
           setRvel(other.getRvel());
         }
-        if (other.hasModel()) {
-          setModel(other.getModel());
+        if (other.hasLife()) {
+          setLife(other.getLife());
         }
         if (other.hasType()) {
           setType(other.getType());
@@ -435,11 +435,11 @@ public final class NetworkProto {
               break;
             }
             case 64: {
-              setModel(input.readInt32());
+              setLife(input.readInt32());
               break;
             }
-            case 72: {
-              setType(input.readInt32());
+            case 74: {
+              setType(input.readString());
               break;
             }
             case 85: {
@@ -577,39 +577,42 @@ public final class NetworkProto {
         return this;
       }
       
-      // optional int32 model = 8;
-      public boolean hasModel() {
-        return result.hasModel();
+      // optional int32 life = 8;
+      public boolean hasLife() {
+        return result.hasLife();
       }
-      public int getModel() {
-        return result.getModel();
+      public int getLife() {
+        return result.getLife();
       }
-      public Builder setModel(int value) {
-        result.hasModel = true;
-        result.model_ = value;
+      public Builder setLife(int value) {
+        result.hasLife = true;
+        result.life_ = value;
         return this;
       }
-      public Builder clearModel() {
-        result.hasModel = false;
-        result.model_ = 0;
+      public Builder clearLife() {
+        result.hasLife = false;
+        result.life_ = 0;
         return this;
       }
       
-      // optional int32 type = 9;
+      // optional string type = 9;
       public boolean hasType() {
         return result.hasType();
       }
-      public int getType() {
+      public java.lang.String getType() {
         return result.getType();
       }
-      public Builder setType(int value) {
-        result.hasType = true;
+      public Builder setType(java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasType = true;
         result.type_ = value;
         return this;
       }
       public Builder clearType() {
         result.hasType = false;
-        result.type_ = 0;
+        result.type_ = getDefaultInstance().getType();
         return this;
       }
       
@@ -1811,19 +1814,19 @@ public final class NetworkProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tnet.proto\022\016common.network\"\220\001\n\rNetworkE" +
+      "\n\tnet.proto\022\016common.network\"\217\001\n\rNetworkE" +
       "ntity\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022" +
       "\014\n\004xvel\030\004 \001(\002\022\014\n\004yvel\030\005 \001(\002\022\t\n\001r\030\006 \001(\002\022\014" +
-      "\n\004rvel\030\007 \001(\002\022\r\n\005model\030\010 \001(\005\022\014\n\004type\030\t \001(" +
-      "\005\022\013\n\003aim\030\n \001(\002\">\n\014NetworkChunk\022\n\n\002id\030\001 \001" +
-      "(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\"\310" +
-      "\001\n\016NetworkMessage\0221\n\004type\030\001 \001(\0162#.common" +
-      ".network.NetworkMessage.Type\0220\n\004data\030\002 \003" +
-      "(\0132\".common.network.NetworkMessageData\"Q" +
-      "\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n\rREQUEST_CHUN",
-      "K\020\001\022\021\n\rGRANT_CONTROL\020\002\022\021\n\rREMOVE_ENTITY\020" +
-      "\003\"!\n\022NetworkMessageData\022\013\n\003int\030\001 \001(\005B\036\n\016" +
-      "common.networkB\014NetworkProto"
+      "\n\004rvel\030\007 \001(\002\022\014\n\004life\030\010 \001(\005\022\014\n\004type\030\t \001(\t" +
+      "\022\013\n\003aim\030\n \001(\002\">\n\014NetworkChunk\022\n\n\002id\030\001 \001(" +
+      "\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\"\310\001" +
+      "\n\016NetworkMessage\0221\n\004type\030\001 \001(\0162#.common." +
+      "network.NetworkMessage.Type\0220\n\004data\030\002 \003(" +
+      "\0132\".common.network.NetworkMessageData\"Q\n" +
+      "\004Type\022\020\n\014CLIENT_READY\020\000\022\021\n\rREQUEST_CHUNK",
+      "\020\001\022\021\n\rGRANT_CONTROL\020\002\022\021\n\rREMOVE_ENTITY\020\003" +
+      "\"!\n\022NetworkMessageData\022\013\n\003int\030\001 \001(\005B\036\n\016c" +
+      "ommon.networkB\014NetworkProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1835,7 +1838,7 @@ public final class NetworkProto {
           internal_static_common_network_NetworkEntity_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkEntity_descriptor,
-              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Model", "Type", "Aim", },
+              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Life", "Type", "Aim", },
               common.network.NetworkProto.NetworkEntity.class,
               common.network.NetworkProto.NetworkEntity.Builder.class);
           internal_static_common_network_NetworkChunk_descriptor =

@@ -1,0 +1,5 @@
+width=.3
+height=.3
+mass=.3
+fixed=false
+model=projectile.model

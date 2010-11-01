@@ -1,0 +1,10 @@
+maxLife=100
+width=1
+height=1
+mass=1
+fixed=false
+damping=.05
+rdamping=.05
+restitution=1
+model=tank.model
+behavior=common.world.behavior.TankBehavior

@@ -1,0 +1,8 @@
+maxLife=50
+width=1
+height=1
+mass=1
+fixed=true
+canRotate=false
+restitution=1
+model=block.model

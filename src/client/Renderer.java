@@ -2,7 +2,7 @@ package client;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import common.util.Log;
+import common.ResourceManager;
 import common.world.Entity;
 
 import net.phys2d.raw.Body;
@@ -27,20 +27,20 @@ public class Renderer {
 	
 				glEnable(GL_TEXTURE_2D);
 				
-				Model m = w.getModel(e.getModel());
+				Model m = ResourceManager.getInstance().getModelFor(e);
 				
 				glPushMatrix(); {
-					m.main.bind();
+					m.getMain().bind();
 					glRotatef((float)Math.toDegrees(b.getRotation())+90, 0, 0, 1);
 					renderSquare(height,width);
 				} glPopMatrix();
 				
-				if (m.aim != null) {
+				if (m.getAim() != null) {
 					glPushMatrix(); {
 						glEnable (GL_BLEND);
 						glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 						
-						m.aim.bind();
+						m.getAim().bind();
 						glRotatef((float)Math.toDegrees(e.getAim())+90, 0, 0, 1);
 						renderSquare(height,width);
 					} glPopMatrix();

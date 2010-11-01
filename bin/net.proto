@@ -12,8 +12,8 @@ message NetworkEntity {
 	optional float r = 6;
 	optional float rvel = 7;
 
-	optional int32 model = 8;
-	optional int32 type = 9;
+	optional int32 life = 8;
+	optional string type = 9;
 	
 	optional float aim = 10;
 }

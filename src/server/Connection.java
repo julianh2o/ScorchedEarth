@@ -43,14 +43,14 @@ public class Connection implements NetworkEventListener {
 		Chunk chunk = server.getWorld().getChunk(1,1);
 		float x = chunk.getWidth()/2;
 		float y = chunk.getHeight()/2;
-		tank = server.getWorld().newEntity(Entity.Type.TANK,x,y);
+		tank = server.getWorld().newEntity("tank.entity",x,y);
 		
 		
-		if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
+		//if (nh.getSocket().getInetAddress().getHostAddress().equals("75.18.227.231")) {
 //		if (nh.getSocket().getInetAddress().getHostAddress().equals("67.161.1.188")) {
-			Log.p.out("Pink Ranger!");
-			tank.setModel(4);
-		}
+			//Log.p.out("Pink Ranger!");
+			//tank.setModel(4);
+		//}
 	}
 	
 	public void update() {

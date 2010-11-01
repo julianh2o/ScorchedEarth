@@ -9,6 +9,7 @@ import java.util.Properties;
 
 import org.lwjgl.input.Keyboard;
 
+import common.ResourceManager;
 import common.input.KeyEvent;
 import common.input.KeyListener;
 import common.input.KeyboardHandler;
@@ -52,6 +53,8 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 	}
 
 	public Client(String host, int port) {
+		ResourceManager.getInstance();
+		
 		Socket s = NetworkHandler.getClientSocket(host,port);
 		if (s != null) {
 			nh = new NetworkHandler(s);

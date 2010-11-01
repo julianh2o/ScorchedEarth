@@ -3,59 +3,37 @@ package common.world;
 import net.phys2d.math.Vector2f;
 import net.phys2d.raw.Body;
 
+import common.ResourceManager;
 import common.network.NetworkProto.NetworkEntity;
 import common.util.BodyUtil;
 import common.world.behavior.Behavior;
-import common.world.behavior.TankBehavior;
+import common.world.entity.EntityType;
 
 public class Entity {
-	public enum Type {
-		TANK,
-		BLOCK,
-		PROJECTILE
-	}
+	private EntityType type;
 	
 	private GameWorld world;
 	private Behavior behavior;
 	private int id;
-	private Type type;
-	private int model;
+	private int life;
 	
 	private float aim;
 	
 	private boolean dirty;
 	
-	public Entity(int id, Type type) {
+	public Entity(int id, String type) {
+		this.type = getTypeForString(type);
 		this.id = id;
-		this.type = type;
 		this.aim = 0;
 		this.dirty = true;
 		configureType();
 	}
 	
 	private void configureType() {
-		switch (type) {
-		case TANK:
-			setBehavior(new TankBehavior());
-			model = 0;
-			break;
-		case BLOCK:
-			model = 3;
-			break;
-		case PROJECTILE:
-			model = 5;
-			break;
-		}
+		if (type == null) return;
+		this.life = type.getMaxLife();
 	}
 
-	public Entity(int id, Type type, int model, Behavior behavior) {
-		this.id = id;
-		this.type = type;
-		this.model = model;
-		this.behavior = behavior;
-		this.dirty = true;
-	}
-	
 	public void update() {
 		if (behavior != null) behavior.update();
 	}
@@ -63,8 +41,7 @@ public class Entity {
 	public byte[] getBytes() {
 		return NetworkEntity.newBuilder()
 		.setId(id)
-		.setType(getType().ordinal())
-		.setModel(model)
+		.setType(getType().getPath())
 		.setAim(aim)
 		.setX(getX())
 		.setY(getY())
@@ -128,26 +105,23 @@ public class Entity {
 		this.behavior = behavior;
 		behavior.setEntity(this);
 	}
-	
-	public int getModel() {
-		return model;
-	}
 
-	public void setModel(int model) {
-		this.model = model;
-	}
-
-	public Type getType() {
+	public EntityType getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(EntityType type) {
 		this.type = type;
+	}
+	
+	public static EntityType getTypeForString(String type) {
+		return ResourceManager.getInstance().getEntityType(type);
 	}
 
 	public void updateWith(NetworkEntity ne) {
-		this.type = Type.values()[ne.getType()];
-		this.model = ne.getModel();
+		this.type = getTypeForString(ne.getType());
+		
+		this.life = ne.getLife();
 		this.aim = ne.getAim();
 		
         Body b = getBody(); 
@@ -171,5 +145,17 @@ public class Entity {
 
 	public float getAim() {
 		return aim;
+	}
+
+	public void setLife(int life) {
+		this.life = life;
+	}
+
+	public int getLife() {
+		return life;
+	}
+	
+	public void damage(int damage) {
+		setLife(getLife() - damage);
 	}
 }
