@@ -11,7 +11,11 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Vector;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import common.util.Log;
 
@@ -32,14 +36,22 @@ public class NetworkHandler implements Runnable {
 	
 	DataOutputStream dos;
 	DataInputStream dis;
+	
+	
+	ReadWriteLock eventsLock;
+	Queue<NetworkEvent> events;
 
 
 	Thread t;
 	volatile boolean halt;
 	
 	public NetworkHandler(Socket socket) {
+		eventsLock = new ReentrantReadWriteLock();
+		events = new LinkedList<NetworkEvent>();
 		listeners = new Vector<NetworkEventListener>();
 		this.socket = socket;
+		
+		
 		try {
 			out = socket.getOutputStream();
 			in = socket.getInputStream();
@@ -76,25 +88,6 @@ public class NetworkHandler implements Runnable {
 			return null;
 		}
 	}
-	
-	
-	// All network activity is sent through serializable objects
-	// The behavior of the client/server monitoring this network handler should
-	// check the type/nature of the object and distribute it accordingly
-//	public void send(Update s) {
-//		try {
-//			oos.reset();
-//			oos.writeObject(s);
-//		} catch (SocketException e) {
-//			if (socket.isClosed()) {
-//				halt = true;
-//				return;
-//			}
-//			Log.p.error("Socket Exception", e);
-//		} catch (IOException e) {
-//			Log.p.error("Error sending object",e);
-//		}
-//	}
 	
 	public void send(int type, byte[] bytes) {
 		try {
@@ -143,7 +136,9 @@ public class NetworkHandler implements Runnable {
 			}
 			if (type == INVALID) continue;
 			
-			broadcastEvent(new NetworkEvent(type,bytes));
+			eventsLock.writeLock().lock();
+			events.add(new NetworkEvent(type,bytes));
+			eventsLock.writeLock().unlock();
 		}
 
 		try {
@@ -169,6 +164,17 @@ public class NetworkHandler implements Runnable {
 	
 	public Socket getSocket() {
 		return socket;
+	}
+	
+	public void update() {
+		eventsLock.writeLock().lock();
+		NetworkEvent[] eventList = events.toArray(new NetworkEvent[0]);
+		events.clear();
+		eventsLock.writeLock().unlock();
+		
+		for (NetworkEvent event : eventList) {
+			broadcastEvent(event);
+		}
 	}
 
 	// Listener methods

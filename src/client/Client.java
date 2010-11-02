@@ -105,6 +105,7 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 				
 				kb.handle();
 				mh.handle();
+				nh.update();
 			}
 			
 			try {

@@ -45,16 +45,26 @@ public class GameWorld implements CollisionListener {
 				yy += (int)(Math.random()*3 - 1);
 
 				if (xx < 0 || xx > Chunk.CHUNK_SIZE-1 || yy < 0 || yy > Chunk.CHUNK_SIZE-1) continue;
-				Entity e = new Entity(newId(),"block.entity");
-				addEntity(e,xx*Chunk.TILE_SIZE, yy*Chunk.TILE_SIZE);
+				addBlock(xx,yy);
 			}
 		}
+		
+		for (int i=0; i<Chunk.CHUNK_SIZE; i++) addBlock(0,i);
+		for (int i=0; i<Chunk.CHUNK_SIZE; i++) addBlock(Chunk.CHUNK_SIZE-1,i);
+		for (int i=0; i<Chunk.CHUNK_SIZE; i++) addBlock(i,0);
+		for (int i=0; i<Chunk.CHUNK_SIZE; i++) addBlock(i,Chunk.CHUNK_SIZE-1);
+	}
+	
+	private void addBlock(int x, int y) {
+		Entity e = new Entity(newId(),"block.entity");
+		addEntity(e,x*Chunk.TILE_SIZE, y*Chunk.TILE_SIZE);
 	}
 	
 	public void addEntity(Entity e, float x, float y) {
 		Body body = null;
 		
 		EntityType type = e.getType();
+//		Log.p.out("Adding entity "+e.getId()+"  "+e.getType().getPath());
 		
 		body = new Body(new Box(type.getWidth(),type.getHeight()), type.getMass());
 		if (type.getFixed()) body = new StaticBody(new Box(type.getWidth(),type.getHeight()));
@@ -62,6 +72,12 @@ public class GameWorld implements CollisionListener {
 		body.setDamping(type.getDamping());
 		body.setRotDamping(type.getRotationalDamping());
 		body.setRotatable(type.getRotatable());
+		
+		if (type.getPath().equals("projectile.entity")) {
+			Entity owner = findEntity(e.getOwner());
+			body.addExcludedBody(owner.getBody());
+		}
+		
 		
 		if (body != null) {
 			body.setUserData(e);
@@ -80,6 +96,7 @@ public class GameWorld implements CollisionListener {
 		Entity[] entityList = getEntities().toArray(new Entity[0]);
 		for (Entity e : entityList) {
 			e.update();
+			if (e.isDead()) removeEntity(e);
 		}
 	}
 	
@@ -90,8 +107,9 @@ public class GameWorld implements CollisionListener {
 		
 		Body bb = event.getBodyB();
 		Entity b = (Entity)bb.getUserData();
+//		Log.p.out("Collision: "+b.getType().getPath()+ "    and     "+ a.getType().getPath());
+//		Log.p.out("\t\t: "+b.getId()+ "    and     "+ a.getId());
 		
-		//TODO FIX THIS
 		boolean projA = "projectile.entity".equals(a.getType().getPath());
 		boolean projB = "projectile.entity".equals(b.getType().getPath());
 		

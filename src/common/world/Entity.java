@@ -16,6 +16,7 @@ public class Entity {
 	private Behavior behavior;
 	private int id;
 	private int life;
+	private int owner;
 	
 	private float aim;
 	
@@ -26,6 +27,7 @@ public class Entity {
 		this.id = id;
 		this.aim = 0;
 		this.dirty = true;
+		this.setOwner(id);
 		configureType();
 	}
 	
@@ -41,6 +43,7 @@ public class Entity {
 	public byte[] getBytes() {
 		return NetworkEntity.newBuilder()
 		.setId(id)
+		.setOwner(getOwner())
 		.setType(getType().getPath())
 		.setAim(aim)
 		.setX(getX())
@@ -49,6 +52,10 @@ public class Entity {
 		.setYvel(getYVel())
 		.setR(getRotation())
 		.setRvel(getAngularVelocity()).build().toByteArray();
+	}
+	
+	public boolean isDead() {
+		return life < 0;
 	}
 	
 
@@ -70,6 +77,7 @@ public class Entity {
 	}
 
 	public Body getBody() {
+		if (world == null) return null;
 		return getWorld().getBody(this);
 	}
 	
@@ -122,9 +130,11 @@ public class Entity {
 		this.type = getTypeForString(ne.getType());
 		
 		this.life = ne.getLife();
+		this.setOwner(ne.getOwner());
 		this.aim = ne.getAim();
 		
         Body b = getBody(); 
+        if (b == null) return;
         b.setPosition(ne.getX(), ne.getY()); 
         BodyUtil.setVelocity(b,new Vector2f(ne.getXvel(),ne.getYvel())); 
         b.setRotation(ne.getR()); 
@@ -157,5 +167,13 @@ public class Entity {
 	
 	public void damage(int damage) {
 		setLife(getLife() - damage);
+	}
+
+	public void setOwner(int owner) {
+		this.owner = owner;
+	}
+
+	public int getOwner() {
+		return owner;
 	}
 }

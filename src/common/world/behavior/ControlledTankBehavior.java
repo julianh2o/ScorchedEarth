@@ -1,14 +1,15 @@
 package common.world.behavior;
 
-import net.phys2d.raw.Body;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
 import client.GameScreen;
 
+import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkMessage;
+import common.network.NetworkProto.NetworkMessageData;
+import common.network.NetworkProto.NetworkMessage.Builder;
 import common.util.VectorUtil;
-import common.world.Entity;
 
 public class ControlledTankBehavior extends TankBehavior {
 	GameScreen screen;
@@ -55,13 +56,7 @@ public class ControlledTankBehavior extends TankBehavior {
 	private void fire() {
 		lastShot = System.currentTimeMillis();
 		
-		Entity bullet = new Entity(-1,"projectile.entity");
-		screen.getWorld().addEntity(bullet, entity.getX(), entity.getY());
-		Body body = bullet.getBody();
-		float mult = 10;
-		net.phys2d.math.Vector2f bulletVelocity = VectorUtil.create(entity.getAim());
-		bulletVelocity.scale(mult);
-		body.adjustVelocity(bulletVelocity);
-		body.addExcludedBody(entity.getBody());
+		Builder nm = NetworkMessage.newBuilder().setType(NetworkMessage.Type.FIRE).addData(NetworkMessageData.newBuilder().setInt(entity.getId()).build());
+		screen.nh().send(NetworkHandler.MESSAGE, nm.build().toByteArray());
 	}
 }

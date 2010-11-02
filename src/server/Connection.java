@@ -3,6 +3,8 @@ package server;
 
 import java.io.IOException;
 
+import net.phys2d.raw.Body;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 import common.network.NetworkEvent;
 import common.network.NetworkEventListener;
@@ -12,8 +14,10 @@ import common.network.NetworkProto.NetworkMessage;
 import common.network.NetworkProto.NetworkMessageData;
 import common.network.NetworkProto.NetworkMessage.Type;
 import common.util.Log;
+import common.util.VectorUtil;
 import common.world.Chunk;
 import common.world.Entity;
+import common.world.behavior.ProjectileBehavior;
 import common.world.net.WorldChunk;
 
 // The connection class handles a single connection to the server. This class holds the
@@ -26,6 +30,7 @@ public class Connection implements NetworkEventListener {
 	
 	private boolean initilized;
 	
+	long lastShot;
 	public Connection(Server server, NetworkHandler nh) {
 		initilized = false;
 		
@@ -35,6 +40,8 @@ public class Connection implements NetworkEventListener {
 		nh.addNetworkEventListener(this);
 		
 		placeTank();
+		
+		lastShot = System.currentTimeMillis();
 	}
 	
 	
@@ -53,12 +60,29 @@ public class Connection implements NetworkEventListener {
 		//}
 	}
 	
+	public Entity tankFired(Entity tank) {
+		if (System.currentTimeMillis() - lastShot < 250) return null;
+		lastShot = System.currentTimeMillis();
+		Entity bullet = new Entity(-1,"projectile.entity");
+		bullet.setOwner(tank.getId());
+		Log.p.out("bullet firing: "+bullet.getId()+" (parent: "+bullet.getOwner()+")");
+		bullet.setBehavior(new ProjectileBehavior());
+		server.getWorld().addEntity(bullet, tank.getX(), tank.getY());
+		Body body = bullet.getBody();
+		float mult = bullet.getType().getFloat("velocity");
+		net.phys2d.math.Vector2f bulletVelocity = VectorUtil.create(tank.getAim());
+		bulletVelocity.scale(mult);
+		body.adjustVelocity(bulletVelocity);
+		return bullet;
+	}
+	
 	public void update() {
-		
+		nh.update();
 	}
 	
 	public void networkUpdate() {
-		for (Entity e : server.getWorld().getEntities()) {
+		Entity[] entityList = server.getWorld().getEntities().toArray(new Entity[0]);
+		for (Entity e : entityList) {
 			if (!initilized || e.isDirty()) {
 				if (e != tank) {
 					nh.send(NetworkHandler.ENTITY_UPDATE, e.getBytes());
@@ -115,6 +139,12 @@ public class Connection implements NetworkEventListener {
 				Log.p.error("Error sending chunk",e1);
 			}
 			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).addData(NetworkMessageData.newBuilder().setInt(tank.getId()).build()).build().toByteArray());
+			break;
+		case FIRE:
+			Entity bullet = tankFired(tank);
+			if (bullet != null) {
+				server.broadcastBytes(NetworkHandler.ENTITY_UPDATE,bullet.getBytes());
+			}
 			break;
 		}
 	}

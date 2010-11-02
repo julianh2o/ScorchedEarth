@@ -16,6 +16,7 @@ message NetworkEntity {
 	optional string type = 9;
 	
 	optional float aim = 10;
+	optional int32 owner = 11;
 }
 
 message NetworkChunk {
@@ -32,6 +33,7 @@ message NetworkMessage {
 		REQUEST_CHUNK = 1;
 		GRANT_CONTROL = 2;
 		REMOVE_ENTITY = 3;
+		FIRE = 4;
 	}
 	
 	optional Type type = 1;

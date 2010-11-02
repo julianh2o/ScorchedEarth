@@ -95,6 +95,7 @@ public class ResourceManager {
 	}
 
 	public Model getModelFor(Entity e) {
+		if (e.getType() == null) return null;
 		return models.get(e.getType().getModel());
 	}
 

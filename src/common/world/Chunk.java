@@ -1,6 +1,9 @@
 package common.world;
 
+import java.util.HashMap;
+
 import common.ResourceManager;
+import common.util.Log;
 
 import client.Model;
 import client.Window;
@@ -8,6 +11,13 @@ import client.Window;
 public class Chunk {
 	public static int CHUNK_SIZE = 50;
 	public static float TILE_SIZE = 1F;
+	
+	public static HashMap<Byte,String> blockModels = new HashMap<Byte,String>();
+	static {
+		blockModels.put((byte)0, "dirt.model");;
+		blockModels.put((byte)1, "grass.model");
+		blockModels.put((byte)2, "sand.model");
+	}
 	
 	int id;
 	byte[] tiles;
@@ -24,7 +34,7 @@ public class Chunk {
 		tiles = new byte[getChunkLength()];
 		
 		for (int i=0; i<getChunkLength(); i++) {
-			byte rand = (byte)(Math.random()*2);
+			byte rand = (byte)(Math.random()*3);
 			tiles[i] = rand;
 		}
 	}
@@ -56,7 +66,9 @@ public class Chunk {
 	}
 	
 	public void renderTile(Window w, int x, int y) {
-		Model m = ResourceManager.getInstance().getModel("dirt.model");
+		byte tileValue = tiles[getIndex(x,y)];
+		String model = blockModels.get(tileValue);
+		Model m = ResourceManager.getInstance().getModel(model);
 		m.renderAt(w, x*TILE_SIZE, y*TILE_SIZE, 0,0);
 	}
 

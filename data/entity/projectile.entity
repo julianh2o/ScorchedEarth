@@ -1,5 +1,7 @@
-width=.3
-height=.3
+width=.4
+height=.4
 mass=.3
+maxLife=50
+velocity=30
 fixed=false
 model=projectile.model
