@@ -1,6 +1,7 @@
 package common.world;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import common.ResourceManager;
 import common.util.Log;
@@ -33,9 +34,42 @@ public class Chunk {
 		
 		tiles = new byte[getChunkLength()];
 		
-		for (int i=0; i<getChunkLength(); i++) {
-			byte rand = (byte)(Math.random()*3);
-			tiles[i] = rand;
+		generateChunk();
+	}
+	
+	public void generateChunk() {
+		Random rng = new Random();
+		for (int i=0; i<getChunkLength(); i++) tiles[i] = 0;
+		
+		for (byte type = 1; type <= 2; type++) {
+			for (int i=0; i<20; i++) {
+				int x = rng.nextInt(CHUNK_SIZE);
+				int y = rng.nextInt(CHUNK_SIZE);
+				int size = 5 + rng.nextInt(25 - i);
+				generateSplotch(rng,x,y,size,type);
+			}
+		}
+	}
+	
+	public void generateSplotch(Random rng, int x, int y, int size, byte type) {
+		if (size <= 0) return;
+		if (!validIndex(x,y)) return;
+		if (tiles[getIndex(x,y)] == type) return;
+		
+		tiles[getIndex(x,y)] = type;
+		
+		for (int i = -1; i<=1; i++) {
+			for (int j = -1; j<=1; j++) {
+				int dx = i;
+				int dy = j;
+				
+				int newx = x + dx;
+				int newy = y + dy;
+				
+				int newsize = size - rng.nextInt(5);
+				
+				generateSplotch(rng,newx,newy,newsize,type);
+			}
 		}
 	}
 	
@@ -109,7 +143,7 @@ public class Chunk {
 	}
 	
 	public boolean validIndex(int x, int y) {
-		if (x < 0 || y < 0 || x > CHUNK_SIZE || y > CHUNK_SIZE) {
+		if (x < 0 || y < 0 || x >= CHUNK_SIZE || y >= CHUNK_SIZE) {
 			return false;
 		}
 		return true;
