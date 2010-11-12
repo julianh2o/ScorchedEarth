@@ -5,8 +5,6 @@
     <property name="jar.dir" value="."/>
 
     <property name="lib.dir" value="lib" />
-	<property name="os" value="${os.name}" />
-	<property name="native.dir" value="${lib.dir}/native/${os}" />
 	
     <property name="client-class" value="client.Client"/>
     <property name="server-class" value="server.Server"/>
@@ -15,6 +13,22 @@
         <fileset dir="${lib.dir}" includes="*.jar"/>
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
+	
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<pathconvert property="manifest.classpath" pathsep=" ">
+		<path refid="build.classpath"/>
+		<mapper>
+			<chainedmapper>
+				<flattenmapper/>
+				<globmapper from="*.jar" to="${lib.dir}/*.jar"/>
+			</chainedmapper>
+		</mapper>
+	</pathconvert>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -26,18 +40,19 @@
 			debug="true" debuglevel="lines,vars,source"/>
     </target>
 
-	<!--<target name="jar" depends="compile">
+	<target name="jar" depends="compile">
+		<echo message="${manifest.classpath}" />
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
             <manifest>
-                <attribute name="Main-Class" value="${client-class}"/>
+                <attribute name="Main-Class" value="${client-class}" />
+                <attribute name="Class-Path" value="${manifest.classpath}" />
             </manifest>
         </jar>
-	</target>-->
+	</target>
 
     <target name="run" depends="compile">
 		<java classname="${client-class}" fork="true">
-			<sysproperty key="java.library.path" path="${native.dir}"/>
             <classpath>
                 <path refid="classpath"/>
                 <path location="${classes.dir}"/>
@@ -59,5 +74,6 @@
 	</target>
 
     <target name="clean-build" depends="clean,compile"/>
-    <target name="main" depends="clean,run"/>
+    <target name="build" depends="compile"/>
+    <target name="main" depends="run"/>
 </project>

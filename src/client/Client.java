@@ -37,6 +37,15 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 	private long lastNetworkUpdate;
 
 	public static void main(String[] args) throws IOException {
+		Log.setPrimary(Log.CLIENT);
+		
+		try {
+			OSUtil.setLibraryPath();
+		} catch (Exception e) {
+			Log.p.out("Unable to set native library path! (Try running me in a different way)");
+			System.exit(1);
+		}
+		
 		Properties p = new Properties();
 		File props = new File("host.properties");
 			
@@ -48,7 +57,6 @@ public class Client implements MouseListener, KeyListener, NetworkEventListener,
 		}
 		String host = p.getProperty("host");
 		
-		Log.setPrimary(Log.CLIENT);
 		new Client(host,7331);
 	}
 

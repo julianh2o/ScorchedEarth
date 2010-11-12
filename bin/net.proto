@@ -17,6 +17,7 @@ message NetworkEntity {
 	
 	optional float aim = 10;
 	optional int32 owner = 11;
+	optional bool firing = 12;
 }
 
 message NetworkChunk {

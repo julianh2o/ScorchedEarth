@@ -65,7 +65,6 @@ public class Connection implements NetworkEventListener {
 		lastShot = System.currentTimeMillis();
 		Entity bullet = new Entity(-1,"projectile.entity");
 		bullet.setOwner(tank.getId());
-		Log.p.out("bullet firing: "+bullet.getId()+" (parent: "+bullet.getOwner()+")");
 		bullet.setBehavior(new ProjectileBehavior());
 		server.getWorld().addEntity(bullet, tank.getX(), tank.getY());
 		Body body = bullet.getBody();
@@ -77,6 +76,7 @@ public class Connection implements NetworkEventListener {
 	}
 	
 	public void update() {
+		if (tank.isFiring()) tankFired(tank);
 		nh.update();
 	}
 	

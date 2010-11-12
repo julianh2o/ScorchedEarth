@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import common.util.Log;
 import common.world.entity.EntityType;
 
 import net.phys2d.math.Vector2f;
@@ -24,8 +25,12 @@ public class GameWorld implements CollisionListener {
 	
 	World phys;
 	Hashtable<Entity,Body> ebmap;
+
+	private List<EntityRemovalListener> removalListeners;
 	
 	public GameWorld() {
+		removalListeners = new LinkedList<EntityRemovalListener>();
+		
 		ebmap = new Hashtable<Entity,Body>();
 		phys = new World(new Vector2f(0F,0F),5);
 		phys.addListener(this);
@@ -36,6 +41,7 @@ public class GameWorld implements CollisionListener {
 	}
 
 	public void generate() {
+		boolean[] hasBlock = new boolean[Chunk.CHUNK_SIZE * Chunk.CHUNK_SIZE];
 		for (int i=0; i<30; i++) {
 			int xx = (int)(Math.random()*Chunk.CHUNK_SIZE);
 			int yy = (int)(Math.random()*Chunk.CHUNK_SIZE);
@@ -45,6 +51,9 @@ public class GameWorld implements CollisionListener {
 				yy += (int)(Math.random()*3 - 1);
 
 				if (xx < 0 || xx > Chunk.CHUNK_SIZE-1 || yy < 0 || yy > Chunk.CHUNK_SIZE-1) continue;
+				int bindex = xx + yy * Chunk.CHUNK_SIZE;
+				if (hasBlock[bindex]) continue;
+				hasBlock[bindex] = true;
 				addBlock(xx,yy);
 			}
 		}
@@ -64,7 +73,6 @@ public class GameWorld implements CollisionListener {
 		Body body = null;
 		
 		EntityType type = e.getType();
-//		Log.p.out("Adding entity "+e.getId()+"  "+e.getType().getPath());
 		
 		body = new Body(new Box(type.getWidth(),type.getHeight()), type.getMass());
 		if (type.getFixed()) body = new StaticBody(new Box(type.getWidth(),type.getHeight()));
@@ -79,14 +87,12 @@ public class GameWorld implements CollisionListener {
 		}
 		
 		
-		if (body != null) {
-			body.setUserData(e);
-			if (e.getId() < 0) e.setId(newId());
-			e.setWorld(this);
-			body.setPosition(x,y);
-			ebmap.put(e,body);
-			phys.add(body);
-		}
+		body.setUserData(e);
+		if (e.getId() < 0) e.setId(newId());
+		e.setWorld(this);
+		body.setPosition(x,y);
+		ebmap.put(e,body);
+		phys.add(body);
 	}
 
 	//please call me 60 times per second
@@ -96,7 +102,10 @@ public class GameWorld implements CollisionListener {
 		Entity[] entityList = getEntities().toArray(new Entity[0]);
 		for (Entity e : entityList) {
 			e.update();
-			if (e.isDead()) removeEntity(e);
+			if (e.isDead()) {
+				Log.p.out("removing entity, its dead");
+				removeEntity(e);
+			}
 		}
 	}
 	
@@ -117,19 +126,24 @@ public class GameWorld implements CollisionListener {
 			if (projA && projB) {
 				return;
 			} else if (projA) {
+				Log.p.out("removing entity "+a.getId()+"due to collision");
 				removeEntity(a);
+				b.damage(10);
 			} else if (projB) {
+				Log.p.out("removing entity "+b.getId()+"due to collision");
 				removeEntity(b);
+				a.damage(10);
 			}
 		}
 	}
 	
 	public void removeEntity(Entity e) {
+		broadcastEntityRemoval(e);
 		Body b = getBody(e);
 		phys.remove(b);
 		ebmap.remove(e);
 	}
-	
+
 	public int getTileAt(double x, double y) {
 		for (Chunk c : chunks) {
 			int t = c.getTileAt(x,y);
@@ -164,6 +178,7 @@ public class GameWorld implements CollisionListener {
 
 	public void removeEntity(int id) {
 		Entity e = findEntity(id);
+		if (e == null) return;
 		Body b = ebmap.get(e);
 		
 		ebmap.remove(e);
@@ -206,5 +221,21 @@ public class GameWorld implements CollisionListener {
 		
 	public Entity newEntity(String type,float x,float y) {
 		return newEntity(type,x,y,-1);
+	}
+	
+	
+	/// Entity Removal Listener methods
+	private void broadcastEntityRemoval(Entity e) {
+		for (EntityRemovalListener rl : removalListeners) {
+			rl.entityRemoved(e);
+		}
+	}
+	
+	public void addEntityRemovalListener(EntityRemovalListener l) {
+		removalListeners.add(l);
+	}
+	
+	public void removeEntityRemovalListener(EntityRemovalListener l) {
+		removalListeners.remove(l);
 	}
 }

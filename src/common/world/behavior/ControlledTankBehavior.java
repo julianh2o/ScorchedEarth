@@ -5,19 +5,13 @@ import org.lwjgl.util.vector.Vector2f;
 
 import client.GameScreen;
 
-import common.network.NetworkHandler;
-import common.network.NetworkProto.NetworkMessage;
-import common.network.NetworkProto.NetworkMessageData;
-import common.network.NetworkProto.NetworkMessage.Builder;
 import common.util.VectorUtil;
 
 public class ControlledTankBehavior extends TankBehavior {
 	GameScreen screen;
-	long lastShot;
 	
 	public ControlledTankBehavior(GameScreen screen) {
 		this.screen = screen;
-		lastShot = System.currentTimeMillis();
 	}
 
 	@Override
@@ -43,20 +37,8 @@ public class ControlledTankBehavior extends TankBehavior {
 			entity.setAim(VectorUtil.getAngle(aim));
 		}
 		
-		if (screen.kb().isDown(Keyboard.KEY_SPACE)) {
-			long since = (System.currentTimeMillis() - lastShot);
-			if (since > 250) {
-				fire();
-			}
-		}
+		entity.setFiring(screen.kb().isDown(Keyboard.KEY_SPACE));
 		
 		super.update();
-	}
-	
-	private void fire() {
-		lastShot = System.currentTimeMillis();
-		
-		Builder nm = NetworkMessage.newBuilder().setType(NetworkMessage.Type.FIRE).addData(NetworkMessageData.newBuilder().setInt(entity.getId()).build());
-		screen.nh().send(NetworkHandler.MESSAGE, nm.build().toByteArray());
 	}
 }

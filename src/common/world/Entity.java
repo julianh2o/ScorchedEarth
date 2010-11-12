@@ -6,6 +6,7 @@ import net.phys2d.raw.Body;
 import common.ResourceManager;
 import common.network.NetworkProto.NetworkEntity;
 import common.util.BodyUtil;
+import common.util.Log;
 import common.world.behavior.Behavior;
 import common.world.entity.EntityType;
 
@@ -17,6 +18,7 @@ public class Entity {
 	private int id;
 	private int life;
 	private int owner;
+	private boolean firing;
 	
 	private float aim;
 	
@@ -26,13 +28,16 @@ public class Entity {
 		this.type = getTypeForString(type);
 		this.id = id;
 		this.aim = 0;
+		this.firing = false;
 		this.dirty = true;
 		this.setOwner(id);
 		configureType();
 	}
 	
 	private void configureType() {
-		if (type == null) return;
+		if (type == null) {
+			return;
+		}
 		this.life = type.getMaxLife();
 	}
 
@@ -46,6 +51,8 @@ public class Entity {
 		.setOwner(getOwner())
 		.setType(getType().getPath())
 		.setAim(aim)
+		.setLife(life)
+		.setFiring(firing)
 		.setX(getX())
 		.setY(getY())
 		.setXvel(getXVel())
@@ -55,7 +62,7 @@ public class Entity {
 	}
 	
 	public boolean isDead() {
-		return life < 0;
+		return life <= 0;
 	}
 	
 
@@ -82,26 +89,32 @@ public class Entity {
 	}
 	
 	public float getX() {
+		if (getBody() == null) return 0;
 		return getBody().getPosition().getX();
 	}
 	
 	public float getY() {
+		if (getBody() == null) return 0;
 		return getBody().getPosition().getY();
 	}
 	
 	public float getXVel() {
+		if (getBody() == null) return 0;
 		return getBody().getVelocity().getX();
 	}
 	
 	public float getYVel() {
+		if (getBody() == null) return 0;
 		return getBody().getVelocity().getY();
 	}
 	
 	public float getRotation() {
+		if (getBody() == null) return 0;
 		return getBody().getRotation();
 	}
 	
 	public float getAngularVelocity() {
+		if (getBody() == null) return 0;
 		return getBody().getAngularVelocity();
 	}
 	
@@ -132,6 +145,7 @@ public class Entity {
 		this.life = ne.getLife();
 		this.setOwner(ne.getOwner());
 		this.aim = ne.getAim();
+		this.firing = ne.getFiring();
 		
         Body b = getBody(); 
         if (b == null) return;
@@ -158,6 +172,9 @@ public class Entity {
 	}
 
 	public void setLife(int life) {
+		if (this.life > 0 && life <= 0) {
+			Log.p.out("Took Fatal Damage!");
+		}
 		this.life = life;
 	}
 
@@ -166,6 +183,7 @@ public class Entity {
 	}
 	
 	public void damage(int damage) {
+		Log.p.out("Entity "+getId()+" is taking damage. ("+getLife()+")");
 		setLife(getLife() - damage);
 	}
 
@@ -175,5 +193,13 @@ public class Entity {
 
 	public int getOwner() {
 		return owner;
+	}
+
+	public void setFiring(boolean firing) {
+		this.firing = firing;
+	}
+
+	public boolean isFiring() {
+		return firing;
 	}
 }

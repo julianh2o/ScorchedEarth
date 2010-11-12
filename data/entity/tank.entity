@@ -6,5 +6,6 @@ fixed=false
 damping=.05
 rdamping=.05
 restitution=1
+reload=.1
 model=tank.model
 behavior=common.world.behavior.TankBehavior

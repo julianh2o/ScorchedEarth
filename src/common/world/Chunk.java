@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 import common.ResourceManager;
-import common.util.Log;
 
 import client.Model;
 import client.Window;
@@ -16,8 +15,9 @@ public class Chunk {
 	public static HashMap<Byte,String> blockModels = new HashMap<Byte,String>();
 	static {
 		blockModels.put((byte)0, "dirt.model");;
-		blockModels.put((byte)1, "grass.model");
-		blockModels.put((byte)2, "sand.model");
+		blockModels.put((byte)1, "sand.model");
+		blockModels.put((byte)2, "grass.model");
+		blockModels.put((byte)3, "mineral.model");
 	}
 	
 	int id;
@@ -41,11 +41,11 @@ public class Chunk {
 		Random rng = new Random();
 		for (int i=0; i<getChunkLength(); i++) tiles[i] = 0;
 		
-		for (byte type = 1; type <= 2; type++) {
-			for (int i=0; i<20; i++) {
+		for (byte type = 1; type <= 3; type++) {
+			for (int i=0; i<15; i++) {
 				int x = rng.nextInt(CHUNK_SIZE);
 				int y = rng.nextInt(CHUNK_SIZE);
-				int size = 5 + rng.nextInt(25 - i);
+				int size = 5 + rng.nextInt(15 - i)-2*type;
 				generateSplotch(rng,x,y,size,type);
 			}
 		}

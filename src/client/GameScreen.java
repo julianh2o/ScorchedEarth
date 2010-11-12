@@ -157,6 +157,10 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 		case GRANT_CONTROL:
 				controlTank(nm.getData(0).getInt());
 			break;
+		case REMOVE_ENTITY:
+				Log.p.out("Entity removal request received: "+nm.getData(0).getInt());
+				world.removeEntity(nm.getData(0).getInt());
+			break;
 		}
 	}
 	

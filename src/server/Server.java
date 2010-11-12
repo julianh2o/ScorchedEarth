@@ -9,13 +9,16 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import common.network.NetworkHandler;
+import common.network.NetworkProto.NetworkMessage;
+import common.network.NetworkProto.NetworkMessageData;
 import common.util.Log;
 import common.util.TickTimer;
 import common.world.Chunk;
 import common.world.Entity;
+import common.world.EntityRemovalListener;
 import common.world.GameWorld;
 
-public class Server implements Runnable {
+public class Server implements Runnable, EntityRemovalListener {
 	private static final long NETWORK_INTERVAL = 50;
 	private long lastNetworkUpdate;
 	
@@ -38,6 +41,7 @@ public class Server implements Runnable {
 		world = new GameWorld();
 		world.addChunk(new Chunk(0,0));
 		world.generate();
+		world.addEntityRemovalListener(this);
 		
 		connectionsLock = new ReentrantReadWriteLock();
 		chatServer = new ChatServer(this);
@@ -189,5 +193,10 @@ public class Server implements Runnable {
 				conn.getNetworkHandler().send(type,bytes);
 			}
 		}
+	}
+
+	@Override
+	public void entityRemoved(Entity e) {
+		broadcastBytes(NetworkHandler.MESSAGE,NetworkMessage.newBuilder().setType(NetworkMessage.Type.REMOVE_ENTITY).addData(NetworkMessageData.newBuilder().setInt(e.getId()).build()).build().toByteArray());
 	}
 }

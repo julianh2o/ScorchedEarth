@@ -112,6 +112,13 @@ public final class NetworkProto {
     public boolean hasOwner() { return hasOwner; }
     public int getOwner() { return owner_; }
     
+    // optional bool firing = 12;
+    public static final int FIRING_FIELD_NUMBER = 12;
+    private boolean hasFiring;
+    private boolean firing_ = false;
+    public boolean hasFiring() { return hasFiring; }
+    public boolean getFiring() { return firing_; }
+    
     private void initFields() {
     }
     public final boolean isInitialized() {
@@ -153,6 +160,9 @@ public final class NetworkProto {
       }
       if (hasOwner()) {
         output.writeInt32(11, getOwner());
+      }
+      if (hasFiring()) {
+        output.writeBool(12, getFiring());
       }
       getUnknownFields().writeTo(output);
     }
@@ -206,6 +216,10 @@ public final class NetworkProto {
       if (hasOwner()) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(11, getOwner());
+      }
+      if (hasFiring()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(12, getFiring());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -398,6 +412,9 @@ public final class NetworkProto {
         if (other.hasOwner()) {
           setOwner(other.getOwner());
         }
+        if (other.hasFiring()) {
+          setFiring(other.getFiring());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -465,6 +482,10 @@ public final class NetworkProto {
             }
             case 88: {
               setOwner(input.readInt32());
+              break;
+            }
+            case 96: {
+              setFiring(input.readBool());
               break;
             }
           }
@@ -670,6 +691,24 @@ public final class NetworkProto {
       public Builder clearOwner() {
         result.hasOwner = false;
         result.owner_ = 0;
+        return this;
+      }
+      
+      // optional bool firing = 12;
+      public boolean hasFiring() {
+        return result.hasFiring();
+      }
+      public boolean getFiring() {
+        return result.getFiring();
+      }
+      public Builder setFiring(boolean value) {
+        result.hasFiring = true;
+        result.firing_ = value;
+        return this;
+      }
+      public Builder clearFiring() {
+        result.hasFiring = false;
+        result.firing_ = false;
         return this;
       }
       
@@ -1855,20 +1894,20 @@ public final class NetworkProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tnet.proto\022\016common.network\"\236\001\n\rNetworkE" +
+      "\n\tnet.proto\022\016common.network\"\256\001\n\rNetworkE" +
       "ntity\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022" +
       "\014\n\004xvel\030\004 \001(\002\022\014\n\004yvel\030\005 \001(\002\022\t\n\001r\030\006 \001(\002\022\014" +
       "\n\004rvel\030\007 \001(\002\022\014\n\004life\030\010 \001(\005\022\014\n\004type\030\t \001(\t" +
-      "\022\013\n\003aim\030\n \001(\002\022\r\n\005owner\030\013 \001(\005\">\n\014NetworkC" +
-      "hunk\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\014" +
-      "\n\004data\030\004 \001(\014\"\322\001\n\016NetworkMessage\0221\n\004type\030" +
-      "\001 \001(\0162#.common.network.NetworkMessage.Ty" +
-      "pe\0220\n\004data\030\002 \003(\0132\".common.network.Networ" +
-      "kMessageData\"[\n\004Type\022\020\n\014CLIENT_READY\020\000\022\021",
-      "\n\rREQUEST_CHUNK\020\001\022\021\n\rGRANT_CONTROL\020\002\022\021\n\r" +
-      "REMOVE_ENTITY\020\003\022\010\n\004FIRE\020\004\"!\n\022NetworkMess" +
-      "ageData\022\013\n\003int\030\001 \001(\005B\036\n\016common.networkB\014" +
-      "NetworkProto"
+      "\022\013\n\003aim\030\n \001(\002\022\r\n\005owner\030\013 \001(\005\022\016\n\006firing\030\014" +
+      " \001(\010\">\n\014NetworkChunk\022\n\n\002id\030\001 \001(\005\022\t\n\001x\030\002 " +
+      "\001(\002\022\t\n\001y\030\003 \001(\002\022\014\n\004data\030\004 \001(\014\"\322\001\n\016Network" +
+      "Message\0221\n\004type\030\001 \001(\0162#.common.network.N" +
+      "etworkMessage.Type\0220\n\004data\030\002 \003(\0132\".commo" +
+      "n.network.NetworkMessageData\"[\n\004Type\022\020\n\014",
+      "CLIENT_READY\020\000\022\021\n\rREQUEST_CHUNK\020\001\022\021\n\rGRA" +
+      "NT_CONTROL\020\002\022\021\n\rREMOVE_ENTITY\020\003\022\010\n\004FIRE\020" +
+      "\004\"!\n\022NetworkMessageData\022\013\n\003int\030\001 \001(\005B\036\n\016" +
+      "common.networkB\014NetworkProto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1880,7 +1919,7 @@ public final class NetworkProto {
           internal_static_common_network_NetworkEntity_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_common_network_NetworkEntity_descriptor,
-              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Life", "Type", "Aim", "Owner", },
+              new java.lang.String[] { "Id", "X", "Y", "Xvel", "Yvel", "R", "Rvel", "Life", "Type", "Aim", "Owner", "Firing", },
               common.network.NetworkProto.NetworkEntity.class,
               common.network.NetworkProto.NetworkEntity.Builder.class);
           internal_static_common_network_NetworkChunk_descriptor =

@@ -6,6 +6,10 @@
 	<classpathentry exported="true" kind="lib" path="lib/phys2d.jar" sourcepath="/home/julian/javalib/phys2d-source"/>
 	<classpathentry exported="true" kind="lib" path="lib/protobuf-java-2.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl_util.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ScorchedEarth/lib/native/Linux"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
