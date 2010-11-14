@@ -78,7 +78,7 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 	}
 
 	public void update() {
-		if (tank != null) {
+		if (tank != null && !tank.isDead()) {
 			view.centerOn(tank.getX(), tank.getY());
 		}
 		
@@ -158,7 +158,6 @@ public class GameScreen implements Screen, KeyListener, MouseListener, NetworkEv
 				controlTank(nm.getData(0).getInt());
 			break;
 		case REMOVE_ENTITY:
-				Log.p.out("Entity removal request received: "+nm.getData(0).getInt());
 				world.removeEntity(nm.getData(0).getInt());
 			break;
 		}

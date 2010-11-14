@@ -4,4 +4,5 @@ mass=.3
 maxLife=25
 velocity=30
 fixed=false
+damage=100
 model=projectile.model

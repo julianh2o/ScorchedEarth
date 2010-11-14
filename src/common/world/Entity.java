@@ -6,7 +6,6 @@ import net.phys2d.raw.Body;
 import common.ResourceManager;
 import common.network.NetworkProto.NetworkEntity;
 import common.util.BodyUtil;
-import common.util.Log;
 import common.world.behavior.Behavior;
 import common.world.entity.EntityType;
 
@@ -172,9 +171,6 @@ public class Entity {
 	}
 
 	public void setLife(int life) {
-		if (this.life > 0 && life <= 0) {
-			Log.p.out("Took Fatal Damage!");
-		}
 		this.life = life;
 	}
 
@@ -183,7 +179,6 @@ public class Entity {
 	}
 	
 	public void damage(int damage) {
-		Log.p.out("Entity "+getId()+" is taking damage. ("+getLife()+")");
 		setLife(getLife() - damage);
 	}
 

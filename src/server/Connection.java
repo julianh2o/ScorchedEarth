@@ -76,6 +76,12 @@ public class Connection implements NetworkEventListener {
 	}
 	
 	public void update() {
+		if (tank == null || tank.isDead()) {
+			Log.p.out("spawning new tank!");
+			placeTank();
+			grantTankControl();
+		}
+		
 		if (tank.isFiring()) tankFired(tank);
 		nh.update();
 	}
@@ -138,7 +144,7 @@ public class Connection implements NetworkEventListener {
 			} catch (IOException e1) {
 				Log.p.error("Error sending chunk",e1);
 			}
-			nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).addData(NetworkMessageData.newBuilder().setInt(tank.getId()).build()).build().toByteArray());
+			grantTankControl();
 			break;
 		case FIRE:
 			Entity bullet = tankFired(tank);
@@ -147,6 +153,11 @@ public class Connection implements NetworkEventListener {
 			}
 			break;
 		}
+	}
+	
+	private void grantTankControl() {
+		nh.send(NetworkHandler.ENTITY_UPDATE,tank.getBytes());
+		nh.send(NetworkHandler.MESSAGE, NetworkMessage.newBuilder().setType(Type.GRANT_CONTROL).addData(NetworkMessageData.newBuilder().setInt(tank.getId()).build()).build().toByteArray());
 	}
 
 	public void finish() {

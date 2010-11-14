@@ -126,13 +126,11 @@ public class GameWorld implements CollisionListener {
 			if (projA && projB) {
 				return;
 			} else if (projA) {
-				Log.p.out("removing entity "+a.getId()+"due to collision");
 				removeEntity(a);
-				b.damage(10);
+				b.damage(a.getType().getInt("damage"));
 			} else if (projB) {
-				Log.p.out("removing entity "+b.getId()+"due to collision");
 				removeEntity(b);
-				a.damage(10);
+				a.damage(b.getType().getInt("damage"));
 			}
 		}
 	}
@@ -142,6 +140,7 @@ public class GameWorld implements CollisionListener {
 		Body b = getBody(e);
 		phys.remove(b);
 		ebmap.remove(e);
+		e.setWorld(null);
 	}
 
 	public int getTileAt(double x, double y) {

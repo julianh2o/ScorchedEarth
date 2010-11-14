@@ -45,6 +45,18 @@
         <mkdir dir="${classes.dir}"/>
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"
 			debug="true" debuglevel="lines,vars,source"/>
+
+		<copy todir="${build.dir}/resources">
+			<fileset dir="resources" />
+		</copy>
+
+		<copy todir="${build.dir}/data">
+			<fileset dir="data" />
+		</copy>
+
+		<copy todir="${build.dir}/lib">
+			<fileset dir="lib" />
+		</copy>
     </target>
 
 	<target name="jar" depends="compile">
