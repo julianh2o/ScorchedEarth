@@ -1,8 +1,12 @@
-<project name="ScorchedEarth" basedir="." default="main">
+<project name="TitanColony" basedir="." default="main">
     <property name="src.dir" value="src"/>
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir" value="."/>
+    <property name="app.dir" value="app"/>
+
+	<property name="jar.file" value="${jar.dir}/${ant.project.name}.jar" />
+	<property name="zip.file" value="./${ant.project.name}.zip" />
 
     <property name="lib.dir" value="lib" />
 	
@@ -32,6 +36,9 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
+        <delete dir="${app.dir}"/>
+        <delete file="${zip.file}"/>
+        <delete file="${jar.file}"/>
     </target>
 
     <target name="compile">
@@ -43,7 +50,7 @@
 	<target name="jar" depends="compile">
 		<echo message="${manifest.classpath}" />
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+		<jar destfile="${jar.file}" basedir="${classes.dir}">
             <manifest>
                 <attribute name="Main-Class" value="${client-class}" />
                 <attribute name="Class-Path" value="${manifest.classpath}" />
@@ -68,11 +75,27 @@
 			</classpath>
 		</java>
 	</target>
-	
-	<target name="os">
-		<echo message="${os.name}" />
+
+	<target name="app" depends="jar">
+		<mkdir dir="${app.dir}" />
+
+		<copy todir="${app.dir}/resources">
+			<fileset dir="resources" />
+		</copy>
+
+		<copy todir="${app.dir}/data">
+			<fileset dir="data" />
+		</copy>
+
+		<copy todir="${app.dir}/lib">
+			<fileset dir="lib" />
+		</copy>
+
+		<copy file="${jar.file}" todir="${app.dir}" />
+		<zip destfile="${zip.file}" basedir="${app.dir}" />
 	</target>
 
+    <target name="fullbuild" depends="clean,app"/>
     <target name="clean-build" depends="clean,compile"/>
     <target name="build" depends="compile"/>
     <target name="main" depends="run"/>
